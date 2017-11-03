@@ -6,6 +6,7 @@
 package aiawardgenerator;
 
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.ApplicationDocReader;
+import cn.com.xiaofabo.scia.aiaward.fileprocessor.AwardDocGenerator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -58,7 +59,8 @@ public class AIAwardGenerator {
 //        out.close();
 //        System.out.println("fontstyle.docx written successully");
 
-        String inputPath = "D:\\OneDrive\\小法博科技\\产品\\AI裁决书\\SHEN DT20170003\\仲裁资料\\申请人\\12281_AI-仲裁申请书.docx";
+        String inputPath = "test\\SHEN DT20170003\\仲裁资料\\申请人\\12281_AI-仲裁申请书.docx";
+        String outputPath = "test\\SHEN DT20170003\\testoutput\\award.docx";
 
         XWPFDocument docx = new XWPFDocument(new FileInputStream(inputPath));
 
@@ -66,7 +68,8 @@ public class AIAwardGenerator {
         XWPFWordExtractor we = new XWPFWordExtractor(docx);
         System.out.println(we.getText());
         
-        ApplicationDocReader adr = new ApplicationDocReader();
+        AwardDocGenerator awardGen = new AwardDocGenerator(outputPath);
+        awardGen.generateAwardDoc();
     }
 
 }
