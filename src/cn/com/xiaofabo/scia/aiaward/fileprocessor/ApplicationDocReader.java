@@ -37,12 +37,20 @@ public class ApplicationDocReader implements InputFileReader {
             System.out.println(docx.getParagraphs().size());
             XWPFWordExtractor we = new XWPFWordExtractor(docx);
             docText = we.getText();
-        }
-        // Old version word documents
+        } // Old version word documents
         catch (org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException e) {
             HWPFDocument doc = new HWPFDocument(new FileInputStream(inputPath));
             WordExtractor we = new WordExtractor(doc);
             docText = we.getText();
+        }
+
+        String lines[] = docText.split("\\r?\\n");
+
+        for (int i = 0; i < lines.length; ++i) {
+            String l[] = lines[i].split("：");
+            for (int j = 0; j < l.length; ++j) {
+                System.out.println(j + ": " + l[j]);
+            }
         }
         return docText;
     }
