@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.VerticalAlign;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -59,15 +60,22 @@ public class AIAwardGenerator {
 //        out.close();
 //        System.out.println("fontstyle.docx written successully");
 
-        String inputPath = "test\\SHEN DT20170003\\仲裁资料\\申请人\\12281_AI-仲裁申请书.docx";
+        String inputPath = "D:\\OneDrive\\小法博科技\\产品\\AI裁决书\\SHEN DP2014088-未生成\\SHEN DP2014088\\仲裁资料\\申请人\\13282_AI-仲裁申请书.doc";
         String outputPath = "test\\SHEN DT20170003\\testoutput\\award.docx";
 
-        XWPFDocument docx = new XWPFDocument(new FileInputStream(inputPath));
+        //XWPFDocument docx = null;
+        try {
+            XWPFDocument docx = new XWPFDocument(new FileInputStream(inputPath));
+            //using XWPFWordExtractor Class
+            XWPFWordExtractor we = new XWPFWordExtractor(docx);
+            System.out.println(we.getText());
+        } catch (org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException e) {
+            HWPFDocument doc = new HWPFDocument(new FileInputStream(inputPath));
+            WordExtractor we = new WordExtractor(doc);
+            System.out.println(we.getText());
+            //System.out.println("Input file has a format which is too old!");
+        }
 
-        //using XWPFWordExtractor Class
-        XWPFWordExtractor we = new XWPFWordExtractor(docx);
-        System.out.println(we.getText());
-        
         AwardDocGenerator awardGen = new AwardDocGenerator(outputPath);
         awardGen.generateAwardDoc();
     }
