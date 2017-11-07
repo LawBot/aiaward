@@ -34,7 +34,6 @@ public class ApplicationDocReader implements InputFileReader {
         // Newer version word documents
         try {
             XWPFDocument docx = new XWPFDocument(new FileInputStream(inputPath));
-            System.out.println(docx.getParagraphs().size());
             XWPFWordExtractor we = new XWPFWordExtractor(docx);
             docText = we.getText();
         } // Old version word documents
@@ -47,10 +46,9 @@ public class ApplicationDocReader implements InputFileReader {
         String lines[] = docText.split("\\r?\\n");
 
         for (int i = 0; i < lines.length; ++i) {
-            String l[] = lines[i].split("：");
-            for (int j = 0; j < l.length; ++j) {
-                System.out.println(j + ": " + l[j]);
-            }
+            String line = lines[i].trim();
+            System.out.println(lines[i]);
+            System.out.println(line);
         }
         return docText;
     }

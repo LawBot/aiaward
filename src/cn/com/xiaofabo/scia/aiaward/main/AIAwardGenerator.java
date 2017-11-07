@@ -72,7 +72,7 @@ public class AIAwardGenerator {
 
         ApplicationDocReader adr = new ApplicationDocReader();
         try {
-            System.out.println(adr.read(inputPath));
+            adr.read(inputPath);
         } catch (IOException e) {
             logger.fatal("Cannot find application file: " + inputPath);
             logger.fatal("Please make sure the file exists!");
