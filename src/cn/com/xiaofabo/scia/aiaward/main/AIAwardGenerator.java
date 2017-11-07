@@ -69,9 +69,14 @@ public class AIAwardGenerator {
 
         String inputPath1 = "test\\SHEN DT20170003\\仲裁资料\\申请人\\12281_AI-仲裁申请书.docx";
         String inputPath2 = "test\\SHEN DX20150363\\仲裁资料\\申请人\\12194_AI-仲裁申请书.doc";
+        String inputPath3 = "test\\SHEN DX20160521\\仲裁资料\\申请人\\12382_AI-仲裁申请书.docx";
+        String inputPath4 = "test\\SHEN DX20170177\\仲裁资料\\申请人\\12200_AI-仲裁申请书.doc";
+        String inputPath5 = "test\\SHEN X20170211\\仲裁资料\\申请人\\12511_AI-仲裁申请书.doc";
+        String inputPath6 = "test\\SHEN DF20170368-未生成\\SHEN DF20170368\\仲裁资料\\申请人\\13606_AI-仲裁申请书.docx";
+        String inputPath7 = "test\\SHEN DP2014088-未生成\\SHEN DP2014088\\仲裁资料\\申请人\\13282_AI-仲裁申请书.doc";
         String outputPath1 = "test\\SHEN DT20170003\\testoutput\\award.docx";
         
-        String inputPath = inputPath2;
+        String inputPath = inputPath3;
         String outputPath = outputPath1;
 
         ApplicationDocReader adr = new ApplicationDocReader();

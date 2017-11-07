@@ -6,12 +6,13 @@
 package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
+import cn.com.xiaofabo.scia.aiaward.entities.Pair;
+import cn.com.xiaofabo.scia.aiaward.entities.Proposer;
+import cn.com.xiaofabo.scia.aiaward.entities.Respondent;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.poi.hwpf.HWPFDocument;
@@ -46,6 +47,7 @@ public class ApplicationDocReader implements InputFileReader {
             docText = we.getText();
         }
 
+        docText = preprocess(docText);
         String lines[] = docText.split("\\r?\\n");
         ArbitrationApplication application = new ArbitrationApplication(0);
 
@@ -55,6 +57,7 @@ public class ApplicationDocReader implements InputFileReader {
         int gistChunkStartIdx = 0;
         int requestChunkStartIdx = 0;
         int factAndReasonChunkStartIdx = 0;
+        int factAndReasonChunkEndIdx = 0;
 
         for (int lineIndex = 0; lineIndex < lines.length; ++lineIndex) {
             String line = lines[lineIndex].trim();
@@ -62,29 +65,33 @@ public class ApplicationDocReader implements InputFileReader {
             if (compressedLine.contains("仲裁申请书")) {
                 titleChunkStartIdx = lineIndex;
             }
-            if (compressedLine.startsWith("申请人：")
-                    || compressedLine.startsWith("申请人:")) {
+            if (compressedLine.startsWith("申请人：")) {
                 /// In case of signature
                 if (requestChunkStartIdx == 0
                         || (requestChunkStartIdx != 0 && lineIndex < requestChunkStartIdx)) {
                     proposerChunkStartIdx.add(lineIndex);
                 }
             }
-            if (compressedLine.startsWith("被申请人：")
-                    || compressedLine.startsWith("被申请人:")) {
+            if (compressedLine.startsWith("被申请人：")) {
                 respondentChunkStartIdx.add(lineIndex);
             }
-            if (compressedLine.startsWith("仲裁依据：")
-                    || compressedLine.startsWith("仲裁依据:")) {
+            if (compressedLine.startsWith("仲裁依据：")) {
                 gistChunkStartIdx = lineIndex;
             }
-            if (compressedLine.startsWith("仲裁请求：")
-                    || compressedLine.startsWith("仲裁请求:")) {
+            if (compressedLine.startsWith("仲裁请求：")) {
                 requestChunkStartIdx = lineIndex;
             }
             if (compressedLine.startsWith("事实与理由：")
-                    || compressedLine.startsWith("事实与理由:")) {
+                    || compressedLine.startsWith("事实理由：")) {
                 factAndReasonChunkStartIdx = lineIndex;
+            }
+            if (compressedLine.startsWith("此致")) {
+//                String nextLine = lines[lineIndex + 1].trim();
+//                if (removeAllSpaces(nextLine).startsWith("深圳国际仲裁院")
+//                        ||removeAllSpaces(nextLine).startsWith("华南国际经济贸易仲裁委员会")) {
+//                    factAndReasonChunkEndIdx = lineIndex;
+//                }
+                factAndReasonChunkEndIdx = lineIndex;
             }
         }
 
@@ -99,86 +106,223 @@ public class ApplicationDocReader implements InputFileReader {
         logger.debug("requestChunkStartIdx: " + requestChunkStartIdx);
         logger.debug("factAndReasonChunkStartIdx: " + factAndReasonChunkStartIdx);
 
-//        List<String> titleChunck = new LinkedList();
-//        List<String> proposerChunk = new LinkedList();
-//        List<String> RespondentChunk = new LinkedList();
-//
-//        int lineIndex = 0;
-//        while (lineIndex < lines.length) {
-//            String line = lines[lineIndex].trim();
-//            if (removeAllSpaces(line).equals("仲裁申请书")) {
-//                titleChunck.add(line);
-//                logger.debug("TitleChunck add: " + line);
-//                ++lineIndex;
-//                continue;
-//            }
-//
-//            if (removeAllSpaces(line).startsWith("申请人：")
-//                    || removeAllSpaces(line).startsWith("申请人:")) {
-//                proposerChunk.add(line);
-//                logger.debug("ProposerChunk add: " + line);
-//                while (++lineIndex < lines.length
-//                        && !removeAllSpaces(lines[lineIndex]).startsWith("申请人：")
-//                        && !removeAllSpaces(lines[lineIndex]).startsWith("被申请人：")) {
-//                    proposerChunk.add(lines[lineIndex]);
-//                    logger.debug("ProposerChunk add: " + lines[lineIndex]);
-//                }
-//                continue;
-//            }
-//
-//            if (removeAllSpaces(line).startsWith("被申请人：")
-//                    || removeAllSpaces(line).startsWith("被申请人:")) {
-//                RespondentChunk.add(line);
-//                logger.debug("RespondentChunk add: " + line);
-//                while (++lineIndex < lines.length
-//                        && !removeAllSpaces(lines[lineIndex]).startsWith("仲裁依据")
-//                        && !removeAllSpaces(lines[lineIndex]).startsWith("仲裁请求")) {
-//                    RespondentChunk.add(lines[lineIndex]);
-//                    logger.debug("RespondentChunk add: " + lines[lineIndex]);
-//                }
-//                continue;
-//            }
-//            
-//            
-//            ++lineIndex;
-//        }
-//        for (int lineIndex = 0; lineIndex < lines.length; ++lineIndex) {
-//            String line = lines[lineIndex].trim();
-//
-//            if (removeAllSpaces(line).equals("仲裁申请书")) {
-//
-//            }
-//
-//            System.out.println(line);
-//            /// Process one single line
-//            List<Integer> indices = new LinkedList<>();
-//            int index = 0;
-//            while ((index = line.indexOf("：", index)) != -1) {
-//                indices.add(index++);
-//            }
-//
-//            /// Lines with '：' character
-//            if (indices.size() != 0) {
-//                List<String> keys = new LinkedList<>();
-//                if (indices.size() >= 2) {
-//                    for (int i = 1; i < indices.size(); ++i) {
-//                        int startIndex = line.lastIndexOf(" ", indices.get(i));
-//                        String key = line.substring(startIndex, indices.get(i));
-//                    }
-//                }
-//                int firstIndex = indices.get(0);
-//                String key = line.substring(0, firstIndex).trim();
-//            }
-//            for (int j = 0; j < indices.size(); ++j) {
-//                System.out.print("line " + lineIndex + ": ");
-//                System.out.print(indices.get(j) + " ");
-//            }
-//            System.out.println("");
-//        }
+        String titleChunk = "";
+        List<String> proposerChunk = new LinkedList<>();
+        List<String> respondentChunk = new LinkedList<>();
+        String gistChunk = "";
+        String requestChunk = "";
+        String factAndReasonChunk = "";
+
+        titleChunk = combineLines(lines, titleChunkStartIdx, proposerChunkStartIdx.get(0));
+        /// TODO: Only considered one proposer case. should consider more proposers case
+        if (proposerChunkStartIdx.size() == 1) {
+            int tmpStartIdx = proposerChunkStartIdx.get(0);
+            int tmpEndIdx = respondentChunkStartIdx.get(0);
+            proposerChunk.add(combineLines(lines, tmpStartIdx, tmpEndIdx));
+        }
+        /// TODO: Only considered one respondent case. should consider more respondents case
+        if (respondentChunkStartIdx.size() == 1) {
+            int tmpStartIdx = respondentChunkStartIdx.get(0);
+            int tmpEndIdx = gistChunkStartIdx == 0 ? requestChunkStartIdx : gistChunkStartIdx;
+            respondentChunk.add(combineLines(lines, tmpStartIdx, tmpEndIdx));
+        }
+        if (gistChunkStartIdx != 0) {
+            int tmpStartIdx = gistChunkStartIdx;
+            int tmpEndIdx = requestChunkStartIdx;
+            gistChunk = combineLines(lines, tmpStartIdx, tmpEndIdx);
+        }
+        if (requestChunkStartIdx != 0) {
+            int tmpStartIdx = requestChunkStartIdx;
+            int tmpEndIdx = factAndReasonChunkStartIdx;
+            requestChunk = combineLines(lines, tmpStartIdx, tmpEndIdx);
+        }
+        if (factAndReasonChunkStartIdx != 0) {
+            int tmpStartIdx = factAndReasonChunkStartIdx;
+            int tmpEndIdx = factAndReasonChunkEndIdx == 0 ? lines.length : factAndReasonChunkEndIdx;
+            factAndReasonChunk = combineLines(lines, tmpStartIdx, tmpEndIdx);
+        }
+
+        logger.debug("标题:\n" + titleChunk);
+        for (int i = 0; i < proposerChunk.size(); ++i) {
+            logger.debug("申请人:\n" + proposerChunk.get(i));
+        }
+        for (int i = 0; i < respondentChunk.size(); ++i) {
+            logger.debug("被申请人:\n" + respondentChunk.get(i));
+        }
+        logger.debug("仲裁依据:\n" + gistChunk);
+        logger.debug("仲裁请求:\n" + requestChunk);
+        logger.debug("事实与理由:\n" + factAndReasonChunk);
+
+        String pChunk = proposerChunk.get(0);
+        pChunk = proposerPreprocess(pChunk);
+        String plines[] = pChunk.split("\\r?\\n");
+        List<Pair> proposerPairList = new LinkedList<>();
+        for (int pLineIndex = 0; pLineIndex < plines.length; ++pLineIndex) {
+            String pline = plines[pLineIndex].trim();
+            List<Integer> indices = new LinkedList<>();
+            int index = 0;
+            while ((index = pline.indexOf("：", index)) != -1) {
+                indices.add(index++);
+            }
+
+            int keyStartIdx = 0;
+            int keyEndIdx = 0;
+            int valueStartIdx = 0;
+            int valueEndIdx = 0;
+            for (int i = 0; i < indices.size(); ++i) {
+                keyEndIdx = indices.get(i);
+                String key = pline.substring(keyStartIdx, keyEndIdx);
+                valueStartIdx = keyEndIdx + 1;
+                if ((i + 1) != indices.size()) {
+                    int tmpIdx = indices.get(i + 1);
+                    valueEndIdx = pline.lastIndexOf(" ", tmpIdx);
+                } else {
+                    valueEndIdx = -1;
+                }
+                String value = valueEndIdx == -1 ? pline.substring(valueStartIdx) : pline.substring(valueStartIdx, valueEndIdx);
+                keyStartIdx = valueEndIdx + 1;
+                proposerPairList.add(new Pair(removeAllSpaces(key), removeAllSpaces(value)));
+            }
+        }
+
+        Proposer pro = new Proposer();
+        String proposer = "";
+        String address = "";
+        String representative = "";
+        String agency = "";
+        for (int i = 0; i < proposerPairList.size(); ++i) {
+            String key = proposerPairList.get(i).getKey();
+            String value = proposerPairList.get(i).getValue();
+
+            if (key.equals("申请人")) {
+                proposer = value;
+            }
+            if (key.equals("住址") || key.equals("地址") || key.equals("住所")) {
+                address = value;
+            }
+            if (key.equals("法定代表人")) {
+                representative = value;
+            }
+            if (key.equals("代理人")) {
+                agency = value;
+            }
+            pro.setProposer(proposer);
+            pro.setAddress(address);
+            pro.setRepresentative(representative);
+            pro.setAgency(agency);
+        }
+        logger.debug("申请人：" + pro.getProposer());
+        logger.debug("地址：" + pro.getAddress());
+        logger.debug("法定代表人：" + pro.getRepresentative());
+        logger.debug("代理人：" + pro.getAgency());
+
+        String rChunk = respondentChunk.get(0);
+        rChunk = proposerPreprocess(rChunk);
+        String rlines[] = rChunk.split("\\r?\\n");
+        List<Pair> respondentPairList = new LinkedList<>();
+        for (int rLineIndex = 0; rLineIndex < rlines.length; ++rLineIndex) {
+            String rline = rlines[rLineIndex].trim();
+            List<Integer> indices = new LinkedList<>();
+            int index = 0;
+            while ((index = rline.indexOf("：", index)) != -1) {
+                indices.add(index++);
+            }
+
+            int keyStartIdx = 0;
+            int keyEndIdx = 0;
+            int valueStartIdx = 0;
+            int valueEndIdx = 0;
+            for (int i = 0; i < indices.size(); ++i) {
+                keyEndIdx = indices.get(i);
+                String key = rline.substring(keyStartIdx, keyEndIdx);
+                valueStartIdx = keyEndIdx + 1;
+                if ((i + 1) != indices.size()) {
+                    int tmpIdx = indices.get(i + 1);
+                    valueEndIdx = rline.lastIndexOf(" ", tmpIdx);
+                } else {
+                    valueEndIdx = -1;
+                }
+                String value = valueEndIdx == -1 ? rline.substring(valueStartIdx) : rline.substring(valueStartIdx, valueEndIdx);
+                keyStartIdx = valueEndIdx + 1;
+                respondentPairList.add(new Pair(removeAllSpaces(key), removeAllSpaces(value)));
+            }
+        }
+
+        Respondent res = new Respondent();
+        String respondent = "";
+        address = "";
+        representative = "";
+        agency = "";
+        for (int i = 0; i < respondentPairList.size(); ++i) {
+            String key = respondentPairList.get(i).getKey();
+            String value = respondentPairList.get(i).getValue();
+
+            if (key.equals("被申请人")) {
+                respondent = value;
+            }
+            if (key.equals("住址") || key.equals("地址") || key.equals("住所")) {
+                address = value;
+            }
+            if (key.equals("法定代表人")) {
+                representative = value;
+            }
+            if (key.equals("代理人")) {
+                agency = value;
+            }
+            res.setRespondent(respondent);
+            res.setAddress(address);
+            res.setRepresentative(representative);
+            res.setAgency(agency);
+        }
+
+        logger.debug("被申请人：" + res.getRespondent());
+        logger.debug("地址：" + res.getAddress());
+        logger.debug("法定代表人：" + res.getRepresentative());
+        logger.debug("代理人：" + res.getAgency());
+
         return docText;
     }
 
     private String removeAllSpaces(String input) {
         return input.replaceAll("\\s+", "");
+    }
+
+    private String combineLines(String[] lines, int startIndex, int endIndex) {
+        if (startIndex >= lines.length || endIndex >= lines.length) {
+            return null;
+        }
+        StringBuilder toReturn = new StringBuilder();
+        for (int i = startIndex; i < endIndex; ++i) {
+            if (!removeAllSpaces(lines[i]).isEmpty()) {
+                toReturn.append(lines[i] + "\n");
+            }
+        }
+        return toReturn.toString();
+    }
+
+    private String preprocess(String str) {
+        str = str.replaceAll(":", "：");
+        str = str.replaceAll("％", "%");
+        str = str.replaceAll("——", "──");
+        return str;
+    }
+
+    private String proposerPreprocess(String proposerStr) {
+        proposerStr = proposerStr.replaceAll("，", "   ");
+        proposerStr = proposerStr.replaceAll(",", "   ");
+        proposerStr = proposerStr.replaceAll("。", "   ");
+        if (proposerStr.contains("性别") && !proposerStr.contains("性别：")) {
+            proposerStr = proposerStr.replaceAll("性别", "性别：");
+        }
+        if (proposerStr.contains("身份证号码") && !proposerStr.contains("身份证号码：")) {
+            proposerStr = proposerStr.replaceAll("身份证号码", "身份证号码：");
+        }
+        if (proposerStr.contains("身份号码") && !proposerStr.contains("身份号码：")) {
+            proposerStr = proposerStr.replaceAll("身份号码", "身份号码：");
+        }
+        if (proposerStr.contains("住址") && !proposerStr.contains("住址：")) {
+            proposerStr = proposerStr.replaceAll("住址", "住址：");
+        }
+        return proposerStr;
     }
 }
