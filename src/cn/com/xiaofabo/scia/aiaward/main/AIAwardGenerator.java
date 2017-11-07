@@ -67,8 +67,12 @@ public class AIAwardGenerator {
 //        out.close();
 //        System.out.println("fontstyle.docx written successully");
 
-        String inputPath = "test\\SHEN DT20170003\\仲裁资料\\申请人\\12281_AI-仲裁申请书.docx";
-        String outputPath = "test\\SHEN DT20170003\\testoutput\\award.docx";
+        String inputPath1 = "test\\SHEN DT20170003\\仲裁资料\\申请人\\12281_AI-仲裁申请书.docx";
+        String inputPath2 = "test\\SHEN DX20150363\\仲裁资料\\申请人\\12194_AI-仲裁申请书.doc";
+        String outputPath1 = "test\\SHEN DT20170003\\testoutput\\award.docx";
+        
+        String inputPath = inputPath2;
+        String outputPath = outputPath1;
 
         ApplicationDocReader adr = new ApplicationDocReader();
         try {
