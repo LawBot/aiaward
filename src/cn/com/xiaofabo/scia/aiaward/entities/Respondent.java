@@ -10,5 +10,52 @@ package cn.com.xiaofabo.scia.aiaward.entities;
  * @author gchen
  */
 public class Respondent {
-    
+
+    private String respondent;
+    private String agency;
+    private String representative;
+    private String address;
+
+    public Respondent() {
+    }
+
+    public Respondent(String respondent, String agency, String representative, String address) {
+        this.respondent = respondent;
+        this.agency = agency;
+        this.representative = representative;
+        this.address = address;
+    }
+
+    public String getRespondent() {
+        return respondent;
+    }
+
+    public void setRespondent(String respondent) {
+        this.respondent = respondent;
+    }
+
+    public String getAgency() {
+        return agency;
+    }
+
+    public void setAgency(String agency) {
+        this.agency = agency;
+    }
+
+    public String getRepresentative() {
+        return representative;
+    }
+
+    public void setRepresentative(String representative) {
+        this.representative = representative;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
 }

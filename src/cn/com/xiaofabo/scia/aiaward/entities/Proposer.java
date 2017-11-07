@@ -12,13 +12,22 @@ package cn.com.xiaofabo.scia.aiaward.entities;
 public class Proposer {
 
     private String proposer;
-    private String partner;
+    private String agency;
     private String representative;
     private String address;
-    private String telephone;
+
+    public Proposer() {
+    }
 
     public Proposer(String proposer) {
         this.proposer = proposer;
+    }
+
+    public Proposer(String proposer, String agency, String representative, String address) {
+        this.proposer = proposer;
+        this.agency = agency;
+        this.representative = representative;
+        this.address = address;
     }
 
     public String getProposer() {
@@ -29,12 +38,12 @@ public class Proposer {
         this.proposer = proposer;
     }
 
-    public String getPartner() {
-        return partner;
+    public String getAgency() {
+        return agency;
     }
 
-    public void setPartner(String partner) {
-        this.partner = partner;
+    public void setAgency(String agency) {
+        this.agency = agency;
     }
 
     public String getRepresentative() {
@@ -52,13 +61,4 @@ public class Proposer {
     public void setAddress(String address) {
         this.address = address;
     }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
 }
