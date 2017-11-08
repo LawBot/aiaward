@@ -34,7 +34,7 @@ public class ApplicationDocReader implements InputFileReader {
         logger.trace("Constructor of ApplicationDocReader");
     }
 
-    public String read(String inputPath) throws IOException {
+    public ArbitrationApplication read(String inputPath) throws IOException {
         // Newer version word documents
         try {
             XWPFDocument docx = new XWPFDocument(new FileInputStream(inputPath));
@@ -280,7 +280,14 @@ public class ApplicationDocReader implements InputFileReader {
         logger.debug("法定代表人：" + res.getRepresentative());
         logger.debug("代理人：" + res.getAgency());
 
-        return docText;
+        ArbitrationApplication aa = new ArbitrationApplication(0);
+        List<Proposer> pList = new LinkedList<>();
+        List<Respondent> rList = new LinkedList<>();
+        pList.add(pro);
+        rList.add(res);
+        aa.setProposerList(pList);
+        aa.setRespondentList(rList);
+        return aa;
     }
 
     private String removeAllSpaces(String input) {

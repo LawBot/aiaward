@@ -5,17 +5,31 @@
  */
 package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
+import cn.com.xiaofabo.scia.aiaward.entities.Proposer;
+import cn.com.xiaofabo.scia.aiaward.entities.Respondent;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Calendar;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
+import org.apache.poi.xwpf.usermodel.BreakClear;
+import org.apache.poi.xwpf.usermodel.BreakType;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 
 /**
  *
@@ -26,7 +40,7 @@ public class AwardDocGenerator implements OutputGenerator {
     public static final Logger logger = Logger.getLogger(AwardDocGenerator.class.getName());
     private String outAwardDocUrl;
     private XWPFDocument awardDoc;
-    
+
     //Constants
     private static final BigInteger PAGE_MARGIN_TOP = BigInteger.valueOf(2153L);
     private static final BigInteger PAGE_MARGIN_BOTTOM = BigInteger.valueOf(2493L);
@@ -34,7 +48,9 @@ public class AwardDocGenerator implements OutputGenerator {
     private static final BigInteger PAGE_MARGIN_RIGHT = BigInteger.valueOf(1796L);
     private static final BigInteger PAGE_MARGIN_HEADER = BigInteger.valueOf(850L);
     private static final BigInteger PAGE_MARGIN_FOOTER = BigInteger.valueOf(2153L);
-    
+
+    private static final String FONT_FAMILY_SONG = "宋体";
+    private static final String FONT_FAMILY_FANGSONG = "仿宋_GB2312";
 
     public AwardDocGenerator(String outAwardDocUrl) {
         PropertyConfigurator.configure("log/config.txt");
@@ -47,11 +63,16 @@ public class AwardDocGenerator implements OutputGenerator {
         logger.trace("Constructor: finish constructing AwardDocGenerator");
     }
 
-    public XWPFDocument generateAwardDoc() {
+    public XWPFDocument generateAwardDoc(ArbitrationApplication aApplication) {
+        /// TODO: only 1 proposer and 1 respondent considered
+        Proposer pro = (Proposer) aApplication.getProposerList().get(0);
+        Respondent res = (Respondent) aApplication.getRespondentList().get(0);
         try {
             pageSetup();
+            generateFirstPage(pro, res);
             FileOutputStream fos = new FileOutputStream(outAwardDocUrl);
             awardDoc.write(fos);
+            fos.close();
             logger.debug("Award document generated.");
         } catch (FileNotFoundException e) {
             logger.fatal("Cannot create output file: " + outAwardDocUrl);
@@ -78,4 +99,287 @@ public class AwardDocGenerator implements OutputGenerator {
         logger.trace("Page setup finished.");
     }
 
+    private void generateFirstPage(Proposer pro, Respondent res) {
+
+        //create paragraph
+        XWPFParagraph p1 = awardDoc.createParagraph();
+        p1.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun p1r1 = p1.createRun();
+        p1r1.setFontFamily(FONT_FAMILY_SONG);
+        p1r1.setFontSize(24);
+        p1r1.setText("华南国际经济贸易仲裁委员会\n");
+
+        XWPFParagraph p2 = awardDoc.createParagraph();
+        p2.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun p2r1 = p2.createRun();
+        p1r1.setFontFamily(FONT_FAMILY_SONG);
+        p2r1.setFontSize(24);
+        p2r1.addBreak();
+        p2r1.setText("裁    决    书");
+
+        XWPFTable proposerTable = awardDoc.createTable(4, 2);
+
+        CTTblPr tblpro;
+        CTTblBorders borders;
+        XWPFTableRow tableRow;
+        XWPFParagraph paragraph;
+        XWPFRun paragraphRun;
+
+        /// Set table border to NONE
+        tblpro = proposerTable.getCTTbl().getTblPr();
+        borders = tblpro.addNewTblBorders();
+        borders.addNewBottom().setVal(STBorder.NONE);
+        borders.addNewLeft().setVal(STBorder.NONE);
+        borders.addNewRight().setVal(STBorder.NONE);
+        borders.addNewTop().setVal(STBorder.NONE);
+        borders.addNewInsideH().setVal(STBorder.NONE);
+        borders.addNewInsideV().setVal(STBorder.NONE);
+
+        tableRow = proposerTable.getRow(0);
+        paragraph = tableRow.getCell(0).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText("申  请  人：");
+
+        paragraph = tableRow.getCell(1).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText(pro.getProposer());
+
+        tableRow = proposerTable.getRow(1);
+        paragraph = tableRow.getCell(0).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText("地      址：");
+
+        paragraph = tableRow.getCell(1).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText(pro.getAddress());
+
+        tableRow = proposerTable.getRow(2);
+        paragraph = tableRow.getCell(0).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText("法定代表人：");
+
+        paragraph = tableRow.getCell(1).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText(pro.getRepresentative());
+
+        tableRow = proposerTable.getRow(3);
+        paragraph = tableRow.getCell(0).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText("代  理  人：");
+
+        paragraph = tableRow.getCell(1).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText(pro.getAgency());
+
+        XWPFTable respondentTable = awardDoc.createTable(4, 2);
+        /// Set table border to NONE
+        tblpro = respondentTable.getCTTbl().getTblPr();
+        borders = tblpro.addNewTblBorders();
+        borders.addNewBottom().setVal(STBorder.NONE);
+        borders.addNewLeft().setVal(STBorder.NONE);
+        borders.addNewRight().setVal(STBorder.NONE);
+        borders.addNewTop().setVal(STBorder.NONE);
+        borders.addNewInsideH().setVal(STBorder.NONE);
+        borders.addNewInsideV().setVal(STBorder.NONE);
+
+        tableRow = respondentTable.getRow(0);
+        paragraph = tableRow.getCell(0).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText("被申请人：");
+
+        paragraph = tableRow.getCell(1).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText(res.getRespondent());
+
+        tableRow = respondentTable.getRow(1);
+        paragraph = tableRow.getCell(0).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText("地      址：");
+
+        paragraph = tableRow.getCell(1).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText(res.getAddress());
+
+        tableRow = respondentTable.getRow(2);
+        paragraph = tableRow.getCell(0).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText("法定代表人：");
+
+        paragraph = tableRow.getCell(1).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText(res.getRepresentative());
+
+        tableRow = respondentTable.getRow(3);
+        paragraph = tableRow.getCell(0).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText("代  理  人：");
+
+        paragraph = tableRow.getCell(1).addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraphRun = paragraph.createRun();
+        paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
+        paragraphRun.setFontSize(16);
+        paragraphRun.setText(res.getAgency());
+
+        XWPFParagraph p5 = awardDoc.createParagraph();
+        p5.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun p5r1 = p5.createRun();
+        p5r1.setFontFamily(FONT_FAMILY_FANGSONG);
+        p5r1.setFontSize(18);
+        p5r1.addBreak();
+        p5r1.addBreak();
+        p5r1.addBreak();
+        p5r1.setText("深   圳");
+
+        XWPFParagraph p6 = awardDoc.createParagraph();
+        p6.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun p6r1 = p6.createRun();
+        p6r1.setFontFamily(FONT_FAMILY_FANGSONG);
+        p6r1.setFontSize(18);
+        p6r1.addBreak();
+        p6r1.setText(cnDateGenerator());
+
+    }
+
+    private String cnDateGenerator() {
+        String toReturn = "";
+        Calendar cal = Calendar.getInstance();
+
+        int year = cal.get(Calendar.YEAR);
+        String yearStr = year + "";
+        String yearStrCN = numberToCN(yearStr.charAt(0))
+                + numberToCN(yearStr.charAt(1))
+                + numberToCN(yearStr.charAt(2))
+                + numberToCN(yearStr.charAt(3));
+
+        int month = cal.get(Calendar.MONTH) + 1;
+        String monthStr = month + "";
+        String monthStrCN = "";
+        switch (month) {
+            case 10:
+                monthStrCN = "十";
+                break;
+            case 11:
+                monthStrCN = "十一";
+                break;
+            case 12:
+                monthStrCN = "十二";
+                break;
+            default:
+                monthStrCN = numberToCN(monthStr.charAt(0));
+                break;
+        }
+
+        int date = cal.get(Calendar.DATE);
+        String dateStr = date + "";
+        String dateStrCN = "";
+        if (date == 10) {
+            dateStrCN = "十";
+        } else if (date < 10) {
+            dateStrCN = numberToCN(dateStr.charAt(0));
+        } else if (date > 10 && date < 20) {
+            dateStrCN = "十" + numberToCN(dateStr.charAt(1));
+        } else if (date == 20) {
+            dateStrCN = "二十";
+        } else if (date > 20 && date < 30) {
+            dateStrCN = "二十" + numberToCN(dateStr.charAt(1));
+        } else if (date == 30) {
+            dateStrCN = "三十";
+        } else if (date == 31) {
+            dateStrCN = "三十一";
+        } else {
+            dateStrCN = "X";
+        }
+
+        toReturn = yearStrCN + "年" + monthStrCN + "月" + dateStrCN + "日";
+        return toReturn;
+    }
+
+    private String numberToCN(char number) {
+        if (number > '9' || number < '0') {
+            return null;
+        }
+        String toReturn;
+        switch (number) {
+            case '0':
+                toReturn = "○";
+                break;
+            case '1':
+                toReturn = "一";
+                break;
+            case '2':
+                toReturn = "二";
+                break;
+            case '3':
+                toReturn = "三";
+                break;
+            case '4':
+                toReturn = "四";
+                break;
+            case '5':
+                toReturn = "五";
+                break;
+            case '6':
+                toReturn = "六";
+                break;
+            case '7':
+                toReturn = "七";
+                break;
+            case '8':
+                toReturn = "八";
+                break;
+            case '9':
+                toReturn = "九";
+                break;
+            default:
+                toReturn = "X";
+                break;
+        }
+        return toReturn;
+    }
 }
