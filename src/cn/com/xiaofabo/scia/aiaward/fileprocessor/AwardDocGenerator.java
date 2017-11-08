@@ -25,7 +25,10 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
@@ -42,13 +45,16 @@ public class AwardDocGenerator implements OutputGenerator {
     private XWPFDocument awardDoc;
 
     //Constants
+    private static final BigInteger PAGE_A4_WIDTH = BigInteger.valueOf(11900L);
+    private static final BigInteger PAGE_A4_HEIGHT = BigInteger.valueOf(16840L);;
+    
     private static final BigInteger PAGE_MARGIN_TOP = BigInteger.valueOf(2153L);
     private static final BigInteger PAGE_MARGIN_BOTTOM = BigInteger.valueOf(2493L);
     private static final BigInteger PAGE_MARGIN_LEFT = BigInteger.valueOf(1796L);
     private static final BigInteger PAGE_MARGIN_RIGHT = BigInteger.valueOf(1796L);
     private static final BigInteger PAGE_MARGIN_HEADER = BigInteger.valueOf(850L);
     private static final BigInteger PAGE_MARGIN_FOOTER = BigInteger.valueOf(2153L);
-
+    
     private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(1000L);
 
     private static final String FONT_FAMILY_SONG = "宋体";
@@ -90,7 +96,23 @@ public class AwardDocGenerator implements OutputGenerator {
 
     // Page setup according to requirement doc
     private void pageSetup() {
-        CTSectPr sectPr = awardDoc.getDocument().getBody().addNewSectPr();
+        CTDocument1 document = awardDoc.getDocument();
+        CTBody body = document.getBody();
+
+        if (!body.isSetSectPr()) {
+            body.addNewSectPr();
+        }
+        CTSectPr section = body.getSectPr();
+
+        if (!section.isSetPgSz()) {
+            section.addNewPgSz();
+        }
+        CTPageSz pageSize = section.getPgSz();
+
+        pageSize.setW(PAGE_A4_WIDTH);
+        pageSize.setH(PAGE_A4_HEIGHT);
+
+        CTSectPr sectPr = body.addNewSectPr();
         CTPageMar pageMar = sectPr.addNewPgMar();
         pageMar.setTop(PAGE_MARGIN_TOP);
         pageMar.setBottom(PAGE_MARGIN_BOTTOM);
@@ -119,13 +141,14 @@ public class AwardDocGenerator implements OutputGenerator {
         p2r1.addBreak();
         p2r1.setText("裁    决    书");
         p2r1.addBreak();
+        p2r1.addBreak();
 
         CTTblPr tblpro;
         CTTblBorders borders;
         XWPFTableRow tableRow;
         XWPFParagraph paragraph;
         XWPFRun paragraphRun;
-        
+
         XWPFTable proposerTable = awardDoc.createTable(4, 2);
         /// Set table border to NONE
         tblpro = proposerTable.getCTTbl().getTblPr();
@@ -197,7 +220,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
         paragraphRun.setFontSize(16);
         paragraphRun.setText(pro.getAgency());
-        
+
         XWPFParagraph p3 = awardDoc.createParagraph();
         p3.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun p3r1 = p3.createRun();
