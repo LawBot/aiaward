@@ -49,6 +49,8 @@ public class AwardDocGenerator implements OutputGenerator {
     private static final BigInteger PAGE_MARGIN_HEADER = BigInteger.valueOf(850L);
     private static final BigInteger PAGE_MARGIN_FOOTER = BigInteger.valueOf(2153L);
 
+    private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(1000L);
+
     private static final String FONT_FAMILY_SONG = "宋体";
     private static final String FONT_FAMILY_FANGSONG = "仿宋_GB2312";
 
@@ -112,19 +114,19 @@ public class AwardDocGenerator implements OutputGenerator {
         XWPFParagraph p2 = awardDoc.createParagraph();
         p2.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun p2r1 = p2.createRun();
-        p1r1.setFontFamily(FONT_FAMILY_SONG);
+        p2r1.setFontFamily(FONT_FAMILY_SONG);
         p2r1.setFontSize(24);
         p2r1.addBreak();
         p2r1.setText("裁    决    书");
-
-        XWPFTable proposerTable = awardDoc.createTable(4, 2);
+        p2r1.addBreak();
 
         CTTblPr tblpro;
         CTTblBorders borders;
         XWPFTableRow tableRow;
         XWPFParagraph paragraph;
         XWPFRun paragraphRun;
-
+        
+        XWPFTable proposerTable = awardDoc.createTable(4, 2);
         /// Set table border to NONE
         tblpro = proposerTable.getCTTbl().getTblPr();
         borders = tblpro.addNewTblBorders();
@@ -136,6 +138,7 @@ public class AwardDocGenerator implements OutputGenerator {
         borders.addNewInsideV().setVal(STBorder.NONE);
 
         tableRow = proposerTable.getRow(0);
+        tableRow.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_KEY_WIDTH);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
         paragraphRun = paragraph.createRun();
@@ -194,6 +197,13 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
         paragraphRun.setFontSize(16);
         paragraphRun.setText(pro.getAgency());
+        
+        XWPFParagraph p3 = awardDoc.createParagraph();
+        p3.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun p3r1 = p3.createRun();
+        p3r1.setFontFamily(FONT_FAMILY_SONG);
+        p3r1.setFontSize(16);
+        p3r1.addBreak();
 
         XWPFTable respondentTable = awardDoc.createTable(4, 2);
         /// Set table border to NONE
@@ -207,6 +217,7 @@ public class AwardDocGenerator implements OutputGenerator {
         borders.addNewInsideV().setVal(STBorder.NONE);
 
         tableRow = respondentTable.getRow(0);
+        tableRow.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_KEY_WIDTH);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
         paragraphRun = paragraph.createRun();
@@ -271,7 +282,6 @@ public class AwardDocGenerator implements OutputGenerator {
         XWPFRun p5r1 = p5.createRun();
         p5r1.setFontFamily(FONT_FAMILY_FANGSONG);
         p5r1.setFontSize(18);
-        p5r1.addBreak();
         p5r1.addBreak();
         p5r1.addBreak();
         p5r1.setText("深   圳");
