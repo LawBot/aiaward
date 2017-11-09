@@ -75,14 +75,22 @@ public class ApplicationDocReader implements InputFileReader {
             if (compressedLine.startsWith("被申请人：")) {
                 respondentChunkStartIdx.add(lineIndex);
             }
-            if (compressedLine.startsWith("仲裁依据：")) {
+            if (compressedLine.startsWith("仲裁依据：")
+                    ||compressedLine.startsWith("仲裁依据")
+                    ||compressedLine.startsWith("仲裁条款：")
+                    ||compressedLine.startsWith("仲裁条款")) {
                 gistChunkStartIdx = lineIndex;
             }
-            if (compressedLine.startsWith("仲裁请求：")) {
+            if (compressedLine.startsWith("仲裁请求：")
+                    ||compressedLine.startsWith("仲裁请求")
+                    ||compressedLine.startsWith("申请请求：")
+                    ||compressedLine.startsWith("申请请求")) {
                 requestChunkStartIdx = lineIndex;
             }
             if (compressedLine.startsWith("事实与理由：")
-                    || compressedLine.startsWith("事实理由：")) {
+                    || compressedLine.startsWith("事实与理由")
+                    || compressedLine.startsWith("事实理由：")
+                    || compressedLine.startsWith("事实理由")) {
                 factAndReasonChunkStartIdx = lineIndex;
             }
             if (compressedLine.startsWith("此致")) {
