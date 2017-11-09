@@ -161,6 +161,7 @@ public class AwardDocGenerator implements OutputGenerator {
         borders.addNewInsideV().setVal(STBorder.NONE);
 
         tableRow = proposerTable.getRow(0);
+        tableRow.getCell(0).removeParagraph(0); 
         tableRow.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_KEY_WIDTH);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
@@ -169,6 +170,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontSize(16);
         paragraphRun.setText("申  请  人：");
 
+        tableRow.getCell(1).removeParagraph(0);
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
@@ -177,6 +179,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setText(pro.getProposer());
 
         tableRow = proposerTable.getRow(1);
+        tableRow.getCell(0).removeParagraph(0);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
         paragraphRun = paragraph.createRun();
@@ -184,6 +187,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontSize(16);
         paragraphRun.setText("地      址：");
 
+        tableRow.getCell(1).removeParagraph(0);
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
@@ -192,6 +196,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setText(pro.getAddress());
 
         tableRow = proposerTable.getRow(2);
+        tableRow.getCell(0).removeParagraph(0);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
         paragraphRun = paragraph.createRun();
@@ -199,6 +204,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontSize(16);
         paragraphRun.setText("法定代表人：");
 
+        tableRow.getCell(1).removeParagraph(0);
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
@@ -207,6 +213,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setText(pro.getRepresentative());
 
         tableRow = proposerTable.getRow(3);
+        tableRow.getCell(0).removeParagraph(0);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
         paragraphRun = paragraph.createRun();
@@ -214,6 +221,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontSize(16);
         paragraphRun.setText("代  理  人：");
 
+        tableRow.getCell(1).removeParagraph(0);
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
@@ -240,6 +248,7 @@ public class AwardDocGenerator implements OutputGenerator {
         borders.addNewInsideV().setVal(STBorder.NONE);
 
         tableRow = respondentTable.getRow(0);
+        tableRow.getCell(0).removeParagraph(0);
         tableRow.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_KEY_WIDTH);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
@@ -248,6 +257,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontSize(16);
         paragraphRun.setText("被申请人：");
 
+        tableRow.getCell(1).removeParagraph(0);
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
@@ -256,6 +266,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setText(res.getRespondent());
 
         tableRow = respondentTable.getRow(1);
+        tableRow.getCell(0).removeParagraph(0);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
         paragraphRun = paragraph.createRun();
@@ -263,6 +274,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontSize(16);
         paragraphRun.setText("地      址：");
 
+        tableRow.getCell(1).removeParagraph(0);
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
@@ -271,6 +283,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setText(res.getAddress());
 
         tableRow = respondentTable.getRow(2);
+        tableRow.getCell(0).removeParagraph(0);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
         paragraphRun = paragraph.createRun();
@@ -278,6 +291,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontSize(16);
         paragraphRun.setText("法定代表人：");
 
+        tableRow.getCell(1).removeParagraph(0);
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
@@ -286,6 +300,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setText(res.getRepresentative());
 
         tableRow = respondentTable.getRow(3);
+        tableRow.getCell(0).removeParagraph(0);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
         paragraphRun = paragraph.createRun();
@@ -293,6 +308,7 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontSize(16);
         paragraphRun.setText("代  理  人：");
 
+        tableRow.getCell(1).removeParagraph(0);
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
