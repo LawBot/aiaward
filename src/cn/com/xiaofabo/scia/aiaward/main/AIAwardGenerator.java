@@ -46,7 +46,7 @@ public class AIAwardGenerator {
         String inputPath7 = "test\\SHEN DP2014088-未生成\\SHEN DP2014088\\仲裁资料\\申请人\\13282_AI-仲裁申请书.doc";
         String outputPath1 = "test\\testoutput\\award.docx";
 
-        String inputPath = inputPath7;
+        String inputPath = inputPath1;
         String outputPath = outputPath1;
 
         ApplicationDocReader adr = new ApplicationDocReader();
