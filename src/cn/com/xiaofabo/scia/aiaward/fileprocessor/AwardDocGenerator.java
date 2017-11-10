@@ -22,15 +22,19 @@ import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.BreakClear;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
@@ -41,6 +45,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
 
 /**
  *
@@ -93,10 +98,11 @@ public class AwardDocGenerator implements OutputGenerator {
         /// TODO: only 1 proposer and 1 respondent considered
         Proposer pro = (Proposer) aApplication.getProposerList().get(0);
         Respondent res = (Respondent) aApplication.getRespondentList().get(0);
+        String request = aApplication.getRequest();
         try {
             pageSetup();
             generateFirstPage(pro, res);
-            generateContentPages();
+            generateContentPages(request);
             FileOutputStream fos = new FileOutputStream(outAwardDocUrl);
             awardDoc.write(fos);
             fos.close();
@@ -143,36 +149,36 @@ public class AwardDocGenerator implements OutputGenerator {
         // create first page header
         XWPFParagraph paragraph = awardDoc.createParagraph();
         XWPFRun run = paragraph.createRun();
-        XWPFHeader header = awardDoc.createHeader(HeaderFooterType.FIRST);
-
-        paragraph = header.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-
-        run = paragraph.createRun();
-        run.setText("The first page header:");
-
-        // create default page header
-        header = awardDoc.createHeader(HeaderFooterType.DEFAULT);
-
-        paragraph = header.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-
-        run = paragraph.createRun();
-        run.setText("The default page header:");
+//        XWPFHeader header = awardDoc.createHeader(HeaderFooterType.FIRST);
+//
+//        paragraph = header.createParagraph();
+//        paragraph.setAlignment(ParagraphAlignment.LEFT);
+//
+//        run = paragraph.createRun();
+//        run.setText("The first page header:");
+//
+//        // create default page header
+//        header = awardDoc.createHeader(HeaderFooterType.DEFAULT);
+//
+//        paragraph = header.createParagraph();
+//        paragraph.setAlignment(ParagraphAlignment.LEFT);
+//
+//        run = paragraph.createRun();
+//        run.setText("The default page header:");
 
         // create footer
-        XWPFFooter footer = awardDoc.createFooter(HeaderFooterType.DEFAULT);
+        XWPFFooter footer;
+        footer = awardDoc.createFooter(HeaderFooterType.FIRST);
+        paragraph = footer.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+
+        footer = awardDoc.createFooter(HeaderFooterType.DEFAULT);
 
         paragraph = footer.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
 
         run = paragraph.createRun();
-        run.setText("Page ");
         paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
-        run = paragraph.createRun();
-        run.setText(" of ");
-        paragraph.getCTP().addNewFldSimple().setInstr("NUMPAGES \\* MERGEFORMAT");
-
 //        XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
 //        if (headerFooterPolicy == null) {
 //            headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
@@ -259,7 +265,7 @@ public class AwardDocGenerator implements OutputGenerator {
 
     }
 
-    private void generateContentPages() {
+    private void generateContentPages(String request) {
         XWPFParagraph p1 = awardDoc.createParagraph();
         p1.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun p1r1 = p1.createRun();
@@ -284,6 +290,8 @@ public class AwardDocGenerator implements OutputGenerator {
         addNormalTextParagraph("{案情描述部分}", 0);
         addTitleTextParagraph("（一）申请人的主张和请求", 0);
         addNormalTextParagraph("{申请人的主张和请求}", 0);
+        String lines[] = request.split("\\r?\\n");
+        addNumbering(lines);
         addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
         addNormalTextParagraph("{被申请人提出答辩意见}", 0);
 
@@ -404,6 +412,43 @@ public class AwardDocGenerator implements OutputGenerator {
                 break;
         }
         return toReturn;
+    }
+
+    private void addNumbering(String[] strList) {
+        CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
+        cTAbstractNum.setAbstractNumId(BigInteger.valueOf(0));
+
+        CTLvl cTLvl = cTAbstractNum.addNewLvl();
+        cTLvl.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
+        cTLvl.addNewLvlText().setVal("%1.");
+        cTLvl.addNewStart().setVal(BigInteger.valueOf(1));
+
+        XWPFAbstractNum abstractNum = new XWPFAbstractNum(cTAbstractNum);
+        XWPFParagraph paragraph = awardDoc.createParagraph();
+
+        CTPPr ppr = paragraph.getCTP().getPPr();
+        if (ppr == null) {
+            ppr = paragraph.getCTP().addNewPPr();
+        }
+        CTSpacing spacing = ppr.isSetSpacing() ? ppr.getSpacing() : ppr.addNewSpacing();
+        spacing.setBefore(BigInteger.valueOf(0L));
+        spacing.setAfter(BigInteger.valueOf(0L));
+        spacing.setLineRule(STLineSpacingRule.EXACT);
+        spacing.setLine(TEXT_LINE_SPACING);
+
+        XWPFNumbering numbering = awardDoc.createNumbering();
+        BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
+        BigInteger numID = numbering.addNum(abstractNumID);
+
+        for (String string : strList) {
+            paragraph = awardDoc.createParagraph();
+            paragraph.setFirstLineIndent(CN_FONT_SIZE_SAN * 2 * 20);
+            paragraph.setNumID(numID);
+            XWPFRun run = paragraph.createRun();
+            run.setFontFamily(FONT_FAMILY_FANGSONG);
+            run.setFontSize(CN_FONT_SIZE_SAN);
+            run.setText(string);
+        }
     }
 
     private void addTextParagraph(String str, int emptyLineAfter, boolean bold) {

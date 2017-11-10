@@ -17,6 +17,9 @@ public class ArbitrationApplication {
     private String title;
     private List proposerList;
     private List respondentList;
+    private String gist;
+    private String request;
+    private String factAndReason;
 
     public ArbitrationApplication(int id) {
         this.id = id;
@@ -59,6 +62,30 @@ public class ArbitrationApplication {
 
     public void setRespondentList(List respondentList) {
         this.respondentList = respondentList;
+    }
+
+    public String getGist() {
+        return gist;
+    }
+
+    public void setGist(String gist) {
+        this.gist = gist;
+    }
+
+    public String getRequest() {
+        return request;
+    }
+
+    public void setRequest(String request) {
+        this.request = request;
+    }
+
+    public String getFactAndReason() {
+        return factAndReason;
+    }
+
+    public void setFactAndReason(String factAndReason) {
+        this.factAndReason = factAndReason;
     }
 
 }

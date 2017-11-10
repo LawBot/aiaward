@@ -137,17 +137,17 @@ public class ApplicationDocReader implements InputFileReader {
         if (gistChunkStartIdx != 0) {
             int tmpStartIdx = gistChunkStartIdx;
             int tmpEndIdx = requestChunkStartIdx;
-            gistChunk = combineLines(lines, tmpStartIdx, tmpEndIdx);
+            gistChunk = combineLines(lines, tmpStartIdx+1, tmpEndIdx);
         }
         if (requestChunkStartIdx != 0) {
             int tmpStartIdx = requestChunkStartIdx;
             int tmpEndIdx = factAndReasonChunkStartIdx;
-            requestChunk = combineLines(lines, tmpStartIdx, tmpEndIdx);
+            requestChunk = combineLines(lines, tmpStartIdx+1, tmpEndIdx);
         }
         if (factAndReasonChunkStartIdx != 0) {
             int tmpStartIdx = factAndReasonChunkStartIdx;
             int tmpEndIdx = factAndReasonChunkEndIdx == 0 ? lines.length : factAndReasonChunkEndIdx;
-            factAndReasonChunk = combineLines(lines, tmpStartIdx, tmpEndIdx);
+            factAndReasonChunk = combineLines(lines, tmpStartIdx+1, tmpEndIdx);
         }
 
         logger.debug("标题:\n" + titleChunk);
@@ -162,7 +162,7 @@ public class ApplicationDocReader implements InputFileReader {
         logger.debug("事实与理由:\n" + factAndReasonChunk);
 
         String pChunk = proposerChunk.get(0);
-        pChunk = proposerPreprocess(pChunk);
+        pChunk = pAndrProcess(pChunk);
         String plines[] = pChunk.split("\\r?\\n");
         List<Pair> proposerPairList = new LinkedList<>();
         for (int pLineIndex = 0; pLineIndex < plines.length; ++pLineIndex) {
@@ -225,7 +225,7 @@ public class ApplicationDocReader implements InputFileReader {
         logger.debug("代理人：" + pro.getAgency());
 
         String rChunk = respondentChunk.get(0);
-        rChunk = proposerPreprocess(rChunk);
+        rChunk = pAndrProcess(rChunk);
         String rlines[] = rChunk.split("\\r?\\n");
         List<Pair> respondentPairList = new LinkedList<>();
         for (int rLineIndex = 0; rLineIndex < rlines.length; ++rLineIndex) {
@@ -295,6 +295,9 @@ public class ApplicationDocReader implements InputFileReader {
         rList.add(res);
         aa.setProposerList(pList);
         aa.setRespondentList(rList);
+        aa.setGist(gistChunk);
+        aa.setRequest(requestChunk);
+        aa.setFactAndReason(factAndReasonChunk);
         return aa;
     }
 
@@ -309,7 +312,7 @@ public class ApplicationDocReader implements InputFileReader {
         StringBuilder toReturn = new StringBuilder();
         for (int i = startIndex; i < endIndex; ++i) {
             if (!removeAllSpaces(lines[i]).isEmpty()) {
-                toReturn.append(lines[i] + "\n");
+                toReturn.append(lines[i]).append("\n");
             }
         }
         return toReturn.toString();
@@ -322,7 +325,7 @@ public class ApplicationDocReader implements InputFileReader {
         return str;
     }
 
-    private String proposerPreprocess(String proposerStr) {
+    private String pAndrProcess(String proposerStr) {
         proposerStr = proposerStr.replaceAll("，", "   ");
         proposerStr = proposerStr.replaceAll(",", "   ");
         proposerStr = proposerStr.replaceAll("。", "   ");
