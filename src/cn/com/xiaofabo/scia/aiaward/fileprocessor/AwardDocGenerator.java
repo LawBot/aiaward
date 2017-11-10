@@ -29,12 +29,15 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 
 /**
  *
@@ -345,9 +348,20 @@ public class AwardDocGenerator implements OutputGenerator {
         }
         return toReturn;
     }
-    
-    private void addTextParagraph(String str, int emptyLineAfter, boolean bold){
+
+    private void addTextParagraph(String str, int emptyLineAfter, boolean bold) {
         XWPFParagraph paragraph = awardDoc.createParagraph();
+
+        CTPPr ppr = paragraph.getCTP().getPPr();
+        if (ppr == null) {
+            ppr = paragraph.getCTP().addNewPPr();
+        }
+        CTSpacing spacing = ppr.isSetSpacing() ? ppr.getSpacing() : ppr.addNewSpacing();
+        spacing.setBefore(BigInteger.valueOf(0L));
+        spacing.setAfter(BigInteger.valueOf(0L));
+        spacing.setLineRule(STLineSpacingRule.EXACT);
+        spacing.setLine(BigInteger.valueOf(500L));
+
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setFirstLineIndent(CN_FONT_SIZE_SAN * 2 * 20);
         XWPFRun run = paragraph.createRun();
@@ -363,7 +377,7 @@ public class AwardDocGenerator implements OutputGenerator {
     private void addNormalTextParagraph(String str, int emptyLineAfter) {
         addTextParagraph(str, emptyLineAfter, false);
     }
-    
+
     private void addTitleTextParagraph(String str, int emptyLineAfter) {
         addTextParagraph(str, emptyLineAfter, true);
     }
