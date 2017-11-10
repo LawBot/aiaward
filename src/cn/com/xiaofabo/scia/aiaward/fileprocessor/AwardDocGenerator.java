@@ -140,28 +140,61 @@ public class AwardDocGenerator implements OutputGenerator {
         pageMar.setHeader(PAGE_MARGIN_HEADER);
         pageMar.setFooter(PAGE_MARGIN_FOOTER);
 
-        XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
-        if (headerFooterPolicy == null) {
-            headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
-        }
-        XWPFFooter footer = headerFooterPolicy.createFooter(XWPFHeaderFooterPolicy.DEFAULT);
+        // create first page header
         XWPFParagraph paragraph = awardDoc.createParagraph();
         XWPFRun run = paragraph.createRun();
+        XWPFHeader header = awardDoc.createHeader(HeaderFooterType.FIRST);
 
-        paragraph = footer.getParagraphArray(0);
-        if (paragraph == null) {
-            paragraph = footer.createParagraph();
-        }
+        paragraph = header.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+
+        run = paragraph.createRun();
+        run.setText("The first page header:");
+
+        // create default page header
+        header = awardDoc.createHeader(HeaderFooterType.DEFAULT);
+
+        paragraph = header.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+
+        run = paragraph.createRun();
+        run.setText("The default page header:");
+
+        // create footer
+        XWPFFooter footer = awardDoc.createFooter(HeaderFooterType.DEFAULT);
+
+        paragraph = footer.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
 
-//        run = paragraph.createRun();
-//        run.setText("Page ");
-//        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
-//        run = paragraph.createRun();
-//        run.setText(" of ");
-//        paragraph.getCTP().addNewFldSimple().setInstr("NUMPAGES \\* MERGEFORMAT");
         run = paragraph.createRun();
+        run.setText("Page ");
         paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
+        run = paragraph.createRun();
+        run.setText(" of ");
+        paragraph.getCTP().addNewFldSimple().setInstr("NUMPAGES \\* MERGEFORMAT");
+
+//        XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
+//        if (headerFooterPolicy == null) {
+//            headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
+//        }
+//        XWPFFooter footer = headerFooterPolicy.createFooter(XWPFHeaderFooterPolicy.DEFAULT);
+//        XWPFParagraph paragraph = awardDoc.createParagraph();
+//        XWPFRun run = paragraph.createRun();
+//
+//        paragraph = footer.getParagraphArray(0);
+//        if (paragraph == null) {
+//            paragraph = footer.createParagraph();
+//        }
+//        paragraph.setAlignment(ParagraphAlignment.CENTER);
+//
+////        run = paragraph.createRun();
+////        run.setText("Page ");
+////        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
+////        run = paragraph.createRun();
+////        run.setText(" of ");
+////        paragraph.getCTP().addNewFldSimple().setInstr("NUMPAGES \\* MERGEFORMAT");
+//        run = paragraph.createRun();
+//        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
         logger.trace("Page setup finished.");
     }
 
