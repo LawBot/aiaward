@@ -18,10 +18,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
+import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.BreakClear;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -29,6 +31,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
@@ -60,6 +63,8 @@ public class AwardDocGenerator implements OutputGenerator {
     private static final BigInteger PAGE_MARGIN_RIGHT = BigInteger.valueOf(1796L);
     private static final BigInteger PAGE_MARGIN_HEADER = BigInteger.valueOf(850L);
     private static final BigInteger PAGE_MARGIN_FOOTER = BigInteger.valueOf(2153L);
+
+    private static final BigInteger TEXT_LINE_SPACING = BigInteger.valueOf(500L);
 
     private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(960L);
 
@@ -134,6 +139,29 @@ public class AwardDocGenerator implements OutputGenerator {
         pageMar.setRight(PAGE_MARGIN_RIGHT);
         pageMar.setHeader(PAGE_MARGIN_HEADER);
         pageMar.setFooter(PAGE_MARGIN_FOOTER);
+
+        XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
+        if (headerFooterPolicy == null) {
+            headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
+        }
+        XWPFFooter footer = headerFooterPolicy.createFooter(XWPFHeaderFooterPolicy.DEFAULT);
+        XWPFParagraph paragraph = awardDoc.createParagraph();
+        XWPFRun run = paragraph.createRun();
+
+        paragraph = footer.getParagraphArray(0);
+        if (paragraph == null) {
+            paragraph = footer.createParagraph();
+        }
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+
+//        run = paragraph.createRun();
+//        run.setText("Page ");
+//        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
+//        run = paragraph.createRun();
+//        run.setText(" of ");
+//        paragraph.getCTP().addNewFldSimple().setInstr("NUMPAGES \\* MERGEFORMAT");
+        run = paragraph.createRun();
+        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
         logger.trace("Page setup finished.");
     }
 
@@ -154,10 +182,6 @@ public class AwardDocGenerator implements OutputGenerator {
         p2r1.setText("裁    决    书");
         p2r1.addBreak();
         p2r1.addBreak();
-
-        XWPFTableRow tableRow;
-        XWPFParagraph paragraph;
-        XWPFRun paragraphRun;
 
         XWPFTable proposerTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(proposerTable);
@@ -360,7 +384,7 @@ public class AwardDocGenerator implements OutputGenerator {
         spacing.setBefore(BigInteger.valueOf(0L));
         spacing.setAfter(BigInteger.valueOf(0L));
         spacing.setLineRule(STLineSpacingRule.EXACT);
-        spacing.setLine(BigInteger.valueOf(500L));
+        spacing.setLine(TEXT_LINE_SPACING);
 
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setFirstLineIndent(CN_FONT_SIZE_SAN * 2 * 20);
