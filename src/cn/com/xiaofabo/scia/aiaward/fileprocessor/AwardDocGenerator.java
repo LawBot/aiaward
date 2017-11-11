@@ -78,7 +78,7 @@ public class AwardDocGenerator implements OutputGenerator {
     private static final BigInteger PAGE_MARGIN_RIGHT = BigInteger.valueOf(1796L);
     private static final BigInteger PAGE_MARGIN_HEADER = BigInteger.valueOf(850L);
     private static final BigInteger PAGE_MARGIN_FOOTER = BigInteger.valueOf(2153L);
-    
+
     private static final BigInteger PAGE_NUMBER_START = BigInteger.valueOf(0L);
 
     private static final BigInteger TEXT_LINE_SPACING = BigInteger.valueOf(500L);
@@ -146,14 +146,7 @@ public class AwardDocGenerator implements OutputGenerator {
         if (!section.isSetPgSz()) {
             section.addNewPgSz();
         }
-        
-        
-        CTPageNumber pageNumber = section.getPgNumType();
-        if(pageNumber == null){
-            pageNumber = section.addNewPgNumType();
-        }
-        pageNumber.setStart(PAGE_NUMBER_START);
-        
+
         CTPageSz pageSize = section.getPgSz();
 
         pageSize.setW(PAGE_A4_WIDTH);
@@ -210,19 +203,36 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraph.setAlignment(ParagraphAlignment.CENTER);
 
         footer = awardDoc.createFooter(HeaderFooterType.DEFAULT);
-        
+
         paragraph = footer.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
 
         run = paragraph.createRun();
         paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
 
+        CTDocument1 document = awardDoc.getDocument();
+
+        CTBody body = document.getBody();
+
+        if (!body.isSetSectPr()) {
+            body.addNewSectPr();
+        }
+        CTSectPr section = body.getSectPr();
+
+        if (!section.isSetPgSz()) {
+            section.addNewPgSz();
+        }
+        CTPageNumber pageNumber = section.getPgNumType();
+        if (pageNumber == null) {
+            pageNumber = section.addNewPgNumType();
+        }
+        pageNumber.setStart(PAGE_NUMBER_START);
+
 ////        run.setText("Page ");
 ////        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
 ////        run = paragraph.createRun();
 ////        run.setText(" of ");
 ////        paragraph.getCTP().addNewFldSimple().setInstr("NUMPAGES \\* MERGEFORMAT");
-
         XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
         if (headerFooterPolicy == null) {
             headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
