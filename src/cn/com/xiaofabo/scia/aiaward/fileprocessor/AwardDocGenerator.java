@@ -23,6 +23,7 @@ import org.apache.poi.xwpf.usermodel.BreakClear;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
+import org.apache.poi.xwpf.usermodel.XWPFDefaultRunStyle;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
@@ -41,14 +42,20 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHdrFtr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 
 /**
  *
@@ -71,6 +78,8 @@ public class AwardDocGenerator implements OutputGenerator {
     private static final BigInteger PAGE_MARGIN_RIGHT = BigInteger.valueOf(1796L);
     private static final BigInteger PAGE_MARGIN_HEADER = BigInteger.valueOf(850L);
     private static final BigInteger PAGE_MARGIN_FOOTER = BigInteger.valueOf(2153L);
+    
+    private static final BigInteger PAGE_NUMBER_START = BigInteger.valueOf(0L);
 
     private static final BigInteger TEXT_LINE_SPACING = BigInteger.valueOf(500L);
 
@@ -137,10 +146,19 @@ public class AwardDocGenerator implements OutputGenerator {
         if (!section.isSetPgSz()) {
             section.addNewPgSz();
         }
+        
+        
+        CTPageNumber pageNumber = section.getPgNumType();
+        if(pageNumber == null){
+            pageNumber = section.addNewPgNumType();
+        }
+        pageNumber.setStart(PAGE_NUMBER_START);
+        
         CTPageSz pageSize = section.getPgSz();
 
         pageSize.setW(PAGE_A4_WIDTH);
         pageSize.setH(PAGE_A4_HEIGHT);
+        pageSize.setOrient(STPageOrientation.PORTRAIT);
 
         CTSectPr sectPr = body.addNewSectPr();
         CTPageMar pageMar = sectPr.addNewPgMar();
@@ -155,65 +173,60 @@ public class AwardDocGenerator implements OutputGenerator {
         CTFonts fonts = CTFonts.Factory.newInstance();
         fonts.setEastAsia(FONT_FAMILY_SONG);
         fonts.setAscii(FONT_FAMILY_TIME_NEW_ROMAN);
-
         styles.setDefaultFonts(fonts);
 
-        // create first page header
+        createFooter();
+//
+        logger.trace("Page setup finished.");
+    }
+
+    private void createHeader() {
+        XWPFHeader header = awardDoc.createHeader(HeaderFooterType.FIRST);
         XWPFParagraph paragraph = awardDoc.createParagraph();
         XWPFRun run = paragraph.createRun();
-//        XWPFHeader header = awardDoc.createHeader(HeaderFooterType.FIRST);
-//
-//        paragraph = header.createParagraph();
-//        paragraph.setAlignment(ParagraphAlignment.LEFT);
-//
-//        run = paragraph.createRun();
-//        run.setText("The first page header:");
-//
-//        // create default page header
-//        header = awardDoc.createHeader(HeaderFooterType.DEFAULT);
-//
-//        paragraph = header.createParagraph();
-//        paragraph.setAlignment(ParagraphAlignment.LEFT);
-//
-//        run = paragraph.createRun();
-//        run.setText("The default page header:");
 
-        // create footer
+        paragraph = header.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+
+        run = paragraph.createRun();
+        run.setText("The first page header:");
+
+        // create default page header
+        header = awardDoc.createHeader(HeaderFooterType.DEFAULT);
+
+        paragraph = header.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+
+        run = paragraph.createRun();
+        run.setText("The default page header:");
+    }
+
+    private void createFooter() {
+        XWPFParagraph paragraph = awardDoc.createParagraph();
+        XWPFRun run = paragraph.createRun();
         XWPFFooter footer;
         footer = awardDoc.createFooter(HeaderFooterType.FIRST);
         paragraph = footer.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
 
         footer = awardDoc.createFooter(HeaderFooterType.DEFAULT);
-
+        
         paragraph = footer.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
 
         run = paragraph.createRun();
         paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
-//        XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
-//        if (headerFooterPolicy == null) {
-//            headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
-//        }
-//        XWPFFooter footer = headerFooterPolicy.createFooter(XWPFHeaderFooterPolicy.DEFAULT);
-//        XWPFParagraph paragraph = awardDoc.createParagraph();
-//        XWPFRun run = paragraph.createRun();
-//
-//        paragraph = footer.getParagraphArray(0);
-//        if (paragraph == null) {
-//            paragraph = footer.createParagraph();
-//        }
-//        paragraph.setAlignment(ParagraphAlignment.CENTER);
-//
-////        run = paragraph.createRun();
+
 ////        run.setText("Page ");
 ////        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
 ////        run = paragraph.createRun();
 ////        run.setText(" of ");
 ////        paragraph.getCTP().addNewFldSimple().setInstr("NUMPAGES \\* MERGEFORMAT");
-//        run = paragraph.createRun();
-//        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
-        logger.trace("Page setup finished.");
+
+        XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
+        if (headerFooterPolicy == null) {
+            headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
+        }
     }
 
     private void generateFirstPage(Proposer pro, Respondent res) {
@@ -442,6 +455,7 @@ public class AwardDocGenerator implements OutputGenerator {
         if (ppr == null) {
             ppr = paragraph.getCTP().addNewPPr();
         }
+
         CTSpacing spacing = ppr.isSetSpacing() ? ppr.getSpacing() : ppr.addNewSpacing();
         spacing.setBefore(BigInteger.valueOf(0L));
         spacing.setAfter(BigInteger.valueOf(0L));
