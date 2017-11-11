@@ -29,11 +29,14 @@ import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CTFontSizeImpl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
@@ -78,6 +81,7 @@ public class AwardDocGenerator implements OutputGenerator {
     private static final int CN_FONT_SIZE_XIAO_ER = 18;
     private static final int CN_FONT_SIZE_SAN = 16;
 
+    private static final String FONT_FAMILY_TIME_NEW_ROMAN = "Times New Roman";
     private static final String FONT_FAMILY_SONG = "宋体";
     private static final String FONT_FAMILY_FANGSONG = "仿宋_GB2312";
     private static final String FONT_FAMILY_HEITI = "黑体";
@@ -122,6 +126,7 @@ public class AwardDocGenerator implements OutputGenerator {
     // Page setup according to requirement doc
     private void pageSetup() {
         CTDocument1 document = awardDoc.getDocument();
+
         CTBody body = document.getBody();
 
         if (!body.isSetSectPr()) {
@@ -145,6 +150,13 @@ public class AwardDocGenerator implements OutputGenerator {
         pageMar.setRight(PAGE_MARGIN_RIGHT);
         pageMar.setHeader(PAGE_MARGIN_HEADER);
         pageMar.setFooter(PAGE_MARGIN_FOOTER);
+
+        XWPFStyles styles = awardDoc.createStyles();
+        CTFonts fonts = CTFonts.Factory.newInstance();
+        fonts.setEastAsia(FONT_FAMILY_SONG);
+        fonts.setAscii(FONT_FAMILY_TIME_NEW_ROMAN);
+
+        styles.setDefaultFonts(fonts);
 
         // create first page header
         XWPFParagraph paragraph = awardDoc.createParagraph();
@@ -446,6 +458,9 @@ public class AwardDocGenerator implements OutputGenerator {
             paragraph.setNumID(numID);
             XWPFRun run = paragraph.createRun();
             run.setFontFamily(FONT_FAMILY_FANGSONG);
+            run.getCTR().getRPr().getRFonts().setAscii(FONT_FAMILY_TIME_NEW_ROMAN);
+            run.getCTR().getRPr().getRFonts().setHAnsi(FONT_FAMILY_TIME_NEW_ROMAN);
+            run.getCTR().getRPr().getRFonts().setEastAsia(FONT_FAMILY_FANGSONG);
             run.setFontSize(CN_FONT_SIZE_SAN);
             run.setText(string);
         }
@@ -468,6 +483,9 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraph.setFirstLineIndent(CN_FONT_SIZE_SAN * 2 * 20);
         XWPFRun run = paragraph.createRun();
         run.setFontFamily(FONT_FAMILY_FANGSONG);
+        run.getCTR().getRPr().getRFonts().setAscii(FONT_FAMILY_TIME_NEW_ROMAN);
+        run.getCTR().getRPr().getRFonts().setHAnsi(FONT_FAMILY_TIME_NEW_ROMAN);
+        run.getCTR().getRPr().getRFonts().setEastAsia(FONT_FAMILY_FANGSONG);
         run.setFontSize(CN_FONT_SIZE_SAN);
         run.setBold(bold);
         run.setText(str);
