@@ -15,6 +15,7 @@ import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.text.html.CSS;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
@@ -95,6 +96,8 @@ public class AwardDocGenerator implements OutputGenerator {
     private static final int CN_FONT_SIZE_ER = 22;
     private static final int CN_FONT_SIZE_XIAO_ER = 18;
     private static final int CN_FONT_SIZE_SAN = 16;
+    
+    private static final int FONT_SIZE_FOOTER = 10;
 
     private static final String FONT_FAMILY_TIME_NEW_ROMAN = "Times New Roman";
     private static final String FONT_FAMILY_SONG = "宋体";
@@ -209,6 +212,8 @@ public class AwardDocGenerator implements OutputGenerator {
         
         styles.setStyles(ctStyles);
         
+        createFooter();
+        
         logger.trace("Page setup finished.");
     }
 
@@ -267,11 +272,6 @@ public class AwardDocGenerator implements OutputGenerator {
         }
         pageNumber.setStart(PAGE_NUMBER_START);
 
-////        run.setText("Page ");
-////        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
-////        run = paragraph.createRun();
-////        run.setText(" of ");
-////        paragraph.getCTP().addNewFldSimple().setInstr("NUMPAGES \\* MERGEFORMAT");
         XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
         if (headerFooterPolicy == null) {
             headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
@@ -367,7 +367,7 @@ public class AwardDocGenerator implements OutputGenerator {
         String lines[] = aApplication.getRequest().split("\\r?\\n");
         addNumbering(lines);
         addNormalTextParagraph("申请人诉称：", 0);
-        addNormalTextParagraph(aApplication.getFactAndReason(), 0);
+        addNormalTextParagraph(aApplication.getFactAndReason().trim(), 1);
 
         addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
         addNormalTextParagraph("{被申请人提出答辩意见}", 0);
@@ -518,7 +518,11 @@ public class AwardDocGenerator implements OutputGenerator {
         BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
         BigInteger numID = numbering.addNum(abstractNumID);
 
-        for (String string : strList) {
+        for (String str : strList) {
+            if(str.matches("^[0-9].*")){
+                str = str.substring(2).trim();
+            }
+            str = str.trim();
             paragraph = awardDoc.createParagraph();
             paragraph.setFirstLineIndent(CN_FONT_SIZE_SAN * 2 * 20);
             paragraph.setNumID(numID);
@@ -528,7 +532,7 @@ public class AwardDocGenerator implements OutputGenerator {
             run.getCTR().getRPr().getRFonts().setHAnsi(FONT_FAMILY_TIME_NEW_ROMAN);
             run.getCTR().getRPr().getRFonts().setEastAsia(FONT_FAMILY_FANGSONG);
             run.setFontSize(CN_FONT_SIZE_SAN);
-            run.setText(string);
+            run.setText(str);
         }
     }
 
