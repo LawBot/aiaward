@@ -36,8 +36,10 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CTFontSizeImpl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
@@ -46,8 +48,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
@@ -84,6 +88,8 @@ public class AwardDocGenerator implements OutputGenerator {
     private static final BigInteger TEXT_LINE_SPACING = BigInteger.valueOf(500L);
 
     private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(960L);
+    
+    private static final BigInteger DEFAULT_FONT_SIZE_HALF_16 = BigInteger.valueOf(32L);
 
     private static final int CN_FONT_SIZE_XIAO_YI = 24;
     private static final int CN_FONT_SIZE_ER = 22;
@@ -111,11 +117,10 @@ public class AwardDocGenerator implements OutputGenerator {
         /// TODO: only 1 proposer and 1 respondent considered
         Proposer pro = (Proposer) aApplication.getProposerList().get(0);
         Respondent res = (Respondent) aApplication.getRespondentList().get(0);
-        String request = aApplication.getRequest();
         try {
             pageSetup();
             generateFirstPage(pro, res);
-            generateContentPages(request);
+            generateContentPages(aApplication);
             FileOutputStream fos = new FileOutputStream(outAwardDocUrl);
             awardDoc.write(fos);
             fos.close();
@@ -168,8 +173,42 @@ public class AwardDocGenerator implements OutputGenerator {
         fonts.setAscii(FONT_FAMILY_TIME_NEW_ROMAN);
         styles.setDefaultFonts(fonts);
 
-        createFooter();
-//
+        CTStyles ctStyles = CTStyles.Factory.newInstance();
+        
+        if(!ctStyles.isSetDocDefaults()){
+            ctStyles.addNewDocDefaults();
+        }
+        
+        CTDocDefaults ctDocDefaults = ctStyles.getDocDefaults();
+        
+        if(!ctDocDefaults.isSetRPrDefault()){
+            ctDocDefaults.addNewRPrDefault();
+        }
+        
+        CTRPrDefault ctRprDefault = ctDocDefaults.getRPrDefault();
+        
+        if(!ctRprDefault.isSetRPr()){
+            ctRprDefault.addNewRPr();
+        }
+        
+        CTRPr ctRpr = ctRprDefault.getRPr();
+        
+        if(!ctRpr.isSetSz()){
+            ctRpr.addNewSz();
+        }
+        
+        if(!ctRpr.isSetSzCs()){
+            ctRpr.addNewSzCs();
+        }
+        
+        CTHpsMeasure sz = ctRpr.getSz();
+        sz.setVal(DEFAULT_FONT_SIZE_HALF_16);
+        
+        CTHpsMeasure szCs = ctRpr.getSzCs();
+        szCs.setVal(DEFAULT_FONT_SIZE_HALF_16);
+        
+        styles.setStyles(ctStyles);
+        
         logger.trace("Page setup finished.");
     }
 
@@ -300,7 +339,7 @@ public class AwardDocGenerator implements OutputGenerator {
 
     }
 
-    private void generateContentPages(String request) {
+    private void generateContentPages(ArbitrationApplication aApplication) {
         XWPFParagraph p1 = awardDoc.createParagraph();
         p1.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun p1r1 = p1.createRun();
@@ -325,8 +364,11 @@ public class AwardDocGenerator implements OutputGenerator {
         addNormalTextParagraph("{案情描述部分}", 0);
         addTitleTextParagraph("（一）申请人的主张和请求", 0);
         addNormalTextParagraph("{申请人的主张和请求}", 0);
-        String lines[] = request.split("\\r?\\n");
+        String lines[] = aApplication.getRequest().split("\\r?\\n");
         addNumbering(lines);
+        addNormalTextParagraph("申请人诉称：", 0);
+        addNormalTextParagraph(aApplication.getFactAndReason(), 0);
+
         addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
         addNormalTextParagraph("{被申请人提出答辩意见}", 0);
 

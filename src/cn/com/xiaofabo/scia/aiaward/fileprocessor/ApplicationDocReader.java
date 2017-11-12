@@ -137,6 +137,7 @@ public class ApplicationDocReader implements InputFileReader {
         if (gistChunkStartIdx != 0) {
             int tmpStartIdx = gistChunkStartIdx;
             int tmpEndIdx = requestChunkStartIdx;
+            /// Start index+1 to remove title
             gistChunk = combineLines(lines, tmpStartIdx+1, tmpEndIdx);
         }
         if (requestChunkStartIdx != 0) {
