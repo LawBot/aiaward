@@ -35,6 +35,7 @@ public class ApplicationDocReader implements InputFileReader {
     }
 
     public ArbitrationApplication read(String inputPath) throws IOException {
+        logger.info("Start reading in file: " + inputPath);
         // Newer version word documents
         try {
             XWPFDocument docx = new XWPFDocument(new FileInputStream(inputPath));
@@ -103,16 +104,16 @@ public class ApplicationDocReader implements InputFileReader {
             }
         }
 
-        logger.debug("TitleChunkStartIdx: " + titleChunkStartIdx);
+        logger.trace("TitleChunkStartIdx: " + titleChunkStartIdx);
         proposerChunkStartIdx.forEach((i) -> {
-            logger.debug("proposerChunkStartIdx: " + i);
+            logger.trace("proposerChunkStartIdx: " + i);
         });
         respondentChunkStartIdx.forEach((i) -> {
-            logger.debug("respondentChunkStartIdx: " + i);
+            logger.trace("respondentChunkStartIdx: " + i);
         });
-        logger.debug("gistChunkStartIdx: " + gistChunkStartIdx);
-        logger.debug("requestChunkStartIdx: " + requestChunkStartIdx);
-        logger.debug("factAndReasonChunkStartIdx: " + factAndReasonChunkStartIdx);
+        logger.trace("gistChunkStartIdx: " + gistChunkStartIdx);
+        logger.trace("requestChunkStartIdx: " + requestChunkStartIdx);
+        logger.trace("factAndReasonChunkStartIdx: " + factAndReasonChunkStartIdx);
 
         String titleChunk = "";
         List<String> proposerChunk = new LinkedList<>();

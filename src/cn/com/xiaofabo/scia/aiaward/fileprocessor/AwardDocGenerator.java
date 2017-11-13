@@ -13,6 +13,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
@@ -62,10 +66,9 @@ public class AwardDocGenerator implements OutputGenerator {
     private final String outAwardDocUrl;
     private final XWPFDocument awardDoc;
 
-    //Constants
+    /// Constants
     private static final BigInteger PAGE_A4_WIDTH = BigInteger.valueOf(11900L);
     private static final BigInteger PAGE_A4_HEIGHT = BigInteger.valueOf(16840L);
-    ;
     
     private static final BigInteger PAGE_MARGIN_TOP = BigInteger.valueOf(2153L);
     private static final BigInteger PAGE_MARGIN_BOTTOM = BigInteger.valueOf(2493L);
@@ -79,14 +82,14 @@ public class AwardDocGenerator implements OutputGenerator {
     private static final BigInteger TEXT_LINE_SPACING = BigInteger.valueOf(500L);
 
     private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(960L);
-    
+
     private static final BigInteger DEFAULT_FONT_SIZE_HALF_16 = BigInteger.valueOf(32L);
 
     private static final int CN_FONT_SIZE_XIAO_YI = 24;
     private static final int CN_FONT_SIZE_ER = 22;
     private static final int CN_FONT_SIZE_XIAO_ER = 18;
     private static final int CN_FONT_SIZE_SAN = 16;
-    
+
     private static final int FONT_SIZE_FOOTER = 10;
 
     private static final String FONT_FAMILY_TIME_NEW_ROMAN = "Times New Roman";
@@ -107,13 +110,13 @@ public class AwardDocGenerator implements OutputGenerator {
     }
 
     public XWPFDocument generateAwardDoc(ArbitrationApplication aApplication) {
-        /// TODO: only 1 proposer and 1 respondent considered
-        Proposer pro = (Proposer) aApplication.getProposerList().get(0);
-        Respondent res = (Respondent) aApplication.getRespondentList().get(0);
+        logger.info("Start generating award to file: " + outAwardDocUrl);
+
+        pageSetup();
+        generateFirstPage(aApplication);
+        generateContentPages(aApplication);
+//        generateSignaturePage();
         try {
-            pageSetup();
-            generateFirstPage(pro, res);
-            generateContentPages(aApplication);
             FileOutputStream fos = new FileOutputStream(outAwardDocUrl);
             awardDoc.write(fos);
             fos.close();
@@ -127,6 +130,7 @@ public class AwardDocGenerator implements OutputGenerator {
             logger.fatal("PROGRAM ABORTED!!!");
         }
 
+        logger.info("Award successfully generated!");
         return awardDoc;
     }
 
@@ -167,43 +171,43 @@ public class AwardDocGenerator implements OutputGenerator {
         styles.setDefaultFonts(fonts);
 
         CTStyles ctStyles = CTStyles.Factory.newInstance();
-        
-        if(!ctStyles.isSetDocDefaults()){
+
+        if (!ctStyles.isSetDocDefaults()) {
             ctStyles.addNewDocDefaults();
         }
-        
+
         CTDocDefaults ctDocDefaults = ctStyles.getDocDefaults();
-        
-        if(!ctDocDefaults.isSetRPrDefault()){
+
+        if (!ctDocDefaults.isSetRPrDefault()) {
             ctDocDefaults.addNewRPrDefault();
         }
-        
+
         CTRPrDefault ctRprDefault = ctDocDefaults.getRPrDefault();
-        
-        if(!ctRprDefault.isSetRPr()){
+
+        if (!ctRprDefault.isSetRPr()) {
             ctRprDefault.addNewRPr();
         }
-        
+
         CTRPr ctRpr = ctRprDefault.getRPr();
-        
-        if(!ctRpr.isSetSz()){
+
+        if (!ctRpr.isSetSz()) {
             ctRpr.addNewSz();
         }
-        
-        if(!ctRpr.isSetSzCs()){
+
+        if (!ctRpr.isSetSzCs()) {
             ctRpr.addNewSzCs();
         }
-        
+
         CTHpsMeasure sz = ctRpr.getSz();
         sz.setVal(DEFAULT_FONT_SIZE_HALF_16);
-        
+
         CTHpsMeasure szCs = ctRpr.getSzCs();
         szCs.setVal(DEFAULT_FONT_SIZE_HALF_16);
-        
+
         styles.setStyles(ctStyles);
-        
+
         createFooter();
-        
+
         logger.trace("Page setup finished.");
     }
 
@@ -267,7 +271,11 @@ public class AwardDocGenerator implements OutputGenerator {
         }
     }
 
-    private void generateFirstPage(Proposer pro, Respondent res) {
+    private void generateFirstPage(ArbitrationApplication aApplication) {
+        /// TODO: only 1 proposer and 1 respondent considered
+        Proposer pro = (Proposer) aApplication.getProposerList().get(0);
+        Respondent res = (Respondent) aApplication.getRespondentList().get(0);
+
         XWPFParagraph p1 = awardDoc.createParagraph();
         p1.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun p1r1 = p1.createRun();
@@ -352,7 +360,7 @@ public class AwardDocGenerator implements OutputGenerator {
         addSubTitle("一、案    情");
         addNormalTextParagraph("{案情描述部分}", 0);
         addTitleTextParagraph("（一）申请人的主张和请求", 0);
-        addNormalTextParagraph("{申请人的主张和请求}", 0);
+//        addNormalTextParagraph("{申请人的主张和请求}", 0);
         String lines[] = aApplication.getRequest().split("\\r?\\n");
         addNumbering(lines);
         addNormalTextParagraph("申请人诉称：", 0);
@@ -373,7 +381,9 @@ public class AwardDocGenerator implements OutputGenerator {
         addNormalTextParagraph("（紧接下一页）", 0);
 
         breakToNextPage();
+    }
 
+    private void generateSignaturePage() {
         addNormalTextParagraph("（此页无正文）", 4);
 
         addSignatureText("首席仲裁员：");
@@ -508,10 +518,11 @@ public class AwardDocGenerator implements OutputGenerator {
         BigInteger numID = numbering.addNum(abstractNumID);
 
         for (String str : strList) {
-            if(str.matches("^[0-9].*")){
+            if (str.matches("^[0-9].*")) {
                 str = str.substring(2).trim();
             }
             str = str.trim();
+            str = findAndCorrectMoneyFormats(str);
             paragraph = awardDoc.createParagraph();
             paragraph.setFirstLineIndent(CN_FONT_SIZE_SAN * 2 * 20);
             paragraph.setNumID(numID);
@@ -554,7 +565,8 @@ public class AwardDocGenerator implements OutputGenerator {
     }
 
     private void addNormalTextParagraph(String str, int emptyLineAfter) {
-        addTextParagraph(str, emptyLineAfter, false);
+        addTextParagraph(findAndCorrectMoneyFormats(str), emptyLineAfter, false);
+//        findAndCorrectMoneyFormats(str);
     }
 
     private void addTitleTextParagraph(String str, int emptyLineAfter) {
@@ -633,5 +645,102 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
         paragraphRun.setFontSize(CN_FONT_SIZE_SAN);
         paragraphRun.setText(value);
+    }
+
+    private String findAndCorrectMoneyFormats(String str) {
+        String toReturn = "";
+        Pattern pattern = Pattern.compile(
+                "(人民币)?[0-9.,，]+(万)?(亿)?元"
+                + "|" + "[0-9.,，]+(万)?(亿)?美元"
+                + "|" + "[0-9.,，]+(万)?(亿)?美金"
+                + "|" + "[0-9.,，]+(万)?(亿)?欧元");
+        Matcher matcher = pattern.matcher(str);
+
+        List<MoneyString> moneyStrList = new LinkedList<>();
+        while (matcher.find()) {
+            String match = matcher.group();
+            int start = matcher.start();
+            int end = matcher.end();
+            while (match.startsWith("，")) {
+                match = match.substring(1);
+                ++start;
+            }
+            moneyStrList.add(new MoneyString(start, end, match));
+//            System.out.println(str.substring(start, end));
+        }
+
+        for (int i = moneyStrList.size() - 1; i >= 0; --i) {
+            int start = moneyStrList.get(i).getStart();
+            int end = moneyStrList.get(i).getEnd();
+            String moneyStr = moneyStrList.get(i).getMoneyString();
+            StringBuilder tmpStrBuilder = new StringBuilder();
+            tmpStrBuilder.append(moneyStr);
+            tmpStrBuilder.append("->");
+            /// Extract only number part and format it
+            Pattern p = Pattern.compile("[0-9.,，]+");
+            Matcher m = p.matcher(moneyStr);
+            /// Should only be one and only one match!
+            if (m.find()) {
+                String num = m.group();
+                int s = m.start();
+                int e = m.end();
+                moneyStr = replaceStr(moneyStr, s, e, correctNumberFormat(num));
+            }
+            if (moneyStr.matches("[0-9.,，]+(万)?元")) {
+                moneyStr = "人民币" + moneyStr;
+            }
+            str = replaceStr(str, start, end, moneyStr);
+            tmpStrBuilder.append(moneyStr);
+            logger.info(tmpStrBuilder.toString());
+        }
+
+        return str;
+    }
+
+    private String replaceStr(String baseStr, int startIdx, int endIdx, String str) {
+        String firstPart = baseStr.substring(0, startIdx);
+        String secondPart = baseStr.substring(endIdx);
+        return firstPart + str + secondPart;
+    }
+
+    private String correctNumberFormat(String s) {
+        s = removeAllCommas(s);
+        int backIdx = s.contains(".") ? s.indexOf(".") - 1 : s.length() - 1;
+        backIdx -= 3;
+        while (backIdx >= 0) {
+            s = replaceStr(s, backIdx + 1, backIdx + 1, ",");
+            backIdx -= 3;
+        }
+        return s;
+    }
+
+    private String removeAllCommas(String str) {
+        return str.replaceAll("[,，]", "");
+    }
+
+    private class MoneyString {
+
+        private final int start;
+        private final int end;
+        private final String moneyString;
+
+        public MoneyString(int start, int end, String moneyString) {
+            this.start = start;
+            this.end = end;
+            this.moneyString = moneyString;
+        }
+
+        public int getStart() {
+            return start;
+        }
+
+        public int getEnd() {
+            return end;
+        }
+
+        public String getMoneyString() {
+            return moneyString;
+        }
+
     }
 }
