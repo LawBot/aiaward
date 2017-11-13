@@ -13,18 +13,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-import javax.swing.text.html.CSS;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
-import org.apache.poi.xwpf.usermodel.BreakClear;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
-import org.apache.poi.xwpf.usermodel.XWPFDefaultRunStyle;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
@@ -34,7 +29,6 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CTFontSizeImpl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
@@ -42,12 +36,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -56,8 +48,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHdrFtr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
@@ -69,8 +59,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 public class AwardDocGenerator implements OutputGenerator {
 
     public static final Logger logger = Logger.getLogger(AwardDocGenerator.class.getName());
-    private String outAwardDocUrl;
-    private XWPFDocument awardDoc;
+    private final String outAwardDocUrl;
+    private final XWPFDocument awardDoc;
 
     //Constants
     private static final BigInteger PAGE_A4_WIDTH = BigInteger.valueOf(11900L);
@@ -225,7 +215,6 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraph = header.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
 
-        run = paragraph.createRun();
         run.setText("The first page header:");
 
         // create default page header
