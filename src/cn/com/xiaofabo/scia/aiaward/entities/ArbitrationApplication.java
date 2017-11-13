@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author gchen
+ * @author 陈光曦
  */
 public class ArbitrationApplication {
 

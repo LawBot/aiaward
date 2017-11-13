@@ -7,7 +7,7 @@ package cn.com.xiaofabo.scia.aiaward.entities;
 
 /**
  *
- * @author gchen
+ * @author 陈光曦
  */
 public class Proposer {
 

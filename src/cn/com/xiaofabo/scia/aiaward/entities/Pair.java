@@ -7,7 +7,7 @@ package cn.com.xiaofabo.scia.aiaward.entities;
 
 /**
  *
- * @author cgx82
+ * @author 陈光曦
  */
 public class Pair {
 

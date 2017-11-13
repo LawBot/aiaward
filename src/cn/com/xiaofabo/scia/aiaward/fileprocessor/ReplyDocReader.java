@@ -7,7 +7,7 @@ package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 
 /**
  *
- * @author cgx82
+ * @author 陈光曦
  */
 public class ReplyDocReader {
     

@@ -17,7 +17,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 /**
  *
- * @author cgx82
+ * @author 陈光曦
  */
 public class AIAwardGenerator {
 

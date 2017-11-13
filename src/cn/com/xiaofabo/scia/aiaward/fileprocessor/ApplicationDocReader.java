@@ -22,7 +22,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 /**
  *
- * @author cgx82
+ * @author 陈光曦
  */
 public class ApplicationDocReader implements InputFileReader {
 

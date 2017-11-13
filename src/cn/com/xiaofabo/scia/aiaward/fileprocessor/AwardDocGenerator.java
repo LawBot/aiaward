@@ -58,7 +58,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 
 /**
  *
- * @author cgx82
+ * @author 陈光曦
  */
 public class AwardDocGenerator implements OutputGenerator {
 
