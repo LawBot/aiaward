@@ -77,15 +77,15 @@ public class ApplicationDocReader implements InputFileReader {
                 respondentChunkStartIdx.add(lineIndex);
             }
             if (compressedLine.startsWith("仲裁依据：")
-                    ||compressedLine.startsWith("仲裁依据")
-                    ||compressedLine.startsWith("仲裁条款：")
-                    ||compressedLine.startsWith("仲裁条款")) {
+                    || compressedLine.startsWith("仲裁依据")
+                    || compressedLine.startsWith("仲裁条款：")
+                    || compressedLine.startsWith("仲裁条款")) {
                 gistChunkStartIdx = lineIndex;
             }
             if (compressedLine.startsWith("仲裁请求：")
-                    ||compressedLine.startsWith("仲裁请求")
-                    ||compressedLine.startsWith("申请请求：")
-                    ||compressedLine.startsWith("申请请求")) {
+                    || compressedLine.startsWith("仲裁请求")
+                    || compressedLine.startsWith("申请请求：")
+                    || compressedLine.startsWith("申请请求")) {
                 requestChunkStartIdx = lineIndex;
             }
             if (compressedLine.startsWith("事实与理由：")
@@ -139,17 +139,17 @@ public class ApplicationDocReader implements InputFileReader {
             int tmpStartIdx = gistChunkStartIdx;
             int tmpEndIdx = requestChunkStartIdx;
             /// Start index+1 to remove title
-            gistChunk = combineLines(lines, tmpStartIdx+1, tmpEndIdx);
+            gistChunk = combineLines(lines, tmpStartIdx + 1, tmpEndIdx);
         }
         if (requestChunkStartIdx != 0) {
             int tmpStartIdx = requestChunkStartIdx;
             int tmpEndIdx = factAndReasonChunkStartIdx;
-            requestChunk = combineLines(lines, tmpStartIdx+1, tmpEndIdx);
+            requestChunk = combineLines(lines, tmpStartIdx + 1, tmpEndIdx);
         }
         if (factAndReasonChunkStartIdx != 0) {
             int tmpStartIdx = factAndReasonChunkStartIdx;
             int tmpEndIdx = factAndReasonChunkEndIdx == 0 ? lines.length : factAndReasonChunkEndIdx;
-            factAndReasonChunk = combineLines(lines, tmpStartIdx+1, tmpEndIdx);
+            factAndReasonChunk = combineLines(lines, tmpStartIdx + 1, tmpEndIdx);
         }
 
         logger.debug("标题:\n" + titleChunk);

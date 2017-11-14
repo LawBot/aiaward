@@ -69,7 +69,7 @@ public class AwardDocGenerator implements OutputGenerator {
     /// Constants
     private static final BigInteger PAGE_A4_WIDTH = BigInteger.valueOf(11900L);
     private static final BigInteger PAGE_A4_HEIGHT = BigInteger.valueOf(16840L);
-    
+
     private static final BigInteger PAGE_MARGIN_TOP = BigInteger.valueOf(2153L);
     private static final BigInteger PAGE_MARGIN_BOTTOM = BigInteger.valueOf(2493L);
     private static final BigInteger PAGE_MARGIN_LEFT = BigInteger.valueOf(1796L);
