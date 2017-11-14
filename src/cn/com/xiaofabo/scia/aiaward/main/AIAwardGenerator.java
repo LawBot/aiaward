@@ -6,9 +6,10 @@
 package cn.com.xiaofabo.scia.aiaward.main;
 
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
-import cn.com.xiaofabo.scia.aiaward.entities.Pair;
+import cn.com.xiaofabo.scia.aiaward.entities.DocProcess;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.ApplicationDocReader;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.AwardDocGenerator;
+import cn.com.xiaofabo.scia.aiaward.fileprocessor.RoutineDocReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,14 +31,24 @@ public class AIAwardGenerator {
         PropertyConfigurator.configure("log/config.txt");
         logger.info("AI Award Generator program started...");
 
-        String inputPath1 = "test\\SHEN DT20170003\\仲裁资料\\申请人\\12281_AI-仲裁申请书.docx";
-        String inputPath2 = "test\\SHEN DX20150363\\仲裁资料\\申请人\\12194_AI-仲裁申请书.doc";
-        String inputPath3 = "test\\SHEN DX20160521\\仲裁资料\\申请人\\12382_AI-仲裁申请书.docx";
-        String inputPath4 = "test\\SHEN DX20170177\\仲裁资料\\申请人\\12200_AI-仲裁申请书.doc";
-        String inputPath5 = "test\\SHEN X20170211\\仲裁资料\\申请人\\12511_AI-仲裁申请书.doc";
-        String inputPath6 = "test\\SHEN DF20170368-未生成\\SHEN DF20170368\\仲裁资料\\申请人\\13606_AI-仲裁申请书.docx";
-        String inputPath7 = "test\\SHEN DP2014088-未生成\\SHEN DP2014088\\仲裁资料\\申请人\\13282_AI-仲裁申请书.doc";
-        String inputPath8 = "test\\testinput\\test1.docx";
+        String appIn1 = "test\\SHEN DT20170003\\仲裁资料\\申请人\\12281_AI-仲裁申请书.docx";
+        String appIn2 = "test\\SHEN DX20150363\\仲裁资料\\申请人\\12194_AI-仲裁申请书.doc";
+        String appIn3 = "test\\SHEN DX20160521\\仲裁资料\\申请人\\12382_AI-仲裁申请书.docx";
+        String appIn4 = "test\\SHEN DX20170177\\仲裁资料\\申请人\\12200_AI-仲裁申请书.doc";
+        String appIn5 = "test\\SHEN X20170211\\仲裁资料\\申请人\\12511_AI-仲裁申请书.doc";
+        String appIn6 = "test\\SHEN DF20170368-未生成\\SHEN DF20170368\\仲裁资料\\申请人\\13606_AI-仲裁申请书.docx";
+        String appIn7 = "test\\SHEN DP2014088-未生成\\SHEN DP2014088\\仲裁资料\\申请人\\13282_AI-仲裁申请书.doc";
+        String appIn8 = "test\\testinput\\award1.docx";
+
+        String routineIn1 = "test\\SHEN DT20170003\\仲裁资料\\award\\12290_AI-裁决书-程序部分.doc";
+        String routineIn2 = "test\\SHEN DX20150363\\仲裁资料\\award\\12195_AI-裁决书-程序部分.doc";
+        String routineIn3 = "test\\SHEN DX20160521\\仲裁资料\\award\\12385_AI-裁决书-程序部分.docx";
+        String routineIn4 = "test\\SHEN DX20170177\\仲裁资料\\award\\12203_AI-裁决书-程序部分.doc";
+        String routineIn5 = "test\\SHEN X20170211\\仲裁资料\\award\\12518_AI-裁决书-程序部分.doc";
+        String routineIn6 = "test\\SHEN DF20170368-未生成\\SHEN DF20170368\\仲裁资料\\award\\13608_AI-裁决书-程序部分.doc";
+        String routineIn7 = "test\\SHEN DP2014088-未生成\\SHEN DP2014088\\仲裁资料\\award\\13291_AI-裁决书-程序部分.doc";
+        String routineIn8 = "test\\testinput\\routine1.doc";
+
         String outputPath1 = "test\\testoutput\\award1.docx";
         String outputPath2 = "test\\testoutput\\award2.docx";
         String outputPath3 = "test\\testoutput\\award3.docx";
@@ -47,25 +58,34 @@ public class AIAwardGenerator {
         String outputPath7 = "test\\testoutput\\award7.docx";
         String outputPath8 = "test\\testoutput\\award8.docx";
 
-        List<Pair> inOutPathList = new LinkedList<>();
-        inOutPathList.add(new Pair(inputPath1, outputPath1));
-        inOutPathList.add(new Pair(inputPath2, outputPath2));
-        inOutPathList.add(new Pair(inputPath3, outputPath3));
-        inOutPathList.add(new Pair(inputPath4, outputPath4));
-        inOutPathList.add(new Pair(inputPath5, outputPath5));
-        inOutPathList.add(new Pair(inputPath6, outputPath6));
-        inOutPathList.add(new Pair(inputPath7, outputPath7));
-        inOutPathList.add(new Pair(inputPath8, outputPath8));
+        List<DocProcess> inOutPathList = new LinkedList<>();
+        inOutPathList.add(new DocProcess(routineIn1, appIn1, null, outputPath1));
+        inOutPathList.add(new DocProcess(routineIn2, appIn2, null, outputPath2));
+        inOutPathList.add(new DocProcess(routineIn3, appIn3, null, outputPath3));
+        inOutPathList.add(new DocProcess(routineIn4, appIn4, null, outputPath4));
+        inOutPathList.add(new DocProcess(routineIn5, appIn5, null, outputPath5));
+        inOutPathList.add(new DocProcess(routineIn6, appIn6, null, outputPath6));
+        inOutPathList.add(new DocProcess(routineIn7, appIn7, null, outputPath7));
+        inOutPathList.add(new DocProcess(routineIn8, appIn8, null, outputPath8));
 
         try {
             for (int i = 0; i < inOutPathList.size(); ++i) {
-                String inputPath = inOutPathList.get(i).getKey();
-                String outputPath = inOutPathList.get(i).getValue();
+                DocProcess dp = inOutPathList.get(i);
+                String inAppPath = dp.getInApplicationDocUrl();
+                String inRoutinePath = dp.getInRoutineDocUrl();
+                String outAwardPath = dp.getOutAwardDocUrl();
+                
                 ApplicationDocReader adr = new ApplicationDocReader();
-                ArbitrationApplication aApplication = adr.read(inputPath);
-                AwardDocGenerator awardGen = new AwardDocGenerator(outputPath);
-                awardGen.generateAwardDoc(aApplication);
+                ArbitrationApplication aApplication = adr.read(inAppPath);
+                AwardDocGenerator awardGen = new AwardDocGenerator(outAwardPath);
+                
+                RoutineDocReader rdr = new RoutineDocReader();
+                String routineContent = rdr.read(inRoutinePath);
+                
+                awardGen.generateAwardDoc(aApplication, routineContent);
             }
+            
+
         } catch (IOException e) {
             logger.fatal("Cannot find application file.");
             logger.fatal("Please make sure the file exists!");

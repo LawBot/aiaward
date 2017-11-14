@@ -109,12 +109,12 @@ public class AwardDocGenerator implements OutputGenerator {
         logger.trace("Constructor: finish constructing AwardDocGenerator");
     }
 
-    public XWPFDocument generateAwardDoc(ArbitrationApplication aApplication) {
+    public XWPFDocument generateAwardDoc(ArbitrationApplication aApplication, String routineContent) {
         logger.info("Start generating award to file: " + outAwardDocUrl);
 
         pageSetup();
         generateFirstPage(aApplication);
-        generateContentPages(aApplication);
+        generateContentPages(aApplication, routineContent);
 //        generateSignaturePage();
         try {
             FileOutputStream fos = new FileOutputStream(outAwardDocUrl);
@@ -336,7 +336,7 @@ public class AwardDocGenerator implements OutputGenerator {
 
     }
 
-    private void generateContentPages(ArbitrationApplication aApplication) {
+    private void generateContentPages(ArbitrationApplication aApplication, String routineContent) {
         XWPFParagraph p1 = awardDoc.createParagraph();
         p1.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun p1r1 = p1.createRun();
@@ -353,18 +353,15 @@ public class AwardDocGenerator implements OutputGenerator {
         p3r1.setText("华南国仲深裁〔XXX〕X号");
         p3r1.addBreak();
 
-        addNormalTextParagraph("{综述部分}", 0);
-        addNormalTextParagraph("本案现已审理终结。仲裁庭根据现有文件以及庭审所查清的事实和查证的证据做出本判决。", 0);
-        addNormalTextParagraph("现将本案案情，仲裁庭的意见和裁决分述如下。", 0);
+        addNormalTextParagraphs(routineContent, 0, 0);
 
         addSubTitle("一、案    情");
-        addNormalTextParagraph("{案情描述部分}", 0);
         addTitleTextParagraph("（一）申请人的主张和请求", 0);
 //        addNormalTextParagraph("{申请人的主张和请求}", 0);
         String lines[] = aApplication.getRequest().split("\\r?\\n");
         addNumbering(lines);
         addNormalTextParagraph("申请人诉称：", 0);
-        addNormalTextParagraph(aApplication.getFactAndReason().trim(), 1);
+        addNormalTextParagraphs(aApplication.getFactAndReason().trim(), 0, 1);
 
         addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
         addNormalTextParagraph("{被申请人提出答辩意见}", 0);
@@ -566,7 +563,19 @@ public class AwardDocGenerator implements OutputGenerator {
 
     private void addNormalTextParagraph(String str, int emptyLineAfter) {
         addTextParagraph(findAndCorrectMoneyFormats(str), emptyLineAfter, false);
-//        findAndCorrectMoneyFormats(str);
+    }
+
+    private void addNormalTextParagraphs(String str, int emptyLineInBetween, int emptyLineAfter) {
+        String lines[] = str.split("\\r?\\n");
+        for (int i = 0; i < lines.length; ++i) {
+            String line = lines[i].trim();
+            if (line != null && !line.isEmpty()) {
+                addTextParagraph(findAndCorrectMoneyFormats(line), emptyLineInBetween, false);
+            }
+        }
+        for (int i = 0; i < emptyLineAfter; ++i) {
+            addTextParagraph("", emptyLineAfter, false);
+        }
     }
 
     private void addTitleTextParagraph(String str, int emptyLineAfter) {
@@ -691,7 +700,7 @@ public class AwardDocGenerator implements OutputGenerator {
             }
             str = replaceStr(str, start, end, moneyStr);
             tmpStrBuilder.append(moneyStr);
-            logger.info(tmpStrBuilder.toString());
+            logger.debug(tmpStrBuilder.toString());
         }
 
         return str;

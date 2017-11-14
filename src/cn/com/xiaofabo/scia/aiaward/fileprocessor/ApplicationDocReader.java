@@ -290,17 +290,17 @@ public class ApplicationDocReader implements InputFileReader {
         logger.debug("法定代表人：" + res.getRepresentative());
         logger.debug("代理人：" + res.getAgency());
 
-        ArbitrationApplication aa = new ArbitrationApplication(0);
+        ArbitrationApplication aApplication = new ArbitrationApplication(0);
         List<Proposer> pList = new LinkedList<>();
         List<Respondent> rList = new LinkedList<>();
         pList.add(pro);
         rList.add(res);
-        aa.setProposerList(pList);
-        aa.setRespondentList(rList);
-        aa.setGist(gistChunk);
-        aa.setRequest(requestChunk);
-        aa.setFactAndReason(factAndReasonChunk);
-        return aa;
+        aApplication.setProposerList(pList);
+        aApplication.setRespondentList(rList);
+        aApplication.setGist(gistChunk);
+        aApplication.setRequest(requestChunk);
+        aApplication.setFactAndReason(factAndReasonChunk);
+        return aApplication;
     }
 
     private String removeAllSpaces(String input) {
