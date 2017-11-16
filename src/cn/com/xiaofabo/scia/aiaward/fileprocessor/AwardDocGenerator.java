@@ -574,7 +574,7 @@ public class AwardDocGenerator implements OutputGenerator {
             }
         }
         for (int i = 0; i < emptyLineAfter; ++i) {
-            addTextParagraph("", emptyLineAfter, false);
+            addTextParagraph("", emptyLineAfter - 1, false);
         }
     }
 

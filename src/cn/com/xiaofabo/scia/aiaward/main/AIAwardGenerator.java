@@ -31,22 +31,22 @@ public class AIAwardGenerator {
         PropertyConfigurator.configure("log/config.txt");
         logger.info("AI Award Generator program started...");
 
-        String appIn1 = "test\\SHEN DT20170003\\仲裁资料\\申请人\\12281_AI-仲裁申请书.docx";
-        String appIn2 = "test\\SHEN DX20150363\\仲裁资料\\申请人\\12194_AI-仲裁申请书.doc";
-        String appIn3 = "test\\SHEN DX20160521\\仲裁资料\\申请人\\12382_AI-仲裁申请书.docx";
-        String appIn4 = "test\\SHEN DX20170177\\仲裁资料\\申请人\\12200_AI-仲裁申请书.doc";
-        String appIn5 = "test\\SHEN X20170211\\仲裁资料\\申请人\\12511_AI-仲裁申请书.doc";
-        String appIn6 = "test\\SHEN DF20170368-未生成\\SHEN DF20170368\\仲裁资料\\申请人\\13606_AI-仲裁申请书.docx";
-        String appIn7 = "test\\SHEN DP2014088-未生成\\SHEN DP2014088\\仲裁资料\\申请人\\13282_AI-仲裁申请书.doc";
+        String appIn1 = "test\\Case1\\仲裁资料\\申请人\\12281_AI-仲裁申请书.docx";
+        String appIn2 = "test\\Case2\\仲裁资料\\申请人\\12194_AI-仲裁申请书.doc";
+        String appIn3 = "test\\Case3\\仲裁资料\\申请人\\12382_AI-仲裁申请书.docx";
+        String appIn4 = "test\\Case4\\仲裁资料\\申请人\\12200_AI-仲裁申请书.doc";
+        String appIn5 = "test\\Case5\\仲裁资料\\申请人\\12511_AI-仲裁申请书.doc";
+        String appIn6 = "test\\Case6\\SHEN DF20170368\\仲裁资料\\申请人\\13606_AI-仲裁申请书.docx";
+        String appIn7 = "test\\Case7\\SHEN DP2014088\\仲裁资料\\申请人\\13282_AI-仲裁申请书.doc";
         String appIn8 = "test\\testinput\\award1.docx";
 
-        String routineIn1 = "test\\SHEN DT20170003\\仲裁资料\\award\\12290_AI-裁决书-程序部分.doc";
-        String routineIn2 = "test\\SHEN DX20150363\\仲裁资料\\award\\12195_AI-裁决书-程序部分.doc";
-        String routineIn3 = "test\\SHEN DX20160521\\仲裁资料\\award\\12385_AI-裁决书-程序部分.docx";
-        String routineIn4 = "test\\SHEN DX20170177\\仲裁资料\\award\\12203_AI-裁决书-程序部分.doc";
-        String routineIn5 = "test\\SHEN X20170211\\仲裁资料\\award\\12518_AI-裁决书-程序部分.doc";
-        String routineIn6 = "test\\SHEN DF20170368-未生成\\SHEN DF20170368\\仲裁资料\\award\\13608_AI-裁决书-程序部分.doc";
-        String routineIn7 = "test\\SHEN DP2014088-未生成\\SHEN DP2014088\\仲裁资料\\award\\13291_AI-裁决书-程序部分.doc";
+        String routineIn1 = "test\\Case1\\仲裁资料\\award\\12290_AI-裁决书-程序部分.doc";
+        String routineIn2 = "test\\Case2\\仲裁资料\\award\\12195_AI-裁决书-程序部分.doc";
+        String routineIn3 = "test\\Case3\\仲裁资料\\award\\12385_AI-裁决书-程序部分.docx";
+        String routineIn4 = "test\\Case4\\仲裁资料\\award\\12203_AI-裁决书-程序部分.doc";
+        String routineIn5 = "test\\Case5\\仲裁资料\\award\\12518_AI-裁决书-程序部分.doc";
+        String routineIn6 = "test\\Case6\\SHEN DF20170368\\仲裁资料\\award\\13608_AI-裁决书-程序部分.doc";
+        String routineIn7 = "test\\Case7\\SHEN DP2014088\\仲裁资料\\award\\13291_AI-裁决书-程序部分.doc";
         String routineIn8 = "test\\testinput\\routine1.doc";
 
         String outputPath1 = "test\\testoutput\\award1.docx";
