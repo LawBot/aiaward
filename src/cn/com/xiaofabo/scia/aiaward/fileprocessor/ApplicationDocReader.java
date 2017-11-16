@@ -9,46 +9,29 @@ import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
 import cn.com.xiaofabo.scia.aiaward.entities.Pair;
 import cn.com.xiaofabo.scia.aiaward.entities.Proposer;
 import cn.com.xiaofabo.scia.aiaward.entities.Respondent;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.extractor.WordExtractor;
-import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 /**
  *
  * @author 陈光曦
  */
-public class ApplicationDocReader implements InputFileReader {
+public class ApplicationDocReader extends DocReader implements InputFileReader {
 
     static Logger logger = Logger.getLogger(ApplicationDocReader.class.getName());
-    private String docText;
 
     public ApplicationDocReader() {
         PropertyConfigurator.configure("log/config.txt");
         logger.trace("Constructor of ApplicationDocReader");
     }
 
-    public ArbitrationApplication read(String inputPath) throws IOException {
-        logger.info("Start reading in file: " + inputPath);
-        // Newer version word documents
-        try {
-            XWPFDocument docx = new XWPFDocument(new FileInputStream(inputPath));
-            XWPFWordExtractor we = new XWPFWordExtractor(docx);
-            docText = we.getText();
-        } /// Old version word documents
-        catch (org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException e) {
-            HWPFDocument doc = new HWPFDocument(new FileInputStream(inputPath));
-            WordExtractor we = new WordExtractor(doc);
-            docText = we.getText();
-        }
-
+    public ArbitrationApplication processApplication(String inputPath) throws IOException {
+        readWordFile(inputPath);
         docText = preprocess(docText);
+
         String lines[] = docText.split("\\r?\\n");
         ArbitrationApplication application = new ArbitrationApplication(0);
 
@@ -301,30 +284,6 @@ public class ApplicationDocReader implements InputFileReader {
         aApplication.setRequest(requestChunk);
         aApplication.setFactAndReason(factAndReasonChunk);
         return aApplication;
-    }
-
-    private String removeAllSpaces(String input) {
-        return input.replaceAll("\\s+", "");
-    }
-
-    private String combineLines(String[] lines, int startIndex, int endIndex) {
-        if (startIndex >= lines.length || endIndex >= lines.length) {
-            return null;
-        }
-        StringBuilder toReturn = new StringBuilder();
-        for (int i = startIndex; i < endIndex; ++i) {
-            if (!removeAllSpaces(lines[i]).isEmpty()) {
-                toReturn.append(lines[i]).append("\n");
-            }
-        }
-        return toReturn.toString();
-    }
-
-    private String preprocess(String str) {
-        str = str.replaceAll(":", "：");
-        str = str.replaceAll("％", "%");
-        str = str.replaceAll("——", "──");
-        return str;
     }
 
     private String pAndrProcess(String proposerStr) {
