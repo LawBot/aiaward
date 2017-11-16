@@ -17,7 +17,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  *
  * @author 陈光曦
  */
-public abstract class DocReader {
+public abstract class DocReader implements InputFileReader{
     protected String docText;
 
     protected void readWordFile(String inputPath) throws IOException {
@@ -58,6 +58,18 @@ public abstract class DocReader {
         for (int i = startIndex; i < endIndex; ++i) {
             if (!removeAllSpaces(lines[i]).isEmpty()) {
                 toReturn.append(lines[i]).append("\n");
+            }
+        }
+        return toReturn.toString();
+    }
+    
+    protected String processContent(String[] lines, int startLineNum, int endLineNum) {
+        StringBuilder toReturn = new StringBuilder();
+        for (int lineIdx = startLineNum; lineIdx <= endLineNum; ++lineIdx) {
+            String line = lines[lineIdx].trim();
+            if (!isEmptyLine(line)) {
+                toReturn.append(line);
+                toReturn.append("\n");
             }
         }
         return toReturn.toString();

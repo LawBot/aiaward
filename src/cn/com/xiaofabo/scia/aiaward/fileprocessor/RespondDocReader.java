@@ -13,31 +13,33 @@ import org.apache.log4j.PropertyConfigurator;
  *
  * @author 陈光曦
  */
-public class RoutineDocReader extends DocReader{
+public class RespondDocReader extends DocReader {
 
-    static Logger logger = Logger.getLogger(RoutineDocReader.class.getName());
+    static Logger logger = Logger.getLogger(RespondDocReader.class.getName());
 
-    public RoutineDocReader() {
+    public RespondDocReader() {
         PropertyConfigurator.configure("log/config.txt");
-        logger.trace("Constructor of RoutineDocReader");
+        logger.trace("Constructor of RespondDocReader");
     }
 
-    public String processRoutine(String inputPath) throws IOException{
+    public String processRespond(String inputPath) throws IOException {
         readWordFile(inputPath);
         preprocess(docText);
-        
+
         String lines[] = docText.split("\\r?\\n");
         int startLineNum = 0, endLineNum = 0;
         for (int i = 0; i < lines.length; ++i) {
             String line = lines[i].trim();
-            if (line.matches("华南国仲深裁.*号")) {
+            if (line.matches(".*答辩如下："
+                    + "|" + ".*事实和理由如下："
+                    + "|" + ".*如下答辩：")) {
                 if (startLineNum != 0) {
                     logger.warn("WARN: Not the first time finding start of content. IGNORED!");
                 } else {
                     startLineNum = i + 1;
                 }
             }
-            if (line.contains("现将本案案情、仲裁庭意见以及裁决内容分述如下。")) {
+            if (line.contains("此致")) {
                 if (endLineNum != 0) {
                     logger.warn("WARN: Not the first time finding end of content. IGNORED!");
                 } else {
@@ -49,10 +51,16 @@ public class RoutineDocReader extends DocReader{
             logger.warn("WARN: Did not find start of the content. First line as content start.");
         }
         if (endLineNum == 0) {
+            endLineNum = lines.length - 1;
             logger.warn("WARN: Did not find end of the content. Last line as content end.");
         }
+
+        if (startLineNum == 0 && endLineNum == lines.length - 1) {
+            logger.error("ERROR: Respond document content is NOT correct. Please check!");
+        }
+
         logger.debug("Content start line number: " + startLineNum);
         logger.debug("Content end line number: " + endLineNum);
-        return processContent(lines, startLineNum, endLineNum);
+        return processContent(lines, startLineNum, endLineNum - 1);
     }
 }

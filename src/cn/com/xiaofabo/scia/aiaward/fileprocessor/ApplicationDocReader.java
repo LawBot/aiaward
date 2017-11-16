@@ -19,7 +19,7 @@ import org.apache.log4j.PropertyConfigurator;
  *
  * @author 陈光曦
  */
-public class ApplicationDocReader extends DocReader implements InputFileReader {
+public class ApplicationDocReader extends DocReader{
 
     static Logger logger = Logger.getLogger(ApplicationDocReader.class.getName());
 

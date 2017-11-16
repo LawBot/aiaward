@@ -109,12 +109,12 @@ public class AwardDocGenerator implements OutputGenerator {
         logger.trace("Constructor: finish constructing AwardDocGenerator");
     }
 
-    public XWPFDocument generateAwardDoc(ArbitrationApplication aApplication, String routineContent) {
+    public XWPFDocument generateAwardDoc(ArbitrationApplication aApplication, String routineContent, String respondConent) {
         logger.info("Start generating award to file: " + outAwardDocUrl);
 
         pageSetup();
         generateFirstPage(aApplication);
-        generateContentPages(aApplication, routineContent);
+        generateContentPages(aApplication, routineContent, respondConent);
 //        generateSignaturePage();
         try {
             FileOutputStream fos = new FileOutputStream(outAwardDocUrl);
@@ -336,7 +336,7 @@ public class AwardDocGenerator implements OutputGenerator {
 
     }
 
-    private void generateContentPages(ArbitrationApplication aApplication, String routineContent) {
+    private void generateContentPages(ArbitrationApplication aApplication, String routineContent, String respondContent) {
         XWPFParagraph p1 = awardDoc.createParagraph();
         p1.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun p1r1 = p1.createRun();
@@ -364,7 +364,7 @@ public class AwardDocGenerator implements OutputGenerator {
         addNormalTextParagraphs(aApplication.getFactAndReason().trim(), 0, 1);
 
         addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
-        addNormalTextParagraph("{被申请人提出答辩意见}", 0);
+        addNormalTextParagraphs(respondContent, 0, 1);
 
         addSubTitle("二、仲裁庭意见");
         addNormalTextParagraph("就本案争议，仲裁庭意见如下：", 1);
@@ -648,6 +648,9 @@ public class AwardDocGenerator implements OutputGenerator {
         paragraphRun.setText(key);
 
         tableRow.getCell(1).removeParagraph(0);
+        if (firstLine) {
+            tableRow.getCell(1).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_KEY_WIDTH);
+        }
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
