@@ -34,6 +34,10 @@ public abstract class DocReader implements InputFileReader{
             docText = we.getText();
         }
     }
+    
+    protected String getDocText(){
+        return docText;
+    }
 
     protected String preprocess(String str) {
         str = str.replaceAll(":", "：");

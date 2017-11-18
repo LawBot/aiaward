@@ -12,11 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
@@ -95,12 +91,15 @@ public class AwardDocGenerator extends DocGenerator{
         logger.trace("Constructor: finish constructing AwardDocGenerator");
     }
 
-    public XWPFDocument generateAwardDoc(ArbitrationApplication aApplication, String routineContent, String respondConent) {
+    public XWPFDocument generateAwardDoc(String routineContent, 
+            ArbitrationApplication aApplication,
+            List appEvidenceList,
+            String respondConent) {
         logger.info("Start generating award to file: " + outAwardDocUrl);
 
         pageSetup();
         generateFirstPage(aApplication);
-        generateContentPages(aApplication, routineContent, respondConent);
+        generateContentPages(routineContent, aApplication, appEvidenceList, respondConent);
 //        generateSignaturePage();
         try {
             FileOutputStream fos = new FileOutputStream(outAwardDocUrl);
@@ -322,7 +321,10 @@ public class AwardDocGenerator extends DocGenerator{
 
     }
 
-    private void generateContentPages(ArbitrationApplication aApplication, String routineContent, String respondContent) {
+    private void generateContentPages(String routineContent, 
+            ArbitrationApplication aApplication,
+            List appEvidenceList,
+            String respondContent) {
         XWPFParagraph p1 = awardDoc.createParagraph();
         p1.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun p1r1 = p1.createRun();
@@ -343,11 +345,30 @@ public class AwardDocGenerator extends DocGenerator{
 
         addSubTitle("一、案    情");
         addTitleTextParagraph("（一）申请人的主张和请求", 0);
-//        addNormalTextParagraph("{申请人的主张和请求}", 0);
+        
+        /// 申请人的主张和请求
         String lines[] = aApplication.getRequest().split("\\r?\\n");
         addNumbering(lines);
+        
+        /// 申请人诉称
         addNormalTextParagraph("申请人诉称：", 0);
         addNormalTextParagraphs(aApplication.getFactAndReason().trim(), 0, 1);
+        
+        /// 申请人提交证据
+        addNormalTextParagraph("申请人为支持仲裁请求提交了以下证据：", 0);
+        for(int i = 0; i < appEvidenceList.size(); ++i){
+            List eList = (List)appEvidenceList.get(i);
+            if(i == 0){
+                String eLines[] = (String [])eList.toArray(new String[eList.size()]);
+                addNumbering(eLines);
+            }else{
+                char c = (char)(i+'0');
+                String tmpStr = "补充证据"+numberToCN(c)+"：";
+                addNormalTextParagraph(tmpStr, 0);
+                String eLines[] = (String [])eList.toArray(new String[eList.size()]);
+                addNumbering(eLines);
+            }
+        }
 
         addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
         addNormalTextParagraphs(respondContent, 0, 1);
