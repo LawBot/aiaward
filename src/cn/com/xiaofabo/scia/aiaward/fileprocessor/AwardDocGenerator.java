@@ -8,6 +8,7 @@ package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
 import cn.com.xiaofabo.scia.aiaward.entities.Proposer;
 import cn.com.xiaofabo.scia.aiaward.entities.Respondent;
+import cn.com.xiaofabo.scia.aiaward.entities.Routine;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,7 +50,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
@@ -96,7 +96,7 @@ public class AwardDocGenerator extends DocGenerator {
         logger.trace("Constructor: finish constructing AwardDocGenerator");
     }
 
-    public XWPFDocument generateAwardDoc(String routineContent,
+    public XWPFDocument generateAwardDoc(Routine routine,
             ArbitrationApplication aApplication,
             List appEvidenceList,
             String respondConent,
@@ -104,8 +104,8 @@ public class AwardDocGenerator extends DocGenerator {
         logger.info("Generating award to file: " + outAwardDocUrl);
 
         pageSetup();
-        generateFirstPage(aApplication);
-        generateContentPages(routineContent,
+        generateFirstPage(aApplication, routine);
+        generateContentPages(routine,
                 aApplication,
                 appEvidenceList,
                 respondConent,
@@ -266,7 +266,7 @@ public class AwardDocGenerator extends DocGenerator {
         }
     }
 
-    private void generateFirstPage(ArbitrationApplication aApplication) {
+    private void generateFirstPage(ArbitrationApplication aApplication, Routine routine) {
         /// TODO: only 1 proposer and 1 respondent considered
         Proposer pro = (Proposer) aApplication.getProposerList().get(0);
         Respondent res = (Respondent) aApplication.getRespondentList().get(0);
@@ -315,12 +315,12 @@ public class AwardDocGenerator extends DocGenerator {
         p6r1.setFontFamily(FONT_FAMILY_FANGSONG);
         p6r1.setFontSize(CN_FONT_SIZE_XIAO_ER);
         p6r1.addBreak();
-        p6r1.setText(cnDateGenerator());
+//        p6r1.setText(cnDateGenerator());  /// Generate today's date
+        p6r1.setText(routine.getAwardDate().trim());
         p6r1.addBreak(BreakType.PAGE);
-
     }
 
-    private void generateContentPages(String routineContent,
+    private void generateContentPages(Routine routine,
             ArbitrationApplication aApplication,
             List appEvidenceList,
             String respondContent,
@@ -341,7 +341,7 @@ public class AwardDocGenerator extends DocGenerator {
         p3r1.setText("华南国仲深裁〔XXX〕X号");
         p3r1.addBreak();
 
-        addNormalTextParagraphs(routineContent, 0, 0);
+        addNormalTextParagraphs(routine.getRoutineText(), 0, 0);
 
         addSubTitle("一、案    情");
         addTitleTextParagraph("（一）申请人的主张和请求", 0);

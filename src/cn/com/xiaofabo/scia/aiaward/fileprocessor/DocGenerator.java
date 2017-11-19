@@ -23,25 +23,25 @@ public abstract class DocGenerator implements OutputGenerator {
 
     public static final Logger logger = Logger.getLogger(DocGenerator.class.getName());
 
-    protected static final BigInteger PAGE_A4_WIDTH = BigInteger.valueOf(11900L);
-    protected static final BigInteger PAGE_A4_HEIGHT = BigInteger.valueOf(16840L);
+    public static final BigInteger PAGE_A4_WIDTH = BigInteger.valueOf(11900L);
+    public static final BigInteger PAGE_A4_HEIGHT = BigInteger.valueOf(16840L);
 
-    protected static final int CN_FONT_SIZE_XIAO_YI = 24;
-    protected static final int CN_FONT_SIZE_ER = 22;
-    protected static final int CN_FONT_SIZE_XIAO_ER = 18;
-    protected static final int CN_FONT_SIZE_SAN = 16;
+    public static final int CN_FONT_SIZE_XIAO_YI = 24;
+    public static final int CN_FONT_SIZE_ER = 22;
+    public static final int CN_FONT_SIZE_XIAO_ER = 18;
+    public static final int CN_FONT_SIZE_SAN = 16;
 
-    protected static final String FONT_FAMILY_TIME_NEW_ROMAN = "Times New Roman";
-    protected static final String FONT_FAMILY_SONG = "宋体";
-    protected static final String FONT_FAMILY_FANGSONG = "仿宋_GB2312";
-    protected static final String FONT_FAMILY_HEITI = "黑体";
-    protected static final String FONT_FAMILY_KAITI = "楷体";
+    public static final String FONT_FAMILY_TIME_NEW_ROMAN = "Times New Roman";
+    public static final String FONT_FAMILY_SONG = "宋体";
+    public static final String FONT_FAMILY_FANGSONG = "仿宋_GB2312";
+    public static final String FONT_FAMILY_HEITI = "黑体";
+    public static final String FONT_FAMILY_KAITI = "楷体";
 
     public DocGenerator() {
         PropertyConfigurator.configure("log/config.txt");
     }
 
-    protected String cnDateGenerator() {
+    public String cnDateGenerator() {
         String toReturn = "";
         Calendar cal = Calendar.getInstance();
 
@@ -95,7 +95,7 @@ public abstract class DocGenerator implements OutputGenerator {
         return toReturn;
     }
 
-    protected String numberToCN(char number) {
+    public String numberToCN(char number) {
         if (number > '9' || number < '0') {
             return null;
         }
@@ -138,7 +138,7 @@ public abstract class DocGenerator implements OutputGenerator {
         return toReturn;
     }
 
-    protected String findAndCorrectMoneyFormats(String str) {
+    public String findAndCorrectMoneyFormats(String str) {
         String toReturn = "";
         Pattern pattern = Pattern.compile(
                 "(人民币)?[0-9.,，]+(万)?(亿)?元"
@@ -188,7 +188,7 @@ public abstract class DocGenerator implements OutputGenerator {
         return str;
     }
 
-    protected String replaceStr(String baseStr, int startIdx, int endIdx, String str) {
+    public String replaceStr(String baseStr, int startIdx, int endIdx, String str) {
         String firstPart = baseStr.substring(0, startIdx);
         String secondPart = baseStr.substring(endIdx);
         return firstPart + str + secondPart;
@@ -219,7 +219,7 @@ public abstract class DocGenerator implements OutputGenerator {
         }
     }
 
-    protected String correctNumberFormat(String s) {
+    public String correctNumberFormat(String s) {
         s = removeAllCommas(s);
         int backIdx = s.contains(".") ? s.indexOf(".") - 1 : s.length() - 1;
         backIdx -= 3;
@@ -230,7 +230,7 @@ public abstract class DocGenerator implements OutputGenerator {
         return s;
     }
 
-    protected String removeAllCommas(String str) {
+    public String removeAllCommas(String str) {
         return str.replaceAll("[,，]", "");
     }
 }

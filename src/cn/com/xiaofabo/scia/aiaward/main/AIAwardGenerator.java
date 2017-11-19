@@ -7,6 +7,7 @@ package cn.com.xiaofabo.scia.aiaward.main;
 
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
 import cn.com.xiaofabo.scia.aiaward.entities.DocProcess;
+import cn.com.xiaofabo.scia.aiaward.entities.Routine;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.ApplicationDocReader;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.AwardDocGenerator;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.EvidenceDocReader;
@@ -148,7 +149,7 @@ public class AIAwardGenerator {
                 String outAwardPath = dp.getOutAwardDocUrl();
 
                 RoutineDocReader rdr = new RoutineDocReader();
-                String routineContent = rdr.processRoutine(inRoutinePath);
+                Routine routine = rdr.processRoutine(inRoutinePath);
 
                 ApplicationDocReader adr = new ApplicationDocReader();
                 ArbitrationApplication aApplication = adr.processApplication(inAppPath);
@@ -163,7 +164,7 @@ public class AIAwardGenerator {
                 EvidenceDocReader redr = new EvidenceDocReader();
                 List reAppList = redr.getEvidenceList(inResEvidencePathList);
 
-                awardGen.generateAwardDoc(routineContent, aApplication, aeAppList, respondContent, reAppList);
+                awardGen.generateAwardDoc(routine, aApplication, aeAppList, respondContent, reAppList);
             }
 
         } catch (IOException e) {
