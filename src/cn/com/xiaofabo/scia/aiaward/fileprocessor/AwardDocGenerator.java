@@ -78,7 +78,8 @@ public class AwardDocGenerator extends DocGenerator {
 
     private static final BigInteger TEXT_LINE_SPACING = BigInteger.valueOf(500L);
 
-    private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(960L);
+    private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(2060L);
+    private static final BigInteger TABLE_VALUE_WIDTH = BigInteger.valueOf(6187L);
 
     private static final BigInteger DEFAULT_FONT_SIZE_HALF_16 = BigInteger.valueOf(32L);
 
@@ -104,9 +105,9 @@ public class AwardDocGenerator extends DocGenerator {
 
         pageSetup();
         generateFirstPage(aApplication);
-        generateContentPages(routineContent, 
-                aApplication, 
-                appEvidenceList, 
+        generateContentPages(routineContent,
+                aApplication,
+                appEvidenceList,
                 respondConent,
                 resEvidenceList);
 //        generateSignaturePage();
@@ -287,18 +288,9 @@ public class AwardDocGenerator extends DocGenerator {
         p2r1.addBreak();
         p2r1.addBreak();
 
-        XWPFTable proposerTable = awardDoc.createTable(4, 2);
-        setTableBorderToNone(proposerTable);
-        
-        CTTblGridCol ctTblgc = proposerTable.getCTTbl().addNewTblGrid().addNewGridCol();
-        ctTblgc.setW(BigInteger.valueOf(28L));
-        proposerTable.getCTTbl().getTblGrid().addNewGridCol().setW(BigInteger.valueOf(5493L));
+        addProposerTable(pro);
 
-        setTableRowContent(proposerTable.getRow(0), "申  请  人：", pro.getProposer(), true);
-        setTableRowContent(proposerTable.getRow(1), "地      址：", pro.getAddress(), false);
-        setTableRowContent(proposerTable.getRow(2), "法定代表人：", pro.getRepresentative(), false);
-        setTableRowContent(proposerTable.getRow(3), "代  理  人：", pro.getAgency(), false);
-
+        /// Add break paragraph
         XWPFParagraph p3 = awardDoc.createParagraph();
         p3.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun p3r1 = p3.createRun();
@@ -306,13 +298,7 @@ public class AwardDocGenerator extends DocGenerator {
         p3r1.setFontSize(CN_FONT_SIZE_SAN);
         p3r1.addBreak();
 
-        XWPFTable respondentTable = awardDoc.createTable(4, 2);
-        setTableBorderToNone(respondentTable);
-
-        setTableRowContent(respondentTable.getRow(0), "被申请人：", res.getRespondent(), false);
-        setTableRowContent(respondentTable.getRow(1), "地      址：", res.getAddress(), false);
-        setTableRowContent(respondentTable.getRow(2), "法定代表人：", res.getRepresentative(), false);
-        setTableRowContent(respondentTable.getRow(3), "代  理  人：", res.getAgency(), false);
+        addRespondentTable(res);
 
         XWPFParagraph p5 = awardDoc.createParagraph();
         p5.setAlignment(ParagraphAlignment.CENTER);
@@ -388,7 +374,7 @@ public class AwardDocGenerator extends DocGenerator {
 
         addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
         addNormalTextParagraphs(respondContent, 0, 1);
-        
+
         if (resEvidenceList != null && !resEvidenceList.isEmpty()) {
             addNormalTextParagraph("被申请人为支持仲裁请求提交了以下证据：", 0);
             for (int i = 0; i < resEvidenceList.size(); ++i) {
@@ -590,13 +576,11 @@ public class AwardDocGenerator extends DocGenerator {
         borders.addNewInsideV().setVal(STBorder.NONE);
     }
 
-    private void setTableRowContent(XWPFTableRow tableRow, String key, String value, boolean firstLine) {
+    private void setTableRowContent(XWPFTableRow tableRow, String key, String value) {
         XWPFParagraph paragraph;
         XWPFRun paragraphRun;
         tableRow.getCell(0).removeParagraph(0);
-        if (firstLine) {
-            tableRow.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_KEY_WIDTH);
-        }
+        tableRow.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_KEY_WIDTH);
         paragraph = tableRow.getCell(0).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.DISTRIBUTE);
         paragraphRun = paragraph.createRun();
@@ -605,14 +589,39 @@ public class AwardDocGenerator extends DocGenerator {
         paragraphRun.setText(key);
 
         tableRow.getCell(1).removeParagraph(0);
-//        if (firstLine) {
-//            tableRow.getCell(1).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_KEY_WIDTH);
-//        }
+        tableRow.getCell(1).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_VALUE_WIDTH);
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
         paragraphRun.setFontFamily(FONT_FAMILY_FANGSONG);
         paragraphRun.setFontSize(CN_FONT_SIZE_SAN);
         paragraphRun.setText(value);
+    }
+
+    private void addProposerTable(Proposer pro) {
+        XWPFTable proposerTable = awardDoc.createTable(4, 2);
+        setTableBorderToNone(proposerTable);
+
+        /// Doesn't seem to have any effect
+        proposerTable.getCTTbl().addNewTblGrid().addNewGridCol().setW(TABLE_KEY_WIDTH);
+        proposerTable.getCTTbl().getTblGrid().addNewGridCol().setW(TABLE_VALUE_WIDTH);
+
+        setTableRowContent(proposerTable.getRow(0), "申  请  人：", pro.getProposer());
+        setTableRowContent(proposerTable.getRow(1), "地      址：", pro.getAddress());
+        setTableRowContent(proposerTable.getRow(2), "法定代表人：", pro.getRepresentative());
+        setTableRowContent(proposerTable.getRow(3), "代  理  人：", pro.getAgency());
+    }
+
+    private void addRespondentTable(Respondent res) {
+        XWPFTable respondentTable = awardDoc.createTable(4, 2);
+        setTableBorderToNone(respondentTable);
+        /// Doesn't seem to have any effect
+        respondentTable.getCTTbl().addNewTblGrid().addNewGridCol().setW(TABLE_KEY_WIDTH);
+        respondentTable.getCTTbl().getTblGrid().addNewGridCol().setW(TABLE_VALUE_WIDTH);
+
+        setTableRowContent(respondentTable.getRow(0), "被申请人：", res.getRespondent());
+        setTableRowContent(respondentTable.getRow(1), "地      址：", res.getAddress());
+        setTableRowContent(respondentTable.getRow(2), "法定代表人：", res.getRepresentative());
+        setTableRowContent(respondentTable.getRow(3), "代  理  人：", res.getAgency());
     }
 }
