@@ -23,6 +23,7 @@ import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -31,11 +32,13 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageNumber;
@@ -56,7 +59,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
  *
  * @author 陈光曦
  */
-public class AwardDocGenerator extends DocGenerator{
+public class AwardDocGenerator extends DocGenerator {
 
     public static final Logger logger = Logger.getLogger(AwardDocGenerator.class.getName());
     private final String outAwardDocUrl;
@@ -91,7 +94,7 @@ public class AwardDocGenerator extends DocGenerator{
         logger.trace("Constructor: finish constructing AwardDocGenerator");
     }
 
-    public XWPFDocument generateAwardDoc(String routineContent, 
+    public XWPFDocument generateAwardDoc(String routineContent,
             ArbitrationApplication aApplication,
             List appEvidenceList,
             String respondConent) {
@@ -321,7 +324,7 @@ public class AwardDocGenerator extends DocGenerator{
 
     }
 
-    private void generateContentPages(String routineContent, 
+    private void generateContentPages(String routineContent,
             ArbitrationApplication aApplication,
             List appEvidenceList,
             String respondContent) {
@@ -345,28 +348,28 @@ public class AwardDocGenerator extends DocGenerator{
 
         addSubTitle("一、案    情");
         addTitleTextParagraph("（一）申请人的主张和请求", 0);
-        
+
         /// 申请人的主张和请求
         String lines[] = aApplication.getRequest().split("\\r?\\n");
-        addNumbering(lines);
-        
+        addNumbering(lines, 0, 1);
+
         /// 申请人诉称
         addNormalTextParagraph("申请人诉称：", 0);
         addNormalTextParagraphs(aApplication.getFactAndReason().trim(), 0, 1);
-        
+
         /// 申请人提交证据
         addNormalTextParagraph("申请人为支持仲裁请求提交了以下证据：", 0);
-        for(int i = 0; i < appEvidenceList.size(); ++i){
-            List eList = (List)appEvidenceList.get(i);
-            if(i == 0){
-                String eLines[] = (String [])eList.toArray(new String[eList.size()]);
-                addNumbering(eLines);
-            }else{
-                char c = (char)(i+'0');
-                String tmpStr = "补充证据"+numberToCN(c)+"：";
+        for (int i = 0; i < appEvidenceList.size(); ++i) {
+            List eList = (List) appEvidenceList.get(i);
+            if (i == 0) {
+                String eLines[] = (String[]) eList.toArray(new String[eList.size()]);
+                addNumbering(eLines, 0, 1);
+            } else {
+                char c = (char) (i + '0');
+                String tmpStr = "补充证据" + numberToCN(c) + "：";
                 addNormalTextParagraph(tmpStr, 0);
-                String eLines[] = (String [])eList.toArray(new String[eList.size()]);
-                addNumbering(eLines);
+                String eLines[] = (String[]) eList.toArray(new String[eList.size()]);
+                addNumbering(eLines, 0, 1);
             }
         }
 
@@ -397,32 +400,26 @@ public class AwardDocGenerator extends DocGenerator{
         addSignatureDate(cnDateGenerator() + "于深圳");
     }
 
-    private void addNumbering(String[] strList) {
+    private void addNumbering(String[] strList, int emptyLineInBetween, int emptyLineAfter) {
         CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
         cTAbstractNum.setAbstractNumId(BigInteger.valueOf(0));
 
         CTLvl cTLvl = cTAbstractNum.addNewLvl();
         cTLvl.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
         cTLvl.addNewLvlText().setVal("%1.");
-        cTLvl.addNewStart().setVal(BigInteger.valueOf(1));
+        cTLvl.addNewStart().setVal(BigInteger.ONE);
 
         XWPFAbstractNum abstractNum = new XWPFAbstractNum(cTAbstractNum);
-        XWPFParagraph paragraph = awardDoc.createParagraph();
-
-        CTPPr ppr = paragraph.getCTP().getPPr();
-        if (ppr == null) {
-            ppr = paragraph.getCTP().addNewPPr();
-        }
-
-        CTSpacing spacing = ppr.isSetSpacing() ? ppr.getSpacing() : ppr.addNewSpacing();
-        spacing.setBefore(BigInteger.valueOf(0L));
-        spacing.setAfter(BigInteger.valueOf(0L));
-        spacing.setLineRule(STLineSpacingRule.EXACT);
-        spacing.setLine(TEXT_LINE_SPACING);
 
         XWPFNumbering numbering = awardDoc.createNumbering();
+        numbering.removeAbstractNum(BigInteger.ZERO);
         BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
         BigInteger numID = numbering.addNum(abstractNumID);
+        XWPFNum num = numbering.getNum(numID);
+        CTNumLvl lvlOverride = num.getCTNum().addNewLvlOverride();
+        lvlOverride.setIlvl(BigInteger.ZERO);
+        CTDecimalNumber number = lvlOverride.addNewStartOverride();
+        number.setVal(BigInteger.ONE);
 
         for (String str : strList) {
             if (str.matches("^[0-9].*")) {
@@ -430,7 +427,18 @@ public class AwardDocGenerator extends DocGenerator{
             }
             str = str.trim();
             str = findAndCorrectMoneyFormats(str);
-            paragraph = awardDoc.createParagraph();
+            XWPFParagraph paragraph = awardDoc.createParagraph();
+
+            CTPPr ppr = paragraph.getCTP().getPPr();
+            if (ppr == null) {
+                ppr = paragraph.getCTP().addNewPPr();
+            }
+
+            CTSpacing spacing = ppr.isSetSpacing() ? ppr.getSpacing() : ppr.addNewSpacing();
+            spacing.setBefore(BigInteger.valueOf(0L));
+            spacing.setAfter(BigInteger.valueOf(0L));
+            spacing.setLineRule(STLineSpacingRule.EXACT);
+            spacing.setLine(TEXT_LINE_SPACING);
             paragraph.setFirstLineIndent(CN_FONT_SIZE_SAN * 2 * 20);
             paragraph.setNumID(numID);
             XWPFRun run = paragraph.createRun();
@@ -440,6 +448,11 @@ public class AwardDocGenerator extends DocGenerator{
             run.getCTR().getRPr().getRFonts().setEastAsia(FONT_FAMILY_FANGSONG);
             run.setFontSize(CN_FONT_SIZE_SAN);
             run.setText(str);
+        }
+
+        /// Insert empty lines after all numbering
+        for (int i = 0; i < emptyLineAfter; ++i) {
+            XWPFParagraph paragraph = awardDoc.createParagraph();
         }
     }
 
