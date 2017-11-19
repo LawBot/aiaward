@@ -51,6 +51,44 @@ public class AIAwardGenerator {
         String appIn6 = "test\\Case6\\SHEN DF20170368\\仲裁资料\\申请人\\13606_AI-仲裁申请书.docx";
         String appIn7 = "test\\Case7\\SHEN DP2014088\\仲裁资料\\申请人\\13282_AI-仲裁申请书.doc";
         String appIn8 = "test\\testinput\\award1.docx";
+        
+        List<String> eAppPathList1 = new LinkedList<>();
+        List<String> eAppPathList2 = new LinkedList<>();
+        List<String> eAppPathList3 = new LinkedList<>();
+        List<String> eAppPathList4 = new LinkedList<>();
+        List<String> eAppPathList5 = new LinkedList<>();
+        List<String> eAppPathList6 = new LinkedList<>();
+        List<String> eAppPathList7 = new LinkedList<>();
+        List<String> eAppPathList8 = new LinkedList<>();
+        
+        String eAppInCase1Path1 = "test\\Case1\\仲裁资料\\申请人\\12282_AI-证据目录.doc";
+        String eAppInCase1Path2 = "test\\Case1\\仲裁资料\\申请人\\12283_AI-证据目录.doc";
+        String eAppInCase1Path3 = "test\\Case1\\仲裁资料\\申请人\\12284_AI-证据目录.doc";
+        String eAppInCase1Path4 = "test\\Case1\\仲裁资料\\申请人\\12288_AI-证据目录.doc";
+        eAppPathList1.add(eAppInCase1Path1);
+        eAppPathList1.add(eAppInCase1Path2);
+        eAppPathList1.add(eAppInCase1Path3);
+        eAppPathList1.add(eAppInCase1Path4);
+        
+        String eAppInCase2Path1 = "test\\Case2\\仲裁资料\\申请人\\12193_AI-证据目录.docx";
+        eAppPathList2.add(eAppInCase2Path1);
+        
+        String eAppInCase3Path1 = "test\\Case3\\仲裁资料\\申请人\\12382_AI-仲裁申请书.docx";
+        eAppPathList3.add(eAppInCase3Path1);
+        
+        String eAppInCase4Path1 = "test\\Case4\\仲裁资料\\申请人\\12199_AI-证据目录.docx";
+        eAppPathList4.add(eAppInCase4Path1);
+        
+        String eAppInCase5Path1 = "test\\Case5\\仲裁资料\\申请人\\12841_AI-证据目录.docx";
+        eAppPathList5.add(eAppInCase5Path1);
+        
+        String eAppInCase6Path1 = "test\\Case6\\SHEN DF20170368\\仲裁资料\\申请人\\13607_AI-证据目录.docx";
+        eAppPathList6.add(eAppInCase6Path1);
+        
+        String eAppInCase7Path1 = "test\\Case7\\SHEN DP2014088\\仲裁资料\\申请人\\13283_AI-证据目录.docx";
+        eAppPathList7.add(eAppInCase7Path1);
+        
+        
 
         String resIn1 = "test\\Case1\\仲裁资料\\被申请人\\12285_AI-答辩状.doc";
         String resIn2 = "test\\Case2\\仲裁资料\\被申请人\\12196_AI-答辩状.docx";
@@ -70,24 +108,14 @@ public class AIAwardGenerator {
         String outputPath7 = "test\\testoutput\\award7.docx";
         String outputPath8 = "test\\testoutput\\award8.docx";
 
-        String eAppInPath1 = "test\\Case1\\仲裁资料\\申请人\\12282_AI-证据目录.doc";
-        String eAppInPath2 = "test\\Case1\\仲裁资料\\申请人\\12283_AI-证据目录.doc";
-        String eAppInPath3 = "test\\Case1\\仲裁资料\\申请人\\12284_AI-证据目录.doc";
-        String eAppInPath4 = "test\\Case1\\仲裁资料\\申请人\\12288_AI-证据目录.doc";
-        List<String> eAppPathList1 = new LinkedList<>();
-        eAppPathList1.add(eAppInPath1);
-        eAppPathList1.add(eAppInPath2);
-        eAppPathList1.add(eAppInPath3);
-        eAppPathList1.add(eAppInPath4);
-
         List<DocProcess> inOutPathList = new LinkedList<>();
         inOutPathList.add(new DocProcess(routineIn1, appIn1, eAppPathList1, resIn1, outputPath1));
-        inOutPathList.add(new DocProcess(routineIn2, appIn2, eAppPathList1, resIn2, outputPath2));
-        inOutPathList.add(new DocProcess(routineIn3, appIn3, eAppPathList1, resIn3, outputPath3));
-        inOutPathList.add(new DocProcess(routineIn4, appIn4, eAppPathList1, resIn4, outputPath4));
-        inOutPathList.add(new DocProcess(routineIn5, appIn5, eAppPathList1, resIn5, outputPath5));
-        inOutPathList.add(new DocProcess(routineIn6, appIn6, eAppPathList1, resIn6, outputPath6));
-        inOutPathList.add(new DocProcess(routineIn7, appIn7, eAppPathList1, resIn7, outputPath7));
+        inOutPathList.add(new DocProcess(routineIn2, appIn2, eAppPathList2, resIn2, outputPath2));
+        inOutPathList.add(new DocProcess(routineIn3, appIn3, eAppPathList3, resIn3, outputPath3));
+        inOutPathList.add(new DocProcess(routineIn4, appIn4, eAppPathList4, resIn4, outputPath4));
+        inOutPathList.add(new DocProcess(routineIn5, appIn5, eAppPathList5, resIn5, outputPath5));
+        inOutPathList.add(new DocProcess(routineIn6, appIn6, eAppPathList6, resIn6, outputPath6));
+        inOutPathList.add(new DocProcess(routineIn7, appIn7, eAppPathList7, resIn7, outputPath7));
         inOutPathList.add(new DocProcess(routineIn8, appIn8, eAppPathList1, resIn8, outputPath8));
 
         try {
@@ -108,7 +136,7 @@ public class AIAwardGenerator {
                 AwardDocGenerator awardGen = new AwardDocGenerator(outAwardPath);
                 
                 EvidenceDocReader edr = new EvidenceDocReader();
-                List eAppList = edr.getEvidenceList(eAppPathList1);
+                List eAppList = edr.getEvidenceList(inEvidencePathList);
 
                 RespondDocReader resdr = new RespondDocReader();
                 String respondContent = resdr.processRespond(inResPath);

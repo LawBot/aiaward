@@ -415,6 +415,8 @@ public class AwardDocGenerator extends DocGenerator {
         numbering.removeAbstractNum(BigInteger.ZERO);
         BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
         BigInteger numID = numbering.addNum(abstractNumID);
+
+        /// Reset numbering start from 1.
         XWPFNum num = numbering.getNum(numID);
         CTNumLvl lvlOverride = num.getCTNum().addNewLvlOverride();
         lvlOverride.setIlvl(BigInteger.ZERO);
@@ -423,7 +425,9 @@ public class AwardDocGenerator extends DocGenerator {
 
         for (String str : strList) {
             if (str.matches("^[0-9].*")) {
-                str = str.substring(2).trim();
+                if (str.length() >= 3) {
+                    str = str.substring(2).trim();
+                }
             }
             str = str.trim();
             str = findAndCorrectMoneyFormats(str);

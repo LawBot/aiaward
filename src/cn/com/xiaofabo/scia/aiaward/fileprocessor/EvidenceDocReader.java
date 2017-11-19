@@ -62,6 +62,12 @@ public class EvidenceDocReader extends DocReader {
                     if (eChunk != -1) {
                         String evidence = chunks[eChunk];
                         if (evidence != null && !evidence.isEmpty()) {
+                            String c[] = evidence.split("[\\s：]");
+                            if(c.length == 1){
+                                evidence = c[0];
+                            }else{
+                                evidence = c[1];
+                            }
                             eList.add(evidence);
                             logger.info("Evidence added: " + evidence);
                         }
