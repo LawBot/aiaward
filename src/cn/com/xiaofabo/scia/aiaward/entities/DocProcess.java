@@ -15,19 +15,22 @@ public class DocProcess {
 
     private final String inRoutineDocUrl;
     private final String inApplicationDocUrl;
-    private final List inEvidenceDocUrlList;
+    private final List inAppEvidenceDocUrlList;
     private final String inRespondDocUrl;
+    private final List inResEvidenceDocUrlList;
     private final String outAwardDocUrl;
 
     public DocProcess(String inRoutineDocUrl,
             String inApplicationDocUrl,
-            List inEvidenceDocUrlList,
+            List inAppEvidenceDocUrlList,
             String inRespondDocUrl,
+            List inResEvidenceDocUrlList,
             String outAwardDocUrl) {
         this.inRoutineDocUrl = inRoutineDocUrl;
         this.inApplicationDocUrl = inApplicationDocUrl;
-        this.inEvidenceDocUrlList = inEvidenceDocUrlList;
+        this.inAppEvidenceDocUrlList = inAppEvidenceDocUrlList;
         this.inRespondDocUrl = inRespondDocUrl;
+        this.inResEvidenceDocUrlList = inResEvidenceDocUrlList;
         this.outAwardDocUrl = outAwardDocUrl;
     }
 
@@ -47,8 +50,12 @@ public class DocProcess {
         return outAwardDocUrl;
     }
 
-    public List getInEvidenceDocUrlList() {
-        return inEvidenceDocUrlList;
+    public List getInAppEvidenceDocUrlList() {
+        return inAppEvidenceDocUrlList;
+    }
+
+    public List getInResEvidenceDocUrlList() {
+        return inResEvidenceDocUrlList;
     }
 
 }

@@ -26,9 +26,12 @@ public class EvidenceDocReader extends DocReader {
     }
 
     public List getEvidenceList(List inputPathList) throws IOException {
+        if (inputPathList == null) {
+            return null;
+        }
         for (int i = 0; i < inputPathList.size(); ++i) {
             String inputPath = (String) inputPathList.get(i);
-            logger.info(inputPath + ":");
+//            logger.info(inputPath + ":");
             readWordFile(inputPath);
             List eList = getEvidences();
             if (!eList.isEmpty()) {
@@ -54,7 +57,7 @@ public class EvidenceDocReader extends DocReader {
                     tableStart = i;
                     for (int c = 0; c < chunks.length; ++c) {
                         String chunk = chunks[c];
-                        if (chunk.equals("证据名称")) {
+                        if (chunk.equals("证据名称") || chunk.equals("证据材料")) {
                             eChunk = c;
                         }
                     }
@@ -63,13 +66,13 @@ public class EvidenceDocReader extends DocReader {
                         String evidence = chunks[eChunk];
                         if (evidence != null && !evidence.isEmpty()) {
                             String c[] = evidence.split("[\\s：]");
-                            if(c.length == 1){
+                            if (c.length == 1) {
                                 evidence = c[0];
-                            }else{
+                            } else {
                                 evidence = c[1];
                             }
                             eList.add(evidence);
-                            logger.info("Evidence added: " + evidence);
+                            logger.debug("Evidence added: " + evidence);
                         }
                     }
                 }
@@ -79,6 +82,9 @@ public class EvidenceDocReader extends DocReader {
 
         logger.debug("Table start: " + tableStart);
         logger.debug("Table end: " + tableEnd);
+        if (tableStart + tableEnd == 0) {
+            logger.error("Did not find evidence list in file. Please check file format!!!");
+        }
         return eList;
     }
 }

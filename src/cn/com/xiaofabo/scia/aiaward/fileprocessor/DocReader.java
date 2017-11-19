@@ -21,7 +21,7 @@ public abstract class DocReader implements InputFileReader{
     protected String docText;
 
     protected void readWordFile(String inputPath) throws IOException {
-        logger.info("Start reading in file: " + inputPath);
+        logger.info("Reading in file: " + inputPath);
         // Newer version word documents
         try {
             XWPFDocument docx = new XWPFDocument(new FileInputStream(inputPath));

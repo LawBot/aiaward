@@ -49,6 +49,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
@@ -97,12 +98,17 @@ public class AwardDocGenerator extends DocGenerator {
     public XWPFDocument generateAwardDoc(String routineContent,
             ArbitrationApplication aApplication,
             List appEvidenceList,
-            String respondConent) {
-        logger.info("Start generating award to file: " + outAwardDocUrl);
+            String respondConent,
+            List resEvidenceList) {
+        logger.info("Generating award to file: " + outAwardDocUrl);
 
         pageSetup();
         generateFirstPage(aApplication);
-        generateContentPages(routineContent, aApplication, appEvidenceList, respondConent);
+        generateContentPages(routineContent, 
+                aApplication, 
+                appEvidenceList, 
+                respondConent,
+                resEvidenceList);
 //        generateSignaturePage();
         try {
             FileOutputStream fos = new FileOutputStream(outAwardDocUrl);
@@ -283,6 +289,10 @@ public class AwardDocGenerator extends DocGenerator {
 
         XWPFTable proposerTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(proposerTable);
+        
+        CTTblGridCol ctTblgc = proposerTable.getCTTbl().addNewTblGrid().addNewGridCol();
+        ctTblgc.setW(BigInteger.valueOf(28L));
+        proposerTable.getCTTbl().getTblGrid().addNewGridCol().setW(BigInteger.valueOf(5493L));
 
         setTableRowContent(proposerTable.getRow(0), "申  请  人：", pro.getProposer(), true);
         setTableRowContent(proposerTable.getRow(1), "地      址：", pro.getAddress(), false);
@@ -299,7 +309,7 @@ public class AwardDocGenerator extends DocGenerator {
         XWPFTable respondentTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(respondentTable);
 
-        setTableRowContent(respondentTable.getRow(0), "被申请人：", res.getRespondent(), true);
+        setTableRowContent(respondentTable.getRow(0), "被申请人：", res.getRespondent(), false);
         setTableRowContent(respondentTable.getRow(1), "地      址：", res.getAddress(), false);
         setTableRowContent(respondentTable.getRow(2), "法定代表人：", res.getRepresentative(), false);
         setTableRowContent(respondentTable.getRow(3), "代  理  人：", res.getAgency(), false);
@@ -327,7 +337,8 @@ public class AwardDocGenerator extends DocGenerator {
     private void generateContentPages(String routineContent,
             ArbitrationApplication aApplication,
             List appEvidenceList,
-            String respondContent) {
+            String respondContent,
+            List resEvidenceList) {
         XWPFParagraph p1 = awardDoc.createParagraph();
         p1.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun p1r1 = p1.createRun();
@@ -358,23 +369,42 @@ public class AwardDocGenerator extends DocGenerator {
         addNormalTextParagraphs(aApplication.getFactAndReason().trim(), 0, 1);
 
         /// 申请人提交证据
-        addNormalTextParagraph("申请人为支持仲裁请求提交了以下证据：", 0);
-        for (int i = 0; i < appEvidenceList.size(); ++i) {
-            List eList = (List) appEvidenceList.get(i);
-            if (i == 0) {
-                String eLines[] = (String[]) eList.toArray(new String[eList.size()]);
-                addNumbering(eLines, 0, 1);
-            } else {
-                char c = (char) (i + '0');
-                String tmpStr = "补充证据" + numberToCN(c) + "：";
-                addNormalTextParagraph(tmpStr, 0);
-                String eLines[] = (String[]) eList.toArray(new String[eList.size()]);
-                addNumbering(eLines, 0, 1);
+        if (appEvidenceList != null && !appEvidenceList.isEmpty()) {
+            addNormalTextParagraph("申请人为支持仲裁请求提交了以下证据：", 0);
+            for (int i = 0; i < appEvidenceList.size(); ++i) {
+                List eList = (List) appEvidenceList.get(i);
+                if (i == 0) {
+                    String eLines[] = (String[]) eList.toArray(new String[eList.size()]);
+                    addNumbering(eLines, 0, 1);
+                } else {
+                    char c = (char) (i + '0');
+                    String tmpStr = "补充证据" + numberToCN(c) + "：";
+                    addNormalTextParagraph(tmpStr, 0);
+                    String eLines[] = (String[]) eList.toArray(new String[eList.size()]);
+                    addNumbering(eLines, 0, 1);
+                }
             }
         }
 
         addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
         addNormalTextParagraphs(respondContent, 0, 1);
+        
+        if (resEvidenceList != null && !resEvidenceList.isEmpty()) {
+            addNormalTextParagraph("被申请人为支持仲裁请求提交了以下证据：", 0);
+            for (int i = 0; i < resEvidenceList.size(); ++i) {
+                List eList = (List) resEvidenceList.get(i);
+                if (i == 0) {
+                    String eLines[] = (String[]) eList.toArray(new String[eList.size()]);
+                    addNumbering(eLines, 0, 1);
+                } else {
+                    char c = (char) (i + '0');
+                    String tmpStr = "补充证据" + numberToCN(c) + "：";
+                    addNormalTextParagraph(tmpStr, 0);
+                    String eLines[] = (String[]) eList.toArray(new String[eList.size()]);
+                    addNumbering(eLines, 0, 1);
+                }
+            }
+        }
 
         addSubTitle("二、仲裁庭意见");
         addNormalTextParagraph("就本案争议，仲裁庭意见如下：", 1);
@@ -575,9 +605,9 @@ public class AwardDocGenerator extends DocGenerator {
         paragraphRun.setText(key);
 
         tableRow.getCell(1).removeParagraph(0);
-        if (firstLine) {
-            tableRow.getCell(1).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_KEY_WIDTH);
-        }
+//        if (firstLine) {
+//            tableRow.getCell(1).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_KEY_WIDTH);
+//        }
         paragraph = tableRow.getCell(1).addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraphRun = paragraph.createRun();
