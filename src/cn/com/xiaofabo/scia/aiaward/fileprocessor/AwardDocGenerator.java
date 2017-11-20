@@ -287,13 +287,13 @@ public class AwardDocGenerator extends DocGenerator {
 
         for (int i = 0; i < aApplication.getProposerList().size(); ++i) {
             Proposer pro = (Proposer) aApplication.getProposerList().get(i);
-            addProposerTable(pro, i + 1);
+            addProposerTable(pro, i + 1, aApplication.getProposerList().size());
             breakLine();
         }
 
         for (int i = 0; i < aApplication.getRespondentList().size(); ++i) {
             Respondent res = (Respondent) aApplication.getRespondentList().get(i);
-            addRespondentTable(res, i + 1);
+            addRespondentTable(res, i + 1, aApplication.getRespondentList().size());
             breakLine();
         }
 
@@ -604,7 +604,7 @@ public class AwardDocGenerator extends DocGenerator {
         paragraphRun.setText(value);
     }
 
-    private void addProposerTable(Proposer pro, int countPro) {
+    private void addProposerTable(Proposer pro, int countPro, int totalCount) {
         XWPFTable proposerTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(proposerTable);
 
@@ -612,9 +612,11 @@ public class AwardDocGenerator extends DocGenerator {
         proposerTable.getCTTbl().addNewTblGrid().addNewGridCol().setW(TABLE_KEY_WIDTH);
         proposerTable.getCTTbl().getTblGrid().addNewGridCol().setW(TABLE_VALUE_WIDTH);
 
-        String proKey = "申  请  人：";
-        if(countPro != 1){
-            proKey = "第"+ numberToCN((char)(countPro+'0')) + "申请人：";
+        String proKey = "";
+        if (totalCount == 1) {
+            proKey = "申  请  人：";
+        } else {
+            proKey = "第" + numberToCN((char) (countPro + '0')) + "申请人：";
         }
         setTableRowContent(proposerTable.getRow(0), proKey, pro.getProposer());
         setTableRowContent(proposerTable.getRow(1), "地      址：", pro.getAddress());
@@ -622,16 +624,18 @@ public class AwardDocGenerator extends DocGenerator {
         setTableRowContent(proposerTable.getRow(3), "代  理  人：", pro.getAgency());
     }
 
-    private void addRespondentTable(Respondent res, int countRes) {
+    private void addRespondentTable(Respondent res, int countRes, int totalCount) {
         XWPFTable respondentTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(respondentTable);
         /// Doesn't seem to have any effect
         respondentTable.getCTTbl().addNewTblGrid().addNewGridCol().setW(TABLE_KEY_WIDTH);
         respondentTable.getCTTbl().getTblGrid().addNewGridCol().setW(TABLE_VALUE_WIDTH);
 
-        String resKey = "被申请人：";
-        if(countRes != 1){
-            resKey = "第"+ numberToCN((char)(countRes+'0')) + "被申请人：";
+        String resKey = "";
+        if (totalCount == 1) {
+            resKey = "被申  请  人：";
+        } else {
+            resKey = "第" + numberToCN((char) (countRes + '0')) + "被申请人：";
         }
         setTableRowContent(respondentTable.getRow(0), resKey, res.getRespondent());
         setTableRowContent(respondentTable.getRow(1), "地      址：", res.getAddress());
