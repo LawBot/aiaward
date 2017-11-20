@@ -19,25 +19,28 @@ import org.apache.log4j.PropertyConfigurator;
  *
  * @author 陈光曦
  */
-public class ApplicationDocReader extends DocReader{
+public class ApplicationDocReader extends DocReader {
 
-    static Logger logger = Logger.getLogger(ApplicationDocReader.class.getName());
+    public static Logger logger = Logger.getLogger(ApplicationDocReader.class.getName());
+    private final List<Proposer> proposerList;
+    private final List<Respondent> respondentList;
 
     public ApplicationDocReader() {
         PropertyConfigurator.configure("log/config.txt");
         logger.trace("Constructor of ApplicationDocReader");
+        proposerList = new LinkedList<>();
+        respondentList = new LinkedList<>();
     }
 
-    public ArbitrationApplication processApplication(String inputPath) throws IOException {
-        readWordFile(inputPath);
+    public ArbitrationApplication processApplication(String inAppPath, String inRoutinePath) throws IOException {
+        readProAndRes(inRoutinePath);
+
+        readWordFile(inAppPath);
         docText = preprocess(docText);
 
         String lines[] = docText.split("\\r?\\n");
         ArbitrationApplication application = new ArbitrationApplication(0);
 
-        int titleChunkStartIdx = 0;
-        List<Integer> proposerChunkStartIdx = new LinkedList();
-        List<Integer> respondentChunkStartIdx = new LinkedList();
         int gistChunkStartIdx = 0;
         int requestChunkStartIdx = 0;
         int factAndReasonChunkStartIdx = 0;
@@ -46,19 +49,6 @@ public class ApplicationDocReader extends DocReader{
         for (int lineIndex = 0; lineIndex < lines.length; ++lineIndex) {
             String line = lines[lineIndex].trim();
             String compressedLine = removeAllSpaces(line);
-            if (compressedLine.contains("仲裁申请书")) {
-                titleChunkStartIdx = lineIndex;
-            }
-            if (compressedLine.startsWith("申请人：")) {
-                /// In case of signature
-                if (requestChunkStartIdx == 0
-                        || (requestChunkStartIdx != 0 && lineIndex < requestChunkStartIdx)) {
-                    proposerChunkStartIdx.add(lineIndex);
-                }
-            }
-            if (compressedLine.startsWith("被申请人：")) {
-                respondentChunkStartIdx.add(lineIndex);
-            }
             if (compressedLine.startsWith("仲裁依据：")
                     || compressedLine.startsWith("仲裁依据")
                     || compressedLine.startsWith("仲裁条款：")
@@ -87,37 +77,14 @@ public class ApplicationDocReader extends DocReader{
             }
         }
 
-        logger.trace("TitleChunkStartIdx: " + titleChunkStartIdx);
-        proposerChunkStartIdx.forEach((i) -> {
-            logger.trace("proposerChunkStartIdx: " + i);
-        });
-        respondentChunkStartIdx.forEach((i) -> {
-            logger.trace("respondentChunkStartIdx: " + i);
-        });
         logger.trace("gistChunkStartIdx: " + gistChunkStartIdx);
         logger.trace("requestChunkStartIdx: " + requestChunkStartIdx);
         logger.trace("factAndReasonChunkStartIdx: " + factAndReasonChunkStartIdx);
 
-        String titleChunk = "";
-        List<String> proposerChunk = new LinkedList<>();
-        List<String> respondentChunk = new LinkedList<>();
         String gistChunk = "";
         String requestChunk = "";
         String factAndReasonChunk = "";
 
-        titleChunk = combineLines(lines, titleChunkStartIdx, proposerChunkStartIdx.get(0));
-        /// TODO: Only considered one proposer case. should consider more proposers case
-        if (proposerChunkStartIdx.size() == 1) {
-            int tmpStartIdx = proposerChunkStartIdx.get(0);
-            int tmpEndIdx = respondentChunkStartIdx.get(0);
-            proposerChunk.add(combineLines(lines, tmpStartIdx, tmpEndIdx));
-        }
-        /// TODO: Only considered one respondent case. should consider more respondents case
-        if (respondentChunkStartIdx.size() == 1) {
-            int tmpStartIdx = respondentChunkStartIdx.get(0);
-            int tmpEndIdx = gistChunkStartIdx == 0 ? requestChunkStartIdx : gistChunkStartIdx;
-            respondentChunk.add(combineLines(lines, tmpStartIdx, tmpEndIdx));
-        }
         if (gistChunkStartIdx != 0) {
             int tmpStartIdx = gistChunkStartIdx;
             int tmpEndIdx = requestChunkStartIdx;
@@ -134,19 +101,91 @@ public class ApplicationDocReader extends DocReader{
             int tmpEndIdx = factAndReasonChunkEndIdx == 0 ? lines.length : factAndReasonChunkEndIdx;
             factAndReasonChunk = combineLines(lines, tmpStartIdx + 1, tmpEndIdx);
         }
-
-        logger.debug("标题:\n" + titleChunk);
-        for (int i = 0; i < proposerChunk.size(); ++i) {
-            logger.debug("申请人:\n" + proposerChunk.get(i));
-        }
-        for (int i = 0; i < respondentChunk.size(); ++i) {
-            logger.debug("被申请人:\n" + respondentChunk.get(i));
-        }
         logger.debug("仲裁依据:\n" + gistChunk);
         logger.debug("仲裁请求:\n" + requestChunk);
         logger.debug("事实与理由:\n" + factAndReasonChunk);
 
-        String pChunk = proposerChunk.get(0);
+        ArbitrationApplication aApplication = new ArbitrationApplication(0);
+        aApplication.setProposerList(proposerList);
+        aApplication.setRespondentList(respondentList);
+        aApplication.setGist(gistChunk);
+        aApplication.setRequest(requestChunk);
+        aApplication.setFactAndReason(factAndReasonChunk);
+        return aApplication;
+    }
+
+    private void readProAndRes(String routineDocPath) throws IOException {
+        readWordFile(routineDocPath);
+        docText = preprocess(docText);
+
+        List<Integer> proposerChunkStartIdx = new LinkedList();
+        List<Integer> respondentChunkStartIdx = new LinkedList();
+
+        String lines[] = docText.split("\\r?\\n");
+
+        int lastIdx = 0;
+        for (int lineIndex = 0; lineIndex < lines.length; ++lineIndex) {
+            String line = lines[lineIndex].trim();
+            String compressedLine = removeAllSpaces(line);
+            if (compressedLine.startsWith("申请人：")) {
+                proposerChunkStartIdx.add(lineIndex);
+            }
+            if (compressedLine.startsWith("被申请人：")) {
+                respondentChunkStartIdx.add(lineIndex);
+            }
+            if (compressedLine.equals("深圳")) {
+                lastIdx = lineIndex;
+                break;
+            }
+        }
+
+        if (proposerChunkStartIdx.isEmpty()) {
+            logger.error("ERROR: Did not find any proposer in routine document!!!");
+        }
+        if (respondentChunkStartIdx.isEmpty()) {
+            logger.error("ERROR: Did not find any respondent in routine document!!!");
+        }
+        if (lastIdx == 0) {
+            logger.error("ERROR: First page in routine document is not correctly formatted!!!");
+        }
+
+        List<String> proposerChunk = new LinkedList<>();
+        List<String> respondentChunk = new LinkedList<>();
+
+        for (int i = 0; i < proposerChunkStartIdx.size(); ++i) {
+            int startIdx = proposerChunkStartIdx.get(i);
+            int endIdx = 0;
+            if (i != proposerChunkStartIdx.size() - 1) {
+                endIdx = proposerChunkStartIdx.get(i + 1);
+            } else {
+                endIdx = respondentChunkStartIdx.get(0) - 1;
+            }
+            proposerChunk.add(combineLines(lines, startIdx, endIdx));
+        }
+
+        for (int i = 0; i < respondentChunkStartIdx.size(); ++i) {
+            int startIdx = respondentChunkStartIdx.get(i);
+            int endIdx = 0;
+            if (i != respondentChunkStartIdx.size() - 1) {
+                endIdx = respondentChunkStartIdx.get(i + 1);
+            } else {
+                endIdx = lastIdx - 1;
+            }
+            respondentChunk.add(combineLines(lines, startIdx, endIdx));
+        }
+
+        for (int i = 0; i < proposerChunk.size(); ++i) {
+            String pChunk = proposerChunk.get(i);
+            proposerList.add(createProposer(pChunk));
+        }
+
+        for (int i = 0; i < respondentChunk.size(); ++i) {
+            String rChunk = respondentChunk.get(i);
+            respondentList.add(createRespondent(rChunk));
+        }
+    }
+
+    private Proposer createProposer(String pChunk) {
         pChunk = pAndrProcess(pChunk);
         String plines[] = pChunk.split("\\r?\\n");
         List<Pair> proposerPairList = new LinkedList<>();
@@ -208,8 +247,10 @@ public class ApplicationDocReader extends DocReader{
         logger.debug("地址：" + pro.getAddress());
         logger.debug("法定代表人：" + pro.getRepresentative());
         logger.debug("代理人：" + pro.getAgency());
+        return pro;
+    }
 
-        String rChunk = respondentChunk.get(0);
+    private Respondent createRespondent(String rChunk) {
         rChunk = pAndrProcess(rChunk);
         String rlines[] = rChunk.split("\\r?\\n");
         List<Pair> respondentPairList = new LinkedList<>();
@@ -243,9 +284,9 @@ public class ApplicationDocReader extends DocReader{
 
         Respondent res = new Respondent();
         String respondent = "";
-        address = "";
-        representative = "";
-        agency = "";
+        String address = "";
+        String representative = "";
+        String agency = "";
         for (int i = 0; i < respondentPairList.size(); ++i) {
             String key = respondentPairList.get(i).getKey();
             String value = respondentPairList.get(i).getValue();
@@ -273,17 +314,7 @@ public class ApplicationDocReader extends DocReader{
         logger.debug("法定代表人：" + res.getRepresentative());
         logger.debug("代理人：" + res.getAgency());
 
-        ArbitrationApplication aApplication = new ArbitrationApplication(0);
-        List<Proposer> pList = new LinkedList<>();
-        List<Respondent> rList = new LinkedList<>();
-        pList.add(pro);
-        rList.add(res);
-        aApplication.setProposerList(pList);
-        aApplication.setRespondentList(rList);
-        aApplication.setGist(gistChunk);
-        aApplication.setRequest(requestChunk);
-        aApplication.setFactAndReason(factAndReasonChunk);
-        return aApplication;
+        return res;
     }
 
     private String pAndrProcess(String proposerStr) {

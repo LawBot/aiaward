@@ -152,7 +152,7 @@ public class AIAwardGenerator {
                 Routine routine = rdr.processRoutine(inRoutinePath);
 
                 ApplicationDocReader adr = new ApplicationDocReader();
-                ArbitrationApplication aApplication = adr.processApplication(inAppPath);
+                ArbitrationApplication aApplication = adr.processApplication(inAppPath, inRoutinePath);
                 AwardDocGenerator awardGen = new AwardDocGenerator(outAwardPath);
 
                 EvidenceDocReader aedr = new EvidenceDocReader();
@@ -160,7 +160,7 @@ public class AIAwardGenerator {
 
                 RespondDocReader resdr = new RespondDocReader();
                 String respondContent = resdr.processRespond(inResPath);
-                
+
                 EvidenceDocReader redr = new EvidenceDocReader();
                 List reAppList = redr.getEvidenceList(inResEvidencePathList);
 

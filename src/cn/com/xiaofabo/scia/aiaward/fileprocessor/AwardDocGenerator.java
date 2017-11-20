@@ -78,8 +78,8 @@ public class AwardDocGenerator extends DocGenerator {
 
     private static final BigInteger TEXT_LINE_SPACING = BigInteger.valueOf(500L);
 
-    private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(2060L);
-    private static final BigInteger TABLE_VALUE_WIDTH = BigInteger.valueOf(6187L);
+    private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(2267L);    /// ~4.0cm
+    private static final BigInteger TABLE_VALUE_WIDTH = BigInteger.valueOf(5950L);  /// ~10.5cm
 
     private static final BigInteger DEFAULT_FONT_SIZE_HALF_16 = BigInteger.valueOf(32L);
 
@@ -267,9 +267,6 @@ public class AwardDocGenerator extends DocGenerator {
     }
 
     private void generateFirstPage(ArbitrationApplication aApplication, Routine routine) {
-        /// TODO: only 1 proposer and 1 respondent considered
-        Proposer pro = (Proposer) aApplication.getProposerList().get(0);
-        Respondent res = (Respondent) aApplication.getRespondentList().get(0);
 
         XWPFParagraph p1 = awardDoc.createParagraph();
         p1.setAlignment(ParagraphAlignment.CENTER);
@@ -288,17 +285,17 @@ public class AwardDocGenerator extends DocGenerator {
         p2r1.addBreak();
         p2r1.addBreak();
 
-        addProposerTable(pro);
+        for (int i = 0; i < aApplication.getProposerList().size(); ++i) {
+            Proposer pro = (Proposer) aApplication.getProposerList().get(i);
+            addProposerTable(pro, i + 1);
+            breakLine();
+        }
 
-        /// Add break paragraph
-        XWPFParagraph p3 = awardDoc.createParagraph();
-        p3.setAlignment(ParagraphAlignment.CENTER);
-        XWPFRun p3r1 = p3.createRun();
-        p3r1.setFontFamily(FONT_FAMILY_SONG);
-        p3r1.setFontSize(CN_FONT_SIZE_SAN);
-        p3r1.addBreak();
-
-        addRespondentTable(res);
+        for (int i = 0; i < aApplication.getRespondentList().size(); ++i) {
+            Respondent res = (Respondent) aApplication.getRespondentList().get(i);
+            addRespondentTable(res, i + 1);
+            breakLine();
+        }
 
         XWPFParagraph p5 = awardDoc.createParagraph();
         p5.setAlignment(ParagraphAlignment.CENTER);
@@ -557,6 +554,15 @@ public class AwardDocGenerator extends DocGenerator {
         run.setText(str);
     }
 
+    private void breakLine() {
+        XWPFParagraph paragraph = awardDoc.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun run = paragraph.createRun();
+        run.setFontFamily(FONT_FAMILY_SONG);
+        run.setFontSize(CN_FONT_SIZE_SAN);
+        run.addBreak();
+    }
+
     private void breakToNextPage() {
         XWPFParagraph paragraph = awardDoc.createParagraph();
         XWPFRun run = paragraph.createRun();
@@ -598,7 +604,7 @@ public class AwardDocGenerator extends DocGenerator {
         paragraphRun.setText(value);
     }
 
-    private void addProposerTable(Proposer pro) {
+    private void addProposerTable(Proposer pro, int countPro) {
         XWPFTable proposerTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(proposerTable);
 
@@ -606,20 +612,28 @@ public class AwardDocGenerator extends DocGenerator {
         proposerTable.getCTTbl().addNewTblGrid().addNewGridCol().setW(TABLE_KEY_WIDTH);
         proposerTable.getCTTbl().getTblGrid().addNewGridCol().setW(TABLE_VALUE_WIDTH);
 
-        setTableRowContent(proposerTable.getRow(0), "申  请  人：", pro.getProposer());
+        String proKey = "申  请  人：";
+        if(countPro != 1){
+            proKey = "第"+ numberToCN((char)(countPro+'0')) + "申请人：";
+        }
+        setTableRowContent(proposerTable.getRow(0), proKey, pro.getProposer());
         setTableRowContent(proposerTable.getRow(1), "地      址：", pro.getAddress());
         setTableRowContent(proposerTable.getRow(2), "法定代表人：", pro.getRepresentative());
         setTableRowContent(proposerTable.getRow(3), "代  理  人：", pro.getAgency());
     }
 
-    private void addRespondentTable(Respondent res) {
+    private void addRespondentTable(Respondent res, int countRes) {
         XWPFTable respondentTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(respondentTable);
         /// Doesn't seem to have any effect
         respondentTable.getCTTbl().addNewTblGrid().addNewGridCol().setW(TABLE_KEY_WIDTH);
         respondentTable.getCTTbl().getTblGrid().addNewGridCol().setW(TABLE_VALUE_WIDTH);
 
-        setTableRowContent(respondentTable.getRow(0), "被申请人：", res.getRespondent());
+        String resKey = "被申请人：";
+        if(countRes != 1){
+            resKey = "第"+ numberToCN((char)(countRes+'0')) + "被申请人：";
+        }
+        setTableRowContent(respondentTable.getRow(0), resKey, res.getRespondent());
         setTableRowContent(respondentTable.getRow(1), "地      址：", res.getAddress());
         setTableRowContent(respondentTable.getRow(2), "法定代表人：", res.getRepresentative());
         setTableRowContent(respondentTable.getRow(3), "代  理  人：", res.getAgency());
