@@ -68,7 +68,7 @@ public class RoutineDocReader extends DocReader {
         }
         logger.debug("Content start line number: " + startLineNum);
         logger.debug("Content end line number: " + endLineNum);
-        routineText = processContent(lines, startLineNum, endLineNum);
+        routineText = combineContent(lines, startLineNum, endLineNum);
 
         return new Routine(dateText, routineText);
     }

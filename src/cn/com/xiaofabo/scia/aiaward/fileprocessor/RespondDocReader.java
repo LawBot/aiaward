@@ -6,6 +6,7 @@
 package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -61,6 +62,14 @@ public class RespondDocReader extends DocReader {
 
         logger.debug("Content start line number: " + startLineNum);
         logger.debug("Content end line number: " + endLineNum);
-        return processContent(lines, startLineNum, endLineNum - 1);
+        String content = combineContent(lines, startLineNum, endLineNum - 1);
+        content = replacePhrases(content);
+        return content;
+    }
+    
+    private String replacePhrases(String str){
+        str = str.replaceAll("答辩人", "被申请人");
+        str = str.replaceAll("被答辩人", "申请人");
+        return str;
     }
 }

@@ -67,7 +67,7 @@ public abstract class DocReader implements InputFileReader{
         return toReturn.toString();
     }
     
-    protected String processContent(String[] lines, int startLineNum, int endLineNum) {
+    protected String combineContent(String[] lines, int startLineNum, int endLineNum) {
         StringBuilder toReturn = new StringBuilder();
         for (int lineIdx = startLineNum; lineIdx <= endLineNum; ++lineIdx) {
             String line = lines[lineIdx].trim();
