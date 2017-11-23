@@ -27,11 +27,7 @@ public class AIAwardGenerator {
 
     private static Logger logger = Logger.getLogger(AIAwardGenerator.class.getName());
 
-    /**
-     * @param args the command line arguments
-     * @throws java.lang.Exception
-     */
-    public static void main(String[] args) throws Exception {
+    public static void batchGenerate() throws Exception {
         PropertyConfigurator.configure("log/config.txt");
         logger.info("AI Award Generator program started...");
 

@@ -17,7 +17,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.ListModel;
+import javax.swing.filechooser.FileFilter;
 
 /**
  *
@@ -25,11 +28,15 @@ import javax.swing.JFileChooser;
  */
 public class MainWindow extends javax.swing.JFrame {
 
+    FileFilter docFileFilter;
+    String currentSelectedDirectory;
+
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
+        initMyComponents();
     }
 
     /**
@@ -41,45 +48,59 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
-        bn_ChooseRoutineDoc = new javax.swing.JButton();
+        bn_chooseRoutineDoc = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane2 = new javax.swing.JTextPane();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextPane3 = new javax.swing.JTextPane();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextPane4 = new javax.swing.JTextPane();
-        bn_ChooseRoutineDoc1 = new javax.swing.JButton();
-        bn_ChooseRoutineDoc2 = new javax.swing.JButton();
-        bn_ChooseRoutineDoc3 = new javax.swing.JButton();
+        bn_chooseApplicationDoc = new javax.swing.JButton();
+        bn_addAppEvidenceDoc = new javax.swing.JButton();
+        bn_chooseResDoc = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTextPane5 = new javax.swing.JTextPane();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        bn_chooseOutputFolder = new javax.swing.JButton();
+        bn_generateOutDoc = new javax.swing.JButton();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jList2 = new javax.swing.JList<>();
+        bn_rmAppEvidenceDoc = new javax.swing.JButton();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        jList3 = new javax.swing.JList<>();
+        bn_addResEvidenceDoc = new javax.swing.JButton();
+        bn_rmResEvidenceDoc = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jButton2 = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextPane4 = new javax.swing.JTextPane();
+
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane6.setViewportView(jList1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("AI智能裁决书");
+        setSize(new java.awt.Dimension(1024, 768));
 
+        jTextPane1.setFocusable(false);
         jScrollPane1.setViewportView(jTextPane1);
 
-        bn_ChooseRoutineDoc.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        bn_ChooseRoutineDoc.setText("选择文件");
-        bn_ChooseRoutineDoc.setToolTipText("");
-        bn_ChooseRoutineDoc.setName(""); // NOI18N
-        bn_ChooseRoutineDoc.addMouseListener(new java.awt.event.MouseAdapter() {
+        bn_chooseRoutineDoc.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        bn_chooseRoutineDoc.setText("选择文件");
+        bn_chooseRoutineDoc.setToolTipText("");
+        bn_chooseRoutineDoc.setName(""); // NOI18N
+        bn_chooseRoutineDoc.setPreferredSize(new java.awt.Dimension(90, 30));
+        bn_chooseRoutineDoc.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bn_ChooseRoutineDocMouseClicked(evt);
+                bn_chooseRoutineDocMouseClicked(evt);
             }
         });
 
@@ -87,39 +108,39 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("程序部分");
 
+        jTextPane2.setFocusable(false);
         jScrollPane2.setViewportView(jTextPane2);
 
+        jTextPane3.setFocusable(false);
         jScrollPane3.setViewportView(jTextPane3);
 
-        jScrollPane4.setViewportView(jTextPane4);
-
-        bn_ChooseRoutineDoc1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        bn_ChooseRoutineDoc1.setText("选择文件");
-        bn_ChooseRoutineDoc1.setToolTipText("");
-        bn_ChooseRoutineDoc1.setName(""); // NOI18N
-        bn_ChooseRoutineDoc1.addMouseListener(new java.awt.event.MouseAdapter() {
+        bn_chooseApplicationDoc.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        bn_chooseApplicationDoc.setText("选择文件");
+        bn_chooseApplicationDoc.setToolTipText("");
+        bn_chooseApplicationDoc.setName(""); // NOI18N
+        bn_chooseApplicationDoc.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bn_ChooseRoutineDoc1MouseClicked(evt);
+                bn_chooseApplicationDocMouseClicked(evt);
             }
         });
 
-        bn_ChooseRoutineDoc2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        bn_ChooseRoutineDoc2.setText("选择文件");
-        bn_ChooseRoutineDoc2.setToolTipText("");
-        bn_ChooseRoutineDoc2.setName(""); // NOI18N
-        bn_ChooseRoutineDoc2.addMouseListener(new java.awt.event.MouseAdapter() {
+        bn_addAppEvidenceDoc.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        bn_addAppEvidenceDoc.setText("添加文件");
+        bn_addAppEvidenceDoc.setToolTipText("");
+        bn_addAppEvidenceDoc.setName(""); // NOI18N
+        bn_addAppEvidenceDoc.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bn_ChooseRoutineDoc2MouseClicked(evt);
+                bn_addAppEvidenceDocMouseClicked(evt);
             }
         });
 
-        bn_ChooseRoutineDoc3.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        bn_ChooseRoutineDoc3.setText("选择文件");
-        bn_ChooseRoutineDoc3.setToolTipText("");
-        bn_ChooseRoutineDoc3.setName(""); // NOI18N
-        bn_ChooseRoutineDoc3.addMouseListener(new java.awt.event.MouseAdapter() {
+        bn_chooseResDoc.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        bn_chooseResDoc.setText("选择文件");
+        bn_chooseResDoc.setToolTipText("");
+        bn_chooseResDoc.setName(""); // NOI18N
+        bn_chooseResDoc.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bn_ChooseRoutineDoc3MouseClicked(evt);
+                bn_chooseResDocMouseClicked(evt);
             }
         });
 
@@ -128,206 +149,270 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel2.setText("仲裁申请书");
 
         jLabel3.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel3.setText("申请人证据目录");
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("申请人证据");
 
         jLabel4.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("答辩状");
 
-        jScrollPane5.setViewportView(jTextPane5);
-
         jLabel5.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("答辩证据");
+        jLabel5.setText("生成裁决书目录");
 
-        jButton1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButton1.setText("选择文件");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        bn_chooseOutputFolder.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        bn_chooseOutputFolder.setText("选择文件");
+        bn_chooseOutputFolder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                bn_chooseOutputFolderMouseClicked(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jButton2.setText("生成");
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+        bn_generateOutDoc.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        bn_generateOutDoc.setText("生成");
+        bn_generateOutDoc.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
+                bn_generateOutDocMouseClicked(evt);
             }
         });
 
-        jMenuBar1.setPreferredSize(new java.awt.Dimension(88, 38));
+        jScrollPane7.setViewportView(jList2);
 
-        jMenu1.setText("工具");
-        jMenu1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jMenu1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jMenu1.setPreferredSize(new java.awt.Dimension(88, 38));
+        bn_rmAppEvidenceDoc.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        bn_rmAppEvidenceDoc.setText("删除文件");
+        bn_rmAppEvidenceDoc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bn_rmAppEvidenceDocMouseClicked(evt);
+            }
+        });
 
-        jMenuItem1.setText("设置");
-        jMenu1.add(jMenuItem1);
+        jList3.setPreferredSize(new java.awt.Dimension(40, 102));
+        jScrollPane8.setViewportView(jList3);
 
-        jMenuBar1.add(jMenu1);
+        bn_addResEvidenceDoc.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        bn_addResEvidenceDoc.setText("添加文件");
+        bn_addResEvidenceDoc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bn_addResEvidenceDocMouseClicked(evt);
+            }
+        });
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        bn_rmResEvidenceDoc.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        bn_rmResEvidenceDoc.setText("删除文件");
+        bn_rmResEvidenceDoc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bn_rmResEvidenceDocMouseClicked(evt);
+            }
+        });
 
-        setJMenuBar(jMenuBar1);
+        jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("被申请人证据");
+
+        jScrollPane4.setViewportView(jTextPane4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(bn_chooseRoutineDoc, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
+                            .addComponent(jSeparator1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane4)
+                                .addGap(18, 18, 18)
+                                .addComponent(bn_chooseOutputFolder, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(432, 432, 432)
+                        .addComponent(bn_generateOutDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
-                            .addComponent(jScrollPane5))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(bn_ChooseRoutineDoc, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
-                    .addComponent(bn_ChooseRoutineDoc1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(bn_ChooseRoutineDoc2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(bn_ChooseRoutineDoc3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(88, 88, 88))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSeparator1)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71))
+                            .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3)
+                            .addComponent(jScrollPane7)
+                            .addComponent(jScrollPane2))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(bn_rmResEvidenceDoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(bn_addResEvidenceDoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(bn_chooseResDoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(bn_rmAppEvidenceDoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(bn_addAppEvidenceDoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(bn_chooseApplicationDoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(49, 49, 49))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(bn_ChooseRoutineDoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(bn_ChooseRoutineDoc1))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bn_ChooseRoutineDoc2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(bn_ChooseRoutineDoc3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
+                .addGap(50, 50, 50)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                    .addComponent(bn_chooseRoutineDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addComponent(bn_chooseApplicationDoc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(53, 53, 53)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane5)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(bn_addAppEvidenceDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(bn_rmAppEvidenceDoc))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(bn_chooseResDoc))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(bn_addResEvidenceDoc)
+                        .addGap(18, 18, 18)
+                        .addComponent(bn_rmResEvidenceDoc))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(29, 29, 29)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(158, 158, 158)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bn_chooseOutputFolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
+                .addComponent(bn_generateOutDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bn_ChooseRoutineDocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_ChooseRoutineDocMouseClicked
+    private void initMyComponents() {
+        currentSelectedDirectory = "./";
+
+        docFileFilter = new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                if (f.isDirectory()) {
+                    return true;
+                } else {
+                    String filename = f.getName().toLowerCase();
+                    return filename.endsWith(".doc") || filename.endsWith(".docx");
+                }
+            }
+
+            @Override
+            public String getDescription() {
+                return "*.doc *.docx";
+            }
+        };
+
+        ListModel listModel1 = new DefaultListModel();
+        ListModel listModel2 = new DefaultListModel();
+        jList2.setModel(listModel1);
+        jList3.setModel(listModel2);
+    }
+
+    private void bn_chooseRoutineDocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_chooseRoutineDocMouseClicked
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("./test/"));
+        chooser.setCurrentDirectory(new File("./"));
+        chooser.setFileFilter(docFileFilter);
         int result = chooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = chooser.getSelectedFile();
+            currentSelectedDirectory = selectedFile.getAbsolutePath();
             jTextPane1.setText(selectedFile.getAbsolutePath());
         }
-    }//GEN-LAST:event_bn_ChooseRoutineDocMouseClicked
+    }//GEN-LAST:event_bn_chooseRoutineDocMouseClicked
 
-    private void bn_ChooseRoutineDoc1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_ChooseRoutineDoc1MouseClicked
+    private void bn_chooseApplicationDocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_chooseApplicationDocMouseClicked
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("./test/"));
+        chooser.setCurrentDirectory(new File(currentSelectedDirectory));
+        chooser.setFileFilter(docFileFilter);
         int result = chooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = chooser.getSelectedFile();
+            currentSelectedDirectory = selectedFile.getAbsolutePath();
             jTextPane2.setText(selectedFile.getAbsolutePath());
         }
-    }//GEN-LAST:event_bn_ChooseRoutineDoc1MouseClicked
+    }//GEN-LAST:event_bn_chooseApplicationDocMouseClicked
 
-    private void bn_ChooseRoutineDoc2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_ChooseRoutineDoc2MouseClicked
+    private void bn_addAppEvidenceDocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_addAppEvidenceDocMouseClicked
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("./test/"));
+        chooser.setCurrentDirectory(new File(currentSelectedDirectory));
+        chooser.setFileFilter(docFileFilter);
+        int result = chooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = chooser.getSelectedFile();
+            DefaultListModel dfm = (DefaultListModel) jList2.getModel();
+            dfm.addElement(selectedFile.getAbsolutePath());
+            currentSelectedDirectory = selectedFile.getAbsolutePath();
+        }
+    }//GEN-LAST:event_bn_addAppEvidenceDocMouseClicked
+
+    private void bn_chooseResDocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_chooseResDocMouseClicked
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File(currentSelectedDirectory));
+        chooser.setFileFilter(docFileFilter);
         int result = chooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = chooser.getSelectedFile();
             jTextPane3.setText(selectedFile.getAbsolutePath());
+            currentSelectedDirectory = selectedFile.getAbsolutePath();
         }
-    }//GEN-LAST:event_bn_ChooseRoutineDoc2MouseClicked
+    }//GEN-LAST:event_bn_chooseResDocMouseClicked
 
-    private void bn_ChooseRoutineDoc3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_ChooseRoutineDoc3MouseClicked
+    private void bn_chooseOutputFolderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_chooseOutputFolderMouseClicked
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("./test/"));
+        chooser.setCurrentDirectory(new File(currentSelectedDirectory));
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int result = chooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = chooser.getSelectedFile();
-            jTextPane4.setText(selectedFile.getAbsolutePath());
+            File selectedFolder = chooser.getSelectedFile();
+            String file = selectedFolder.getAbsolutePath() + "/裁决书.docx";
+            jTextPane4.setText(file);
+            currentSelectedDirectory = selectedFolder.getAbsolutePath();
         }
-    }//GEN-LAST:event_bn_ChooseRoutineDoc3MouseClicked
+    }//GEN-LAST:event_bn_chooseOutputFolderMouseClicked
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("./test/"));
-        int result = chooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = chooser.getSelectedFile();
-            jTextPane5.setText(selectedFile.getAbsolutePath());
-        }
-    }//GEN-LAST:event_jButton1MouseClicked
-
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+    private void bn_generateOutDocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_generateOutDocMouseClicked
         String routineDocPath = jTextPane1.getText();
         String applicationDocPath = jTextPane2.getText();
-        String appEvidenceDocPath = jTextPane3.getText();
-        String responseDocPath = jTextPane4.getText();
-        String resEvidenceDocPath = jTextPane5.getText();
         List<String> eAppList = new LinkedList<>();
-        eAppList.add(appEvidenceDocPath);
+        DefaultListModel dlm = (DefaultListModel) jList2.getModel();
+        for (int i = 0; i < dlm.getSize(); ++i) {
+            eAppList.add((String) dlm.getElementAt(i));
+        }
+        String responseDocPath = jTextPane3.getText();
         List<String> eResList = new LinkedList<>();
-        eResList.add(resEvidenceDocPath);
-
-        String outDocPath = "./test/testoutput/guiout.docx";
+        dlm = (DefaultListModel) jList3.getModel();
+        for (int i = 0; i < dlm.getSize(); ++i) {
+            eResList.add((String) dlm.getElementAt(i));
+        }
+        String outDocPath = jTextPane4.getText();
 
         DocProcess dp = new DocProcess(routineDocPath, applicationDocPath, eAppList, responseDocPath, eResList, outDocPath);
 
@@ -337,6 +422,27 @@ public class MainWindow extends javax.swing.JFrame {
         String inResPath = dp.getInRespondDocUrl();
         List inResEvidencePathList = dp.getInResEvidenceDocUrlList();
         String outAwardPath = dp.getOutAwardDocUrl();
+        
+        boolean error = false;
+        StringBuilder errorMessage = new StringBuilder();
+        
+        if(inRoutinePath==null||inRoutinePath.isEmpty()){
+            error = true;
+            errorMessage.append("裁决书程序文件缺失\n");
+        }
+        
+        if(inAppPath==null||inAppPath.isEmpty()){
+            error = true;
+            errorMessage.append("仲裁申请文件缺失\n");
+        }
+        
+        if(error){
+            ErrorDialog ed = new ErrorDialog(this, rootPaneCheckingEnabled);
+            ed.setErrorLabel(errorMessage.toString());
+            ed.setLocationRelativeTo(this);
+            ed.setVisible(true);
+            return;
+        }
 
         try {
             RoutineDocReader rdr = new RoutineDocReader();
@@ -360,7 +466,36 @@ public class MainWindow extends javax.swing.JFrame {
             System.err.println("IOException!");
         }
 
-    }//GEN-LAST:event_jButton2MouseClicked
+    }//GEN-LAST:event_bn_generateOutDocMouseClicked
+
+    private void bn_rmAppEvidenceDocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_rmAppEvidenceDocMouseClicked
+        int selectedIdx = jList2.getSelectedIndex();
+        if (selectedIdx >= 0) {
+            DefaultListModel dfm = (DefaultListModel) jList2.getModel();
+            dfm.removeElementAt(selectedIdx);
+        }
+    }//GEN-LAST:event_bn_rmAppEvidenceDocMouseClicked
+
+    private void bn_addResEvidenceDocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_addResEvidenceDocMouseClicked
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File(currentSelectedDirectory));
+        chooser.setFileFilter(docFileFilter);
+        int result = chooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = chooser.getSelectedFile();
+            DefaultListModel dfm = (DefaultListModel) jList3.getModel();
+            dfm.addElement(selectedFile.getAbsolutePath());
+            currentSelectedDirectory = selectedFile.getAbsolutePath();
+        }
+    }//GEN-LAST:event_bn_addResEvidenceDocMouseClicked
+
+    private void bn_rmResEvidenceDocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bn_rmResEvidenceDocMouseClicked
+        int selectedIdx = jList3.getSelectedIndex();
+        if (selectedIdx >= 0) {
+            DefaultListModel dfm = (DefaultListModel) jList3.getModel();
+            dfm.removeElementAt(selectedIdx);
+        }
+    }//GEN-LAST:event_bn_rmResEvidenceDocMouseClicked
 
     /**
      * @param args the command line arguments
@@ -392,37 +527,44 @@ public class MainWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainWindow().setVisible(true);
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.pack();
+                mainWindow.setLocationRelativeTo(null);
+                mainWindow.setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bn_ChooseRoutineDoc;
-    private javax.swing.JButton bn_ChooseRoutineDoc1;
-    private javax.swing.JButton bn_ChooseRoutineDoc2;
-    private javax.swing.JButton bn_ChooseRoutineDoc3;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton bn_addAppEvidenceDoc;
+    private javax.swing.JButton bn_addResEvidenceDoc;
+    private javax.swing.JButton bn_chooseApplicationDoc;
+    private javax.swing.JButton bn_chooseOutputFolder;
+    private javax.swing.JButton bn_chooseResDoc;
+    private javax.swing.JButton bn_chooseRoutineDoc;
+    private javax.swing.JButton bn_generateOutDoc;
+    private javax.swing.JButton bn_rmAppEvidenceDoc;
+    private javax.swing.JButton bn_rmResEvidenceDoc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JList<String> jList2;
+    private javax.swing.JList<String> jList3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTextPane jTextPane2;
     private javax.swing.JTextPane jTextPane3;
     private javax.swing.JTextPane jTextPane4;
-    private javax.swing.JTextPane jTextPane5;
     // End of variables declaration//GEN-END:variables
 }
