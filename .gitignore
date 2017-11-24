@@ -2,3 +2,4 @@ build/
 nbproject/private
 test/testoutput/
 test/~*
+log/log*
