@@ -684,10 +684,10 @@ public class MainWindow extends javax.swing.JFrame {
         String result;
         SimpleDateFormat formatter;
 
-        formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
+        formatter = new SimpleDateFormat("yyyy-MM-dd@HH-mm");
         now = new Date();
         result = formatter.format(now);
-        return result + "生成裁决书.docx";
+        return result + "_生成裁决书.docx";
     }
 
     /**
