@@ -285,15 +285,15 @@ public class AwardDocGenerator extends DocGenerator {
         p2r1.addBreak();
         p2r1.addBreak();
 
-        for (int i = 0; i < aApplication.getProposerList().size(); ++i) {
-            Proposer pro = (Proposer) aApplication.getProposerList().get(i);
-            addProposerTable(pro, i + 1, aApplication.getProposerList().size());
+        for (int i = 0; i < routine.getProposerList().size(); ++i) {
+            Proposer pro = (Proposer) routine.getProposerList().get(i);
+            addProposerTable(pro, i + 1, routine.getProposerList().size());
             breakLine();
         }
 
-        for (int i = 0; i < aApplication.getRespondentList().size(); ++i) {
-            Respondent res = (Respondent) aApplication.getRespondentList().get(i);
-            addRespondentTable(res, i + 1, aApplication.getRespondentList().size());
+        for (int i = 0; i < routine.getRespondentList().size(); ++i) {
+            Respondent res = (Respondent) routine.getRespondentList().get(i);
+            addRespondentTable(res, i + 1, routine.getRespondentList().size());
             breakLine();
         }
 

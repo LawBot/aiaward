@@ -148,7 +148,7 @@ public class AIAwardGenerator {
                 Routine routine = rdr.processRoutine(inRoutinePath);
 
                 ApplicationDocReader adr = new ApplicationDocReader();
-                ArbitrationApplication aApplication = adr.processApplication(inAppPath, inRoutinePath);
+                ArbitrationApplication aApplication = adr.processApplication(inAppPath);
                 AwardDocGenerator awardGen = new AwardDocGenerator(outAwardPath);
 
                 EvidenceDocReader aedr = new EvidenceDocReader();

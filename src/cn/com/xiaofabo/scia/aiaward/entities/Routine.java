@@ -5,16 +5,23 @@
  */
 package cn.com.xiaofabo.scia.aiaward.entities;
 
+import java.util.List;
+
 /**
  *
  * @author 陈光曦
  */
 public class Routine {
 
-    private String awardDate;
-    private String routineText;
+    private final String awardDate;
+    private final String routineText;
 
-    public Routine(String awardDate, String routineText) {
+    private final List proposerList;
+    private final List respondentList;
+
+    public Routine(List proposerList, List respondentList, String awardDate, String routineText) {
+        this.proposerList = proposerList;
+        this.respondentList = respondentList;
         this.awardDate = awardDate;
         this.routineText = routineText;
     }
@@ -27,4 +34,11 @@ public class Routine {
         return routineText;
     }
 
+    public List getProposerList() {
+        return proposerList;
+    }
+
+    public List getRespondentList() {
+        return respondentList;
+    }
 }

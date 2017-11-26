@@ -5,8 +5,6 @@
  */
 package cn.com.xiaofabo.scia.aiaward.entities;
 
-import java.util.List;
-
 /**
  *
  * @author 陈光曦
@@ -15,8 +13,6 @@ public class ArbitrationApplication {
 
     private int id;
     private String title;
-    private List proposerList;
-    private List respondentList;
     private String gist;
     private String request;
     private String factAndReason;
@@ -25,11 +21,9 @@ public class ArbitrationApplication {
         this.id = id;
     }
 
-    public ArbitrationApplication(int id, String title, List proposerList, List respondentList) {
+    public ArbitrationApplication(int id, String title) {
         this.id = id;
         this.title = title;
-        this.proposerList = proposerList;
-        this.respondentList = respondentList;
     }
 
     public int getId() {
@@ -46,22 +40,6 @@ public class ArbitrationApplication {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List getProposerList() {
-        return proposerList;
-    }
-
-    public void setProposerList(List proposerList) {
-        this.proposerList = proposerList;
-    }
-
-    public List getRespondentList() {
-        return respondentList;
-    }
-
-    public void setRespondentList(List respondentList) {
-        this.respondentList = respondentList;
     }
 
     public String getGist() {
