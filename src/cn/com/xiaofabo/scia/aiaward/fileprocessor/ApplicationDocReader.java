@@ -6,12 +6,7 @@
 package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
-import cn.com.xiaofabo.scia.aiaward.entities.Pair;
-import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationProposer;
-import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRespondent;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -22,9 +17,9 @@ import org.apache.log4j.PropertyConfigurator;
 public class ApplicationDocReader extends DocReader {
 
     public static Logger logger = Logger.getLogger(ApplicationDocReader.class.getName());
-    
 
     public ApplicationDocReader() {
+        super();
         PropertyConfigurator.configure("log/config.txt");
         logger.trace("Constructor of ApplicationDocReader");
     }
@@ -103,6 +98,21 @@ public class ApplicationDocReader extends DocReader {
         aApplication.setGist(gistChunk);
         aApplication.setRequest(requestChunk);
         aApplication.setFactAndReason(factAndReasonChunk);
+
+        if (aApplication.getGist() == null || aApplication.getGist().isEmpty()) {
+            logger.warn("WARN: aApplication.getGist()== null|| aApplication.getGist().isEmpty()");
+            addWarningToUser("在仲裁申请书中未找到仲裁依据");
+        }
+
+        if (aApplication.getRequest() == null || aApplication.getRequest().isEmpty()) {
+            logger.error("ERROR: aApplication.getRequest()== null|| aApplication.getRequest().isEmpty()");
+            addErrorToUser("在仲裁申请书中未找到仲裁请求");
+        }
+        if (aApplication.getFactAndReason() == null || aApplication.getFactAndReason().isEmpty()) {
+            logger.error("ERROR: aApplication.getFactAndReason() == null || aApplication.getFactAndReason().isEmpty()");
+            addErrorToUser("在仲裁申请书中未找到事实与理由");
+        }
+
         return aApplication;
     }
 }

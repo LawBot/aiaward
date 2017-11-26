@@ -1,0 +1,27 @@
+[2017-11-26 21:54:18,864]INFO :gui.MainWindow - +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[2017-11-26 21:54:18,864]INFO :gui.MainWindow - ++++++++++++++++++++Generation Starts++++++++++++++++++++
+[2017-11-26 21:54:18,864]FATAL:gui.MainWindow - 裁决书程序文件缺失
+[2017-11-26 21:54:18,865]FATAL:gui.MainWindow - 仲裁申请文件缺失
+[2017-11-26 21:54:18,865]FATAL:gui.MainWindow - 输出裁决书文件地址未定义
+[2017-11-26 21:54:18,865]FATAL:gui.MainWindow - FATAL ERROR occurred. Abort!
+[2017-11-26 21:54:33,039]INFO :gui.MainWindow - +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[2017-11-26 21:54:33,039]INFO :gui.MainWindow - ++++++++++++++++++++Generation Starts++++++++++++++++++++
+[2017-11-26 21:54:33,040]FATAL:gui.MainWindow - 裁决书程序文件缺失
+[2017-11-26 21:54:33,040]FATAL:gui.MainWindow - 仲裁申请文件缺失
+[2017-11-26 21:54:33,040]FATAL:gui.MainWindow - 输出裁决书文件地址未定义
+[2017-11-26 21:54:33,040]FATAL:gui.MainWindow - FATAL ERROR occurred. Abort!
+[2017-11-26 21:55:27,189]INFO :gui.MainWindow - +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[2017-11-26 21:55:27,189]INFO :gui.MainWindow - ++++++++++++++++++++Generation Starts++++++++++++++++++++
+[2017-11-26 21:55:27,192]INFO :fileprocessor.ApplicationDocReader - Reading in file: D:\Code\XiaoFaBo\AIAwardGenerator\test\Case6\SHEN DF20170368\仲裁资料\award\13608_AI-裁决书-程序部分.doc
+[2017-11-26 21:55:27,387]INFO :fileprocessor.ApplicationDocReader - Reading in file: D:\Code\XiaoFaBo\AIAwardGenerator\test\Case6\SHEN DF20170368\仲裁资料\申请人\13606_AI-仲裁申请书.docx
+[2017-11-26 21:55:27,726]WARN :fileprocessor.ApplicationDocReader - WARN: aApplication.getGist()== null|| aApplication.getGist().isEmpty()
+[2017-11-26 21:55:27,727]INFO :fileprocessor.ApplicationDocReader - Reading in file: D:\Code\XiaoFaBo\AIAwardGenerator\test\Case6\SHEN DF20170368\仲裁资料\申请人\13607_AI-证据目录.docx
+[2017-11-26 21:55:27,808]INFO :fileprocessor.ApplicationDocReader - Reading in file: D:\Code\XiaoFaBo\AIAwardGenerator\test\Case6\SHEN DF20170368\仲裁资料\被申请人\13609_AI-答辩状.docx
+[2017-11-26 21:55:27,862]ERROR:gui.MainWindow - All error messages: 
+[2017-11-26 21:55:27,862]WARN :gui.MainWindow - All warning messages: 在仲裁申请书中未找到仲裁依据
+无有效答辩证据
+
+[2017-11-26 21:55:33,862]INFO :fileprocessor.AwardDocGenerator - Generating award to file: D:\Code\XiaoFaBo\AIAwardGenerator\test\Case6\SHEN DF20170368\2017-11-26_21-55生成裁决书.docx
+[2017-11-26 21:55:34,008]INFO :fileprocessor.AwardDocGenerator - Award successfully generated!
+[2017-11-26 21:55:38,025]INFO :gui.MainWindow - 成功生成裁决书：D:\Code\XiaoFaBo\AIAwardGenerator\test\Case6\SHEN DF20170368\2017-11-26_21-55生成裁决书.docx
+[2017-11-26 21:55:38,025]INFO :gui.MainWindow - --------------------Generation Ends--------------------

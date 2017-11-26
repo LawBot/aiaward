@@ -21,6 +21,7 @@ public class EvidenceDocReader extends DocReader {
     Logger logger = Logger.getLogger(EvidenceDocReader.class.getName());
 
     public EvidenceDocReader() {
+        super();
         evidenceList = new LinkedList();
         PropertyConfigurator.configure("log/config.txt");
     }
@@ -33,15 +34,16 @@ public class EvidenceDocReader extends DocReader {
             String inputPath = (String) inputPathList.get(i);
 //            logger.info(inputPath + ":");
             readWordFile(inputPath);
-            List eList = getEvidences();
+            List eList = getEvidences(inputPath);
             if (!eList.isEmpty()) {
                 evidenceList.add(eList);
             }
         }
+
         return evidenceList;
     }
 
-    private List getEvidences() {
+    private List getEvidences(String inputPath) {
         List<String> eList = new LinkedList<>();
         String lines[] = docText.split("\\r?\\n");
         int tableStart = 0;
@@ -84,6 +86,11 @@ public class EvidenceDocReader extends DocReader {
         logger.debug("Table end: " + tableEnd);
         if (tableStart + tableEnd == 0) {
             logger.error("Did not find evidence list in file. Please check file format!!!");
+        }
+
+        if (eList.isEmpty()) {
+            logger.warn("evidenceList.isEmpty()");
+            addWarningToUser("在证据列表中未找到证据: " + inputPath);
         }
         return eList;
     }

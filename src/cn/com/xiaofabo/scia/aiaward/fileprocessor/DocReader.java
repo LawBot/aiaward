@@ -8,6 +8,8 @@ package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 import static cn.com.xiaofabo.scia.aiaward.fileprocessor.ApplicationDocReader.logger;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
@@ -17,8 +19,16 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  *
  * @author 陈光曦
  */
-public abstract class DocReader implements InputFileReader{
+public abstract class DocReader implements InputFileReader {
+
     protected String docText;
+    private List<String> errorToUser;
+    private List<String> warningToUser;
+
+    public DocReader() {
+        errorToUser = new LinkedList<>();
+        warningToUser = new LinkedList<>();
+    }
 
     protected void readWordFile(String inputPath) throws IOException {
         logger.info("Reading in file: " + inputPath);
@@ -34,8 +44,8 @@ public abstract class DocReader implements InputFileReader{
             docText = we.getText();
         }
     }
-    
-    protected String getDocText(){
+
+    protected String getDocText() {
         return docText;
     }
 
@@ -66,7 +76,7 @@ public abstract class DocReader implements InputFileReader{
         }
         return toReturn.toString();
     }
-    
+
     protected String combineContent(String[] lines, int startLineNum, int endLineNum) {
         StringBuilder toReturn = new StringBuilder();
         for (int lineIdx = startLineNum; lineIdx <= endLineNum; ++lineIdx) {
@@ -77,5 +87,21 @@ public abstract class DocReader implements InputFileReader{
             }
         }
         return toReturn.toString();
+    }
+
+    protected void addErrorToUser(String error) {
+        errorToUser.add(error);
+    }
+
+    protected void addWarningToUser(String warning) {
+        warningToUser.add(warning);
+    }
+
+    public List getErrorToUser() {
+        return errorToUser;
+    }
+
+    public List getWarningToUser() {
+        return warningToUser;
     }
 }

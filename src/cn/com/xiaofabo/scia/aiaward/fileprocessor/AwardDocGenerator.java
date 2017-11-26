@@ -9,6 +9,7 @@ import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationProposer;
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRespondent;
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRoutine;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -112,6 +113,15 @@ public class AwardDocGenerator extends DocGenerator {
                 resEvidenceList);
 //        generateSignaturePage();
         try {
+            int lastIdx1 = outAwardDocUrl.lastIndexOf("/");
+            int lastIdx2 = outAwardDocUrl.lastIndexOf("\\");
+            int lastIdx = lastIdx1 > lastIdx2 ? lastIdx1 : lastIdx2;
+            String directoryName = outAwardDocUrl.substring(0, lastIdx);
+            File directory = new File(directoryName);
+            if (!directory.exists()) {
+                directory.mkdir();
+                logger.info("Creating folder:" + directoryName);
+            }
             FileOutputStream fos = new FileOutputStream(outAwardDocUrl);
             awardDoc.write(fos);
             fos.close();
@@ -120,9 +130,13 @@ public class AwardDocGenerator extends DocGenerator {
             logger.fatal("Cannot create output file: " + outAwardDocUrl);
             logger.fatal("Please make sure parent folder exists!");
             logger.fatal("PROGRAM ABORTED!!!");
+            addErrorToUser("无法生成裁决书文件，请确认文件上层目录存在");
+            return null;
         } catch (IOException e) {
             logger.fatal("Cannot write to output file: " + outAwardDocUrl);
             logger.fatal("PROGRAM ABORTED!!!");
+            addErrorToUser("无法写入裁决书文件");
+            return null;
         }
 
         logger.info("Award successfully generated!");
@@ -370,7 +384,9 @@ public class AwardDocGenerator extends DocGenerator {
         }
 
         addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
-        addNormalTextParagraphs(respondContent, 0, 1);
+        if (respondContent != null && !respondContent.isEmpty()) {
+            addNormalTextParagraphs(respondContent, 0, 1);
+        }
 
         if (resEvidenceList != null && !resEvidenceList.isEmpty()) {
             addNormalTextParagraph("被申请人为支持仲裁请求提交了以下证据：", 0);

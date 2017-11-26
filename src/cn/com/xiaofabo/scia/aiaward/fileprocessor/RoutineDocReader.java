@@ -27,6 +27,7 @@ public class RoutineDocReader extends DocReader {
     private final List<ArbitrationRespondent> respondentList;
 
     public RoutineDocReader() {
+        super();
         PropertyConfigurator.configure("log/config.txt");
         logger.trace("Constructor of RoutineDocReader");
         proposerList = new LinkedList<>();
@@ -82,6 +83,16 @@ public class RoutineDocReader extends DocReader {
         logger.debug("Content end line number: " + endLineNum);
         routineText = combineContent(lines, startLineNum, endLineNum);
 
+        if (dateText == null || dateText.isEmpty()) {
+            logger.warn("WARN: dateText == null || dateText.isEmpty()");
+            addWarningToUser("在程序文件中未找到裁决书日期");
+        }
+        
+        if(routineText == null || routineText.isEmpty()){
+            logger.error("ERROR: routineText == null || routineText.isEmpty()");
+            addErrorToUser("在程序文件中未找到程序部分文本");
+        }
+
         return new ArbitrationRoutine(proposerList, respondentList, dateText, routineText);
     }
 
@@ -109,13 +120,16 @@ public class RoutineDocReader extends DocReader {
         }
 
         if (proposerChunkStartIdx.isEmpty()) {
-            logger.error("ERROR: Did not find any proposer in routine document!!!");
+            /// Did not find any proposer in routine document!!!
+            logger.error("ERROR: proposerChunkStartIdx.isEmpty()");
         }
         if (respondentChunkStartIdx.isEmpty()) {
-            logger.error("ERROR: Did not find any respondent in routine document!!!");
+            /// Did not find any respondent in routine document!!!
+            logger.error("ERROR: respondentChunkStartIdx.isEmpty()");
         }
         if (lastIdx == 0) {
-            logger.error("ERROR: First page in routine document is not correctly formatted!!!");
+            /// First page in routine document is not correctly formatted!!!
+            logger.error("ERROR: lastIdx == 0");
         }
 
         List<String> proposerChunk = new LinkedList<>();
@@ -151,6 +165,16 @@ public class RoutineDocReader extends DocReader {
         for (int i = 0; i < respondentChunk.size(); ++i) {
             String rChunk = respondentChunk.get(i);
             respondentList.add(createRespondent(rChunk));
+        }
+
+        /// Error handling
+        if (proposerList.isEmpty()) {
+            logger.error("proposerList.isEmpty()");
+            addErrorToUser("在程序文件中未找到申请人信息");
+        }
+        if (respondentList.isEmpty()) {
+            logger.error("respondentList.isEmpty()");
+            addErrorToUser("在程序文件中未找到被申请人信息");
         }
     }
 
