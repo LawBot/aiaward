@@ -6,9 +6,9 @@
 package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 
 import cn.com.xiaofabo.scia.aiaward.entities.Pair;
-import cn.com.xiaofabo.scia.aiaward.entities.Proposer;
-import cn.com.xiaofabo.scia.aiaward.entities.Respondent;
-import cn.com.xiaofabo.scia.aiaward.entities.Routine;
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationProposer;
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRespondent;
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRoutine;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,8 +23,8 @@ public class RoutineDocReader extends DocReader {
 
     static Logger logger = Logger.getLogger(RoutineDocReader.class.getName());
 
-    private final List<Proposer> proposerList;
-    private final List<Respondent> respondentList;
+    private final List<ArbitrationProposer> proposerList;
+    private final List<ArbitrationRespondent> respondentList;
 
     public RoutineDocReader() {
         PropertyConfigurator.configure("log/config.txt");
@@ -33,7 +33,7 @@ public class RoutineDocReader extends DocReader {
         respondentList = new LinkedList<>();
     }
 
-    public Routine processRoutine(String inputPath) throws IOException {
+    public ArbitrationRoutine processRoutine(String inputPath) throws IOException {
         readWordFile(inputPath);
         preprocess(docText);
 
@@ -82,7 +82,7 @@ public class RoutineDocReader extends DocReader {
         logger.debug("Content end line number: " + endLineNum);
         routineText = combineContent(lines, startLineNum, endLineNum);
 
-        return new Routine(proposerList, respondentList, dateText, routineText);
+        return new ArbitrationRoutine(proposerList, respondentList, dateText, routineText);
     }
 
     private void readProAndRes() throws IOException {
@@ -154,7 +154,7 @@ public class RoutineDocReader extends DocReader {
         }
     }
 
-    private Proposer createProposer(String pChunk) {
+    private ArbitrationProposer createProposer(String pChunk) {
         pChunk = pAndrProcess(pChunk);
         String plines[] = pChunk.split("\\r?\\n");
         List<Pair> proposerPairList = new LinkedList<>();
@@ -186,7 +186,7 @@ public class RoutineDocReader extends DocReader {
             }
         }
 
-        Proposer pro = new Proposer();
+        ArbitrationProposer pro = new ArbitrationProposer();
         String proposer = "";
         String address = "";
         String representative = "";
@@ -219,7 +219,7 @@ public class RoutineDocReader extends DocReader {
         return pro;
     }
 
-    private Respondent createRespondent(String rChunk) {
+    private ArbitrationRespondent createRespondent(String rChunk) {
         rChunk = pAndrProcess(rChunk);
         String rlines[] = rChunk.split("\\r?\\n");
         List<Pair> respondentPairList = new LinkedList<>();
@@ -251,7 +251,7 @@ public class RoutineDocReader extends DocReader {
             }
         }
 
-        Respondent res = new Respondent();
+        ArbitrationRespondent res = new ArbitrationRespondent();
         String respondent = "";
         String address = "";
         String representative = "";

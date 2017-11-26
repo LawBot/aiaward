@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author 陈光曦
  */
-public class Routine {
+public class ArbitrationRoutine {
 
     private final String awardDate;
     private final String routineText;
@@ -19,7 +19,7 @@ public class Routine {
     private final List proposerList;
     private final List respondentList;
 
-    public Routine(List proposerList, List respondentList, String awardDate, String routineText) {
+    public ArbitrationRoutine(List proposerList, List respondentList, String awardDate, String routineText) {
         this.proposerList = proposerList;
         this.respondentList = respondentList;
         this.awardDate = awardDate;

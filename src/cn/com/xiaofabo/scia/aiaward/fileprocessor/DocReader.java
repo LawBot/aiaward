@@ -22,7 +22,7 @@ public abstract class DocReader implements InputFileReader{
 
     protected void readWordFile(String inputPath) throws IOException {
         logger.info("Reading in file: " + inputPath);
-        // Newer version word documents
+        /// Newer version word documents
         try {
             XWPFDocument docx = new XWPFDocument(new FileInputStream(inputPath));
             XWPFWordExtractor we = new XWPFWordExtractor(docx);

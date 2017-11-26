@@ -7,7 +7,7 @@ package cn.com.xiaofabo.scia.aiaward.gui;
 
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
 import cn.com.xiaofabo.scia.aiaward.entities.DocProcess;
-import cn.com.xiaofabo.scia.aiaward.entities.Routine;
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRoutine;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.ApplicationDocReader;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.AwardDocGenerator;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.EvidenceDocReader;
@@ -423,6 +423,7 @@ public class MainWindow extends javax.swing.JFrame {
         String outAwardPath = dp.getOutAwardDocUrl();
         
         boolean error = false;
+        
         StringBuilder errorMessage = new StringBuilder();
         
         if(inRoutinePath==null||inRoutinePath.isEmpty()){
@@ -445,7 +446,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         try {
             RoutineDocReader rdr = new RoutineDocReader();
-            Routine routine = rdr.processRoutine(inRoutinePath);
+            ArbitrationRoutine routine = rdr.processRoutine(inRoutinePath);
 
             ApplicationDocReader adr = new ApplicationDocReader();
             ArbitrationApplication aApplication = adr.processApplication(inAppPath);

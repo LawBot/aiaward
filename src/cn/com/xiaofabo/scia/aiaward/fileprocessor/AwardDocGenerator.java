@@ -6,9 +6,9 @@
 package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
-import cn.com.xiaofabo.scia.aiaward.entities.Proposer;
-import cn.com.xiaofabo.scia.aiaward.entities.Respondent;
-import cn.com.xiaofabo.scia.aiaward.entities.Routine;
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationProposer;
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRespondent;
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRoutine;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -96,7 +96,7 @@ public class AwardDocGenerator extends DocGenerator {
         logger.trace("Constructor: finish constructing AwardDocGenerator");
     }
 
-    public XWPFDocument generateAwardDoc(Routine routine,
+    public XWPFDocument generateAwardDoc(ArbitrationRoutine routine,
             ArbitrationApplication aApplication,
             List appEvidenceList,
             String respondConent,
@@ -266,7 +266,7 @@ public class AwardDocGenerator extends DocGenerator {
         }
     }
 
-    private void generateFirstPage(ArbitrationApplication aApplication, Routine routine) {
+    private void generateFirstPage(ArbitrationApplication aApplication, ArbitrationRoutine routine) {
 
         XWPFParagraph p1 = awardDoc.createParagraph();
         p1.setAlignment(ParagraphAlignment.CENTER);
@@ -286,13 +286,13 @@ public class AwardDocGenerator extends DocGenerator {
         p2r1.addBreak();
 
         for (int i = 0; i < routine.getProposerList().size(); ++i) {
-            Proposer pro = (Proposer) routine.getProposerList().get(i);
+            ArbitrationProposer pro = (ArbitrationProposer) routine.getProposerList().get(i);
             addProposerTable(pro, i + 1, routine.getProposerList().size());
             breakLine();
         }
 
         for (int i = 0; i < routine.getRespondentList().size(); ++i) {
-            Respondent res = (Respondent) routine.getRespondentList().get(i);
+            ArbitrationRespondent res = (ArbitrationRespondent) routine.getRespondentList().get(i);
             addRespondentTable(res, i + 1, routine.getRespondentList().size());
             breakLine();
         }
@@ -317,7 +317,7 @@ public class AwardDocGenerator extends DocGenerator {
         p6r1.addBreak(BreakType.PAGE);
     }
 
-    private void generateContentPages(Routine routine,
+    private void generateContentPages(ArbitrationRoutine routine,
             ArbitrationApplication aApplication,
             List appEvidenceList,
             String respondContent,
@@ -604,7 +604,7 @@ public class AwardDocGenerator extends DocGenerator {
         paragraphRun.setText(value);
     }
 
-    private void addProposerTable(Proposer pro, int countPro, int totalCount) {
+    private void addProposerTable(ArbitrationProposer pro, int countPro, int totalCount) {
         XWPFTable proposerTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(proposerTable);
 
@@ -624,7 +624,7 @@ public class AwardDocGenerator extends DocGenerator {
         setTableRowContent(proposerTable.getRow(3), "代  理  人：", pro.getAgency());
     }
 
-    private void addRespondentTable(Respondent res, int countRes, int totalCount) {
+    private void addRespondentTable(ArbitrationRespondent res, int countRes, int totalCount) {
         XWPFTable respondentTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(respondentTable);
         /// Doesn't seem to have any effect

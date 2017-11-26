@@ -7,8 +7,8 @@ package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
 import cn.com.xiaofabo.scia.aiaward.entities.Pair;
-import cn.com.xiaofabo.scia.aiaward.entities.Proposer;
-import cn.com.xiaofabo.scia.aiaward.entities.Respondent;
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationProposer;
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRespondent;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +34,6 @@ public class ApplicationDocReader extends DocReader {
         docText = preprocess(docText);
 
         String lines[] = docText.split("\\r?\\n");
-        ArbitrationApplication application = new ArbitrationApplication(0);
 
         int gistChunkStartIdx = 0;
         int requestChunkStartIdx = 0;
