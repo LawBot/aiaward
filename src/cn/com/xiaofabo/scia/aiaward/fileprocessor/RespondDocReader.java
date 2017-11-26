@@ -6,7 +6,6 @@
 package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
