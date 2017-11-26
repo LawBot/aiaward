@@ -3,3 +3,4 @@ nbproject/private
 test/testoutput/
 test/~*
 log/log*
+dist/log/*
