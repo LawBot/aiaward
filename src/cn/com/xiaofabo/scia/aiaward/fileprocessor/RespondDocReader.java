@@ -18,11 +18,15 @@ public class RespondDocReader extends DocReader {
     static Logger logger = Logger.getLogger(RespondDocReader.class.getName());
 
     public RespondDocReader() {
+        super();
         PropertyConfigurator.configure("log/config.txt");
         logger.trace("Constructor of RespondDocReader");
     }
 
     public String processRespond(String inputPath) throws IOException {
+        if (inputPath == null || inputPath.isEmpty()) {
+            return null;
+        }
         readWordFile(inputPath);
         preprocess(docText);
 
@@ -63,10 +67,14 @@ public class RespondDocReader extends DocReader {
         logger.debug("Content end line number: " + endLineNum);
         String content = combineContent(lines, startLineNum, endLineNum - 1);
         content = replacePhrases(content);
+        if (content.isEmpty()) {
+            logger.error("content.isEmpty()");
+            addErrorToUser("在答辩书中未找到答辩人意见");
+        }
         return content;
     }
-    
-    private String replacePhrases(String str){
+
+    private String replacePhrases(String str) {
         str = str.replaceAll("答辩人", "被申请人");
         str = str.replaceAll("被答辩人", "申请人");
         return str;

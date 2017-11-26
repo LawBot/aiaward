@@ -7,7 +7,7 @@ package cn.com.xiaofabo.scia.aiaward.main;
 
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
 import cn.com.xiaofabo.scia.aiaward.entities.DocProcess;
-import cn.com.xiaofabo.scia.aiaward.entities.Routine;
+import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRoutine;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.ApplicationDocReader;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.AwardDocGenerator;
 import cn.com.xiaofabo.scia.aiaward.fileprocessor.EvidenceDocReader;
@@ -27,15 +27,11 @@ public class AIAwardGenerator {
 
     private static Logger logger = Logger.getLogger(AIAwardGenerator.class.getName());
 
-    /**
-     * @param args the command line arguments
-     * @throws java.lang.Exception
-     */
-    public static void main(String[] args) throws Exception {
+    public static void batchGenerate() throws Exception {
         PropertyConfigurator.configure("log/config.txt");
         logger.info("AI Award Generator program started...");
 
-        /// Routine
+        /// ArbitrationRoutine
         String routineIn1 = "test\\Case1\\仲裁资料\\award\\12290_AI-裁决书-程序部分.doc";
         String routineIn2 = "test\\Case2\\仲裁资料\\award\\12195_AI-裁决书-程序部分.doc";
         String routineIn3 = "test\\Case3\\仲裁资料\\award\\12385_AI-裁决书-程序部分.docx";
@@ -149,10 +145,10 @@ public class AIAwardGenerator {
                 String outAwardPath = dp.getOutAwardDocUrl();
 
                 RoutineDocReader rdr = new RoutineDocReader();
-                Routine routine = rdr.processRoutine(inRoutinePath);
+                ArbitrationRoutine routine = rdr.processRoutine(inRoutinePath);
 
                 ApplicationDocReader adr = new ApplicationDocReader();
-                ArbitrationApplication aApplication = adr.processApplication(inAppPath, inRoutinePath);
+                ArbitrationApplication aApplication = adr.processApplication(inAppPath);
                 AwardDocGenerator awardGen = new AwardDocGenerator(outAwardPath);
 
                 EvidenceDocReader aedr = new EvidenceDocReader();

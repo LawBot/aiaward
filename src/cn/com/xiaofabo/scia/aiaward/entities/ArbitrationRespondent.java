@@ -7,35 +7,31 @@ package cn.com.xiaofabo.scia.aiaward.entities;
 
 /**
  *
- * @author 陈光曦
+ * @author gchen
  */
-public class Proposer {
+public class ArbitrationRespondent {
 
-    private String proposer;
+    private String respondent;
     private String agency;
     private String representative;
     private String address;
 
-    public Proposer() {
+    public ArbitrationRespondent() {
     }
 
-    public Proposer(String proposer) {
-        this.proposer = proposer;
-    }
-
-    public Proposer(String proposer, String agency, String representative, String address) {
-        this.proposer = proposer;
+    public ArbitrationRespondent(String respondent, String agency, String representative, String address) {
+        this.respondent = respondent;
         this.agency = agency;
         this.representative = representative;
         this.address = address;
     }
 
-    public String getProposer() {
-        return proposer;
+    public String getRespondent() {
+        return respondent;
     }
 
-    public void setProposer(String proposer) {
-        this.proposer = proposer;
+    public void setRespondent(String respondent) {
+        this.respondent = respondent;
     }
 
     public String getAgency() {
@@ -61,4 +57,5 @@ public class Proposer {
     public void setAddress(String address) {
         this.address = address;
     }
+
 }

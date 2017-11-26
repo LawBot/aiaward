@@ -37,8 +37,29 @@ public abstract class DocGenerator implements OutputGenerator {
     public static final String FONT_FAMILY_HEITI = "黑体";
     public static final String FONT_FAMILY_KAITI = "楷体";
 
+    private List<String> errorToUser;
+    private List<String> warningToUser;
+
     public DocGenerator() {
         PropertyConfigurator.configure("log/config.txt");
+        errorToUser = new LinkedList<>();
+        warningToUser = new LinkedList<>();
+    }
+
+    protected void addErrorToUser(String error) {
+        errorToUser.add(error);
+    }
+
+    protected void addWarningToUser(String warning) {
+        warningToUser.add(warning);
+    }
+
+    public List getErrorToUser() {
+        return errorToUser;
+    }
+
+    public List getWarningToUser() {
+        return warningToUser;
     }
 
     public String cnDateGenerator() {
