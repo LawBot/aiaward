@@ -383,8 +383,8 @@ public class AwardDocGenerator extends DocGenerator {
             }
         }
 
-        addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
         if (respondContent != null && !respondContent.isEmpty()) {
+            addTitleTextParagraph("（二）被申请人提出如下答辩意见", 0);
             addNormalTextParagraphs(respondContent, 0, 1);
         }
 
