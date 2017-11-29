@@ -51,11 +51,13 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 
 /**
  *
@@ -623,6 +625,8 @@ public class AwardDocGenerator extends DocGenerator {
     private void addProposerTable(ArbitrationProposer pro, int countPro, int totalCount) {
         XWPFTable proposerTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(proposerTable);
+        CTTblLayoutType type = proposerTable.getCTTbl().getTblPr().addNewTblLayout();
+        type.setType(STTblLayoutType.FIXED);
 
         /// Doesn't seem to have any effect
         proposerTable.getCTTbl().addNewTblGrid().addNewGridCol().setW(TABLE_KEY_WIDTH);
@@ -643,13 +647,16 @@ public class AwardDocGenerator extends DocGenerator {
     private void addRespondentTable(ArbitrationRespondent res, int countRes, int totalCount) {
         XWPFTable respondentTable = awardDoc.createTable(4, 2);
         setTableBorderToNone(respondentTable);
+        CTTblLayoutType type = respondentTable.getCTTbl().getTblPr().addNewTblLayout();
+        type.setType(STTblLayoutType.FIXED);
+        
         /// Doesn't seem to have any effect
         respondentTable.getCTTbl().addNewTblGrid().addNewGridCol().setW(TABLE_KEY_WIDTH);
         respondentTable.getCTTbl().getTblGrid().addNewGridCol().setW(TABLE_VALUE_WIDTH);
 
         String resKey = "";
         if (totalCount == 1) {
-            resKey = "被申  请  人：";
+            resKey = "被申请人：";
         } else {
             resKey = "第" + numberToCN((char) (countRes + '0')) + "被申请人：";
         }
