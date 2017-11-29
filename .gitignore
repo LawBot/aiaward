@@ -1,7 +1,7 @@
 build/
 nbproject/private
 test/testoutput/
-test/~*
+~$*.doc*
 log/log*
 dist/log/*
 dist/*.zip
