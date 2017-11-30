@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextRules>
+    <InputData>
+        <General>
+            <ReplacementTextList usage="preprocess">
+                <ReplacementText name="comma">
+                    <From>:</From>
+                    <To>：</To>
+                </ReplacementText>
+                <ReplacementText name="percent">
+                    <From>％</From>
+                    <To>%</To>
+                </ReplacementText>
+                <ReplacementText name="hyphen">
+                    <From>——</From>
+                    <To>──</To>
+                </ReplacementText>
+            </ReplacementTextList>
+        </General>
+        <Routine>
+            <StaticTextList>
+                <StaticText type="user_warning" name="NoDate">
+                    在程序文件中未找到裁决书日期
+                </StaticText>
+                <StaticText type="user_error" name="NoRoutine">
+                    在程序文件中未找到程序部分文本
+                </StaticText>
+                <StaticText type="user_error" name="NoProposer">
+                    在程序文件中未找到申请人信息
+                </StaticText>
+                <StaticText type="user_error" name="NoRespondent">
+                    在程序文件中未找到被申请人信息
+                </StaticText>
+            </StaticTextList>
+            <SearchTextList>
+                <SearchText name="ShenZhen">
+                    <Text>深圳</Text>
+                </SearchText>
+                <SearchText name="Date">
+                    <Text>\\b.*年.*月.*日</Text>
+                </SearchText>
+                <SearchText name="AwardId">
+                    <Text>华南国仲深裁.*号</Text>
+                </SearchText>
+                <SearchText name="ContentEnd">
+                    <Text>现将本案案情、仲裁庭意见以及裁决内容分述如下。</Text>
+                </SearchText>
+                <SearchText name="ProposerStart">
+                    <Text>申请人：</Text>
+                </SearchText>
+                <SearchText name="RespondentStart">
+                    <Text>被申请人：</Text>
+                </SearchText>
+                <SearchText name="Proposer">
+                    <Text>申请人</Text>
+                </SearchText>
+                <SearchText name="Respondent">
+                    <Text>被申请人</Text>
+                </SearchText>
+                <SearchText name="Address">
+                    <Text>住址</Text>
+                    <Text>地址</Text>
+                    <Text>住所</Text>
+                </SearchText>
+                <SearchText name="Representative">
+                    <Text>法定代表人</Text>
+                </SearchText>
+                <SearchText name="Agent">
+                    <Text>代理人</Text>
+                </SearchText>
+            </SearchTextList>
+            <ReplaceTextList>
+                <ReplaceText name="ChineseComma">
+                    <From>，</From>
+                    <To>   </To>
+                </ReplaceText>
+                <ReplaceText name="Comma">
+                    <From>,</From>
+                    <To>   </To>
+                </ReplaceText>
+                <ReplaceText name="Period">
+                    <From>。</From>
+                    <To>   </To>
+                </ReplaceText>
+                <ReplaceText name="Gender">
+                    <From>性别</From>
+                    <To>性别：</To>
+                </ReplaceText>
+                <ReplaceText name="Id">
+                    <From>身份证号码</From>
+                    <To>身份证号码：</To>
+                </ReplaceText>
+                <ReplaceText name="Id2">
+                    <From>身份号码</From>
+                    <To>身份号码：</To>
+                </ReplaceText>
+                <ReplaceText name="Address">
+                    <From>住址</From>
+                    <To>住址：</To>
+                </ReplaceText>
+            </ReplaceTextList>
+        </Routine>
+        <Application>
+            <StaticTextList>
+                <StaticText type="user_warning" name="NoGist">
+                    在仲裁申请书中未找到仲裁依据
+                </StaticText>
+                <StaticText type="user_warning" name="NoRequest">
+                    在仲裁申请书中未找到仲裁请求
+                </StaticText>
+                <StaticText type="user_warning" name="NoFactAndReason">
+                    在仲裁申请书中未找到事实与理由
+                </StaticText>
+            </StaticTextList>
+            <SearchTextList>
+                <SearchText name="ArbitrationGist">
+                    <Text>仲裁依据：</Text>
+                    <Text>仲裁依据</Text>
+                    <Text>仲裁条款：</Text>
+                    <Text>仲裁条款</Text>
+                </SearchText>
+                <SearchText name="ArbitrationRequest">
+                    <Text>仲裁请求：</Text>
+                    <Text>仲裁请求</Text>
+                    <Text>申请请求：</Text>
+                    <Text>申请请求</Text>
+                </SearchText>
+                <SearchText name="FactAndReason">
+                    <Text>事实与理由：</Text>
+                    <Text>事实与理由</Text>
+                    <Text>事实理由：</Text>
+                    <Text>事实理由</Text>
+                </SearchText>
+                <SearchText name="ApplicationEnd">
+                    <Text>此致</Text>
+                </SearchText>
+            </SearchTextList>
+        </Application>
+        <Evidence>
+            <StaticTextList>
+                <StaticText type="user_warning" name="NoEvidence">
+                    在证据列表中未找到证据
+                </StaticText>
+            </StaticTextList>
+            <SearchTextList>
+                <SearchText name="Evidence">
+                    <Text>证据名称</Text>
+                    <Text>证据材料</Text>
+                </SearchText>
+            </SearchTextList>
+        </Evidence>
+        <Respond>
+            <StaticTextList>
+                <StaticText type="user_error" name="NoContent">
+                    在答辩书中未找到答辩人意见
+                </StaticText>
+            </StaticTextList>
+            <SearchTextList>
+                <SearchText name="RespondStart">
+                    <Text>.*答辩如下：</Text>
+                    <Text>.*事实和理由如下：</Text>
+                    <Text>.*如下答辩：</Text>
+                </SearchText>
+                <SearchText name="RespondEnd">
+                    <Text>此致</Text>  
+                </SearchText>
+            </SearchTextList>
+            <ReplaceTextList>
+                <ReplaceText name="Respondent">
+                    <From>答辩人</From>
+                    <To>被申请人</To>
+                </ReplaceText>
+                <ReplaceText name="Proposer">
+                    <From>被答辩人</From>
+                    <To>申请人</To>
+                </ReplaceText>
+            </ReplaceTextList>
+        </Respond>
+    </InputData>
+    <OutputData>
+        <General>
+            <SearchTextList>
+                <SearchText name="Currency">
+                    <Text>(人民币)?[0-9.,，]+(万)?(亿)?元</Text>
+                    <Text>[0-9.,，]+(万)?(亿)?美元</Text>
+                    <Text>[0-9.,，]+(万)?(亿)?美金</Text>
+                    <Text>[0-9.,，]+(万)?(亿)?欧元</Text>
+                </SearchText>
+            </SearchTextList>
+        </General>
+        <Award>
+            <StaticTextList>
+                <StaticText type="user_error" name="CantGenerateAward">
+                    无法生成裁决书文件，请确认文件上层目录存在
+                </StaticText>
+                <StaticText type="user_error" name="CantWriteFile">
+                    无法写入裁决书文件
+                </StaticText>
+                <StaticText type="word_standard" name="PageNumber">
+                    PAGE \\* MERGEFORMAT
+                </StaticText>
+                <StaticText type="first_page_output" name="SCIA">
+                    华南国际经济贸易仲裁委员会\n
+                </StaticText>
+                <StaticText type="first_page_output" name="Title">
+                    裁    决    书
+                </StaticText>
+                <StaticText type="first_page_output" name="Shenzhen">
+                    深   圳
+                </StaticText>
+                <StaticText type="content_page_output" name="Title">
+                    裁    决    书\n
+                </StaticText>
+                <StaticText type="content_page_output" name="Id">
+                    华南国仲深裁〔XXX〕X号
+                </StaticText>
+                <StaticText type="content_page_output" name="Num_1">
+                    一、案    情
+                </StaticText>
+                <StaticText type="content_page_output" name="Num_1_1">
+                    （一）申请人的主张和请求
+                </StaticText>
+                <StaticText type="content_page_output" name="Num_1_1_AllegationStart">
+                    申请人诉称：
+                </StaticText>
+                <StaticText type="content_page_output" name="Num_1_1_ProposerEvidenceStart">
+                    申请人为支持仲裁请求提交了以下证据：
+                </StaticText>
+                <StaticText type="content_page_output" name="SupplementEvidence">
+                    补充证据
+                </StaticText>
+                <StaticText type="content_page_output" name="Num_1_2">
+                    （二）被申请人提出如下答辩意见
+                </StaticText>
+                <StaticText type="content_page_output" name="Num_1_2_RespondentEvidenceStart">
+                    被申请人为支持仲裁请求提交了以下证据：
+                </StaticText>
+                <StaticText type="content_page_output" name="Num_2">
+                    二、仲裁庭意见
+                </StaticText>
+                <StaticText type="content_page_output" name="Num_2_Start">
+                    就本案争议，仲裁庭意见如下：
+                </StaticText>
+                <StaticText type="content_page_output" name="Num_3">
+                    三、裁    决
+                </StaticText>
+                <StaticText type="content_page_output" name="Num_3_Start">
+                    根据上述事实和仲裁庭意见，仲裁庭对本案作出裁决如下：
+                </StaticText>
+                <StaticText type="content_page_output" name="End_1">
+                    本裁决为终局裁决。
+                </StaticText>
+                <StaticText type="content_page_output" name="End_2">
+                    （紧接下一页）
+                </StaticText>
+            </StaticTextList>
+        </Award>
+    </OutputData>
+</TextRules>
