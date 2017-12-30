@@ -99,10 +99,10 @@ public class ApplicationDocReader extends DocReader {
         aApplication.setRequest(requestChunk);
         aApplication.setFactAndReason(factAndReasonChunk);
 
-        if (aApplication.getGist() == null || aApplication.getGist().isEmpty()) {
-            logger.warn("WARN: aApplication.getGist()== null|| aApplication.getGist().isEmpty()");
-            addWarningToUser("在仲裁申请书中未找到仲裁依据");
-        }
+//        if (aApplication.getGist() == null || aApplication.getGist().isEmpty()) {
+//            logger.warn("WARN: aApplication.getGist()== null|| aApplication.getGist().isEmpty()");
+//            addWarningToUser("在仲裁申请书中未找到仲裁依据");
+//        }
 
         if (aApplication.getRequest() == null || aApplication.getRequest().isEmpty()) {
             logger.error("ERROR: aApplication.getRequest()== null|| aApplication.getRequest().isEmpty()");
