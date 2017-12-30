@@ -22,6 +22,8 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 public abstract class DocReader implements InputFileReader {
 
     protected String docText;
+    XWPFDocument docx;
+    HWPFDocument doc;
     private List<String> errorToUser;
     private List<String> warningToUser;
 
@@ -34,12 +36,12 @@ public abstract class DocReader implements InputFileReader {
         logger.info("Reading in file: " + inputPath);
         /// Newer version word documents
         try {
-            XWPFDocument docx = new XWPFDocument(new FileInputStream(inputPath));
+            docx = new XWPFDocument(new FileInputStream(inputPath));
             XWPFWordExtractor we = new XWPFWordExtractor(docx);
             docText = we.getText();
         } /// Old version word documents
         catch (org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException e) {
-            HWPFDocument doc = new HWPFDocument(new FileInputStream(inputPath));
+            doc = new HWPFDocument(new FileInputStream(inputPath));
             WordExtractor we = new WordExtractor(doc);
             docText = we.getText();
         }
@@ -104,4 +106,13 @@ public abstract class DocReader implements InputFileReader {
     public List getWarningToUser() {
         return warningToUser;
     }
+
+    public XWPFDocument getDocx() {
+        return docx;
+    }
+
+    public HWPFDocument getDoc() {
+        return doc;
+    }
+
 }

@@ -15,6 +15,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
@@ -360,7 +362,15 @@ public class AwardDocGenerator extends DocGenerator {
         addTitleTextParagraph("（一）申请人的主张和请求", 0);
 
         /// 申请人的主张和请求
+        /// Dirty implementation. TODO: regex deletion of original numbering with wrong format
         String lines[] = aApplication.getRequest().split("\\r?\\n");
+        for (int i = 0; i < lines.length; ++i) {
+            if (lines[i].matches("^[0-9].*")) {
+                if (lines[i].length() >= 3) {
+                    lines[i] = lines[i].substring(2).trim();
+                }
+            }
+        }
         addNumbering(lines, 0, 1);
 
         /// 申请人诉称
@@ -455,11 +465,11 @@ public class AwardDocGenerator extends DocGenerator {
         number.setVal(BigInteger.ONE);
 
         for (String str : strList) {
-            if (str.matches("^[0-9].*")) {
-                if (str.length() >= 3) {
-                    str = str.substring(2).trim();
-                }
-            }
+//            if (str.matches("^[0-9].*")) {
+//                if (str.length() >= 3) {
+//                    str = str.substring(2).trim();
+//                }
+//            }
             str = str.trim();
             str = findAndCorrectMoneyFormats(str);
             XWPFParagraph paragraph = awardDoc.createParagraph();
@@ -649,7 +659,7 @@ public class AwardDocGenerator extends DocGenerator {
         setTableBorderToNone(respondentTable);
         CTTblLayoutType type = respondentTable.getCTTbl().getTblPr().addNewTblLayout();
         type.setType(STTblLayoutType.FIXED);
-        
+
         /// Doesn't seem to have any effect
         respondentTable.getCTTbl().addNewTblGrid().addNewGridCol().setW(TABLE_KEY_WIDTH);
         respondentTable.getCTTbl().getTblGrid().addNewGridCol().setW(TABLE_VALUE_WIDTH);
