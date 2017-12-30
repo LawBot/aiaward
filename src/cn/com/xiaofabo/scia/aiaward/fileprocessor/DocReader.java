@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
@@ -45,6 +47,7 @@ public abstract class DocReader implements InputFileReader {
             WordExtractor we = new WordExtractor(doc);
             docText = we.getText();
         }
+        this.findArticleName();
     }
 
     protected String getDocText() {
@@ -56,6 +59,15 @@ public abstract class DocReader implements InputFileReader {
         str = str.replaceAll("％", "%");
         str = str.replaceAll("——", "──");
         return str;
+    }
+    
+    protected void findArticleName(){
+        Pattern pattern = Pattern.compile("《.*?》");
+        Matcher matcher = pattern.matcher(docText);
+        
+        while(matcher.find()){
+            String match = matcher.group();
+        }
     }
 
     protected boolean isEmptyLine(String s) {
