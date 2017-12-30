@@ -75,8 +75,8 @@ public class RespondDocReader extends DocReader {
     }
 
     private String replacePhrases(String str) {
-        str = str.replaceAll("答辩人", "被申请人");
         str = str.replaceAll("被答辩人", "申请人");
+        str = str.replaceAll("答辩人", "被申请人");
         return str;
     }
 }
