@@ -33,8 +33,8 @@ public class XmlParserUtil {
             System.out.println(repText.get(i).getChild("To").getValue());
         }
     }
-    
-    public static void main(String args[]) throws Exception{
-        XmlParserUtil.parse();
-    }
+//    
+//    public static void main(String args[]) throws Exception{
+//        XmlParserUtil.parse();
+//    }
 }
