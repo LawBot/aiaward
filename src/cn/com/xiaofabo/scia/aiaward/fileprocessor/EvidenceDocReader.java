@@ -63,7 +63,7 @@ public class EvidenceDocReader extends DocReader {
                 for (int i = 0; i < firstRowCellList.size(); ++i) {
                     XWPFTableCell cell = (XWPFTableCell) firstRowCellList.get(i);
                     String tmpText = cell.getText().trim();
-                    if (tmpText.equals("证据名称") || tmpText.equals("证据材料")) {
+                    if (tmpText.startsWith("证据名称") || tmpText.startsWith("证据材料")) {
                         eChunk = i;
                         break;
                     }
@@ -74,6 +74,9 @@ public class EvidenceDocReader extends DocReader {
                     List cellList = row.getTableCells();
 
                     if (cellList != null) {
+                        if (cellList.size() <= eChunk) {
+                            continue;
+                        }
                         XWPFTableCell cell = (XWPFTableCell) cellList.get(eChunk);
                         String evidenceText = cell.getText();
                         if (!isEmptyLine(evidenceText)) {
