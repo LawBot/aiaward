@@ -12,6 +12,8 @@ import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationRoutine;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -106,14 +108,20 @@ public class RoutineDocReader extends DocReader {
         int lastIdx = 0;
         for (int lineIndex = 0; lineIndex < lines.length; ++lineIndex) {
             String line = lines[lineIndex].trim();
-            String compressedLine = removeAllSpaces(line);
-            if (compressedLine.startsWith("申请人：")) {
+//            String compressedLine = removeAllSpaces(line);
+            Pattern pattern = Pattern.compile("^申\\s.*请\\s.*人：");
+            Matcher matcher = pattern.matcher(line);
+            if(matcher.find()){
                 proposerChunkStartIdx.add(lineIndex);
             }
-            if (compressedLine.startsWith("被申请人：")) {
+            pattern = Pattern.compile("^被\\s.*申\\s.*请\\s.*人：");
+            matcher = pattern.matcher(line);
+            if(matcher.find()){
                 respondentChunkStartIdx.add(lineIndex);
             }
-            if (compressedLine.equals("深圳")) {
+            pattern = Pattern.compile("^深\\s.*圳$");
+            matcher = pattern.matcher(line);
+            if(matcher.find()){
                 lastIdx = lineIndex;
                 break;
             }
@@ -206,7 +214,7 @@ public class RoutineDocReader extends DocReader {
                 }
                 String value = valueEndIdx == -1 ? pline.substring(valueStartIdx) : pline.substring(valueStartIdx, valueEndIdx);
                 keyStartIdx = valueEndIdx + 1;
-                proposerPairList.add(new Pair(removeAllSpaces(key), removeAllSpaces(value)));
+                proposerPairList.add(new Pair(key.trim(), value.trim()));
             }
         }
 
@@ -218,17 +226,18 @@ public class RoutineDocReader extends DocReader {
         for (int i = 0; i < proposerPairList.size(); ++i) {
             String key = proposerPairList.get(i).getKey();
             String value = proposerPairList.get(i).getValue();
-
-            if (key.equals("申请人")) {
+            String keyNoSpace = removeAllSpaces(key);
+            
+            if (keyNoSpace.equals("申请人")) {
                 proposer = value;
             }
-            if (key.equals("住址") || key.equals("地址") || key.equals("住所")) {
+            if (keyNoSpace.equals("住址") || keyNoSpace.equals("地址") || keyNoSpace.equals("住所")) {
                 address = value;
             }
-            if (key.equals("法定代表人")) {
+            if (keyNoSpace.equals("法定代表人")) {
                 representative = value;
             }
-            if (key.equals("代理人")) {
+            if (keyNoSpace.equals("代理人")) {
                 agency = value;
             }
             pro.setProposer(proposer);
@@ -271,7 +280,7 @@ public class RoutineDocReader extends DocReader {
                 }
                 String value = valueEndIdx == -1 ? rline.substring(valueStartIdx) : rline.substring(valueStartIdx, valueEndIdx);
                 keyStartIdx = valueEndIdx + 1;
-                respondentPairList.add(new Pair(removeAllSpaces(key), removeAllSpaces(value)));
+                respondentPairList.add(new Pair(key.trim(), value.trim()));
             }
         }
 
@@ -283,17 +292,18 @@ public class RoutineDocReader extends DocReader {
         for (int i = 0; i < respondentPairList.size(); ++i) {
             String key = respondentPairList.get(i).getKey();
             String value = respondentPairList.get(i).getValue();
+            String keyNoSpace = removeAllSpaces(key);
 
-            if (key.equals("被申请人")) {
+            if (keyNoSpace.equals("被申请人")) {
                 respondent = value;
             }
-            if (key.equals("住址") || key.equals("地址") || key.equals("住所")) {
+            if (keyNoSpace.equals("住址") || keyNoSpace.equals("地址") || keyNoSpace.equals("住所")) {
                 address = value;
             }
-            if (key.equals("法定代表人")) {
+            if (keyNoSpace.equals("法定代表人")) {
                 representative = value;
             }
-            if (key.equals("代理人")) {
+            if (keyNoSpace.equals("代理人")) {
                 agency = value;
             }
             res.setRespondent(respondent);

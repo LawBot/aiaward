@@ -7,6 +7,8 @@ package cn.com.xiaofabo.scia.aiaward.fileprocessor;
 
 import cn.com.xiaofabo.scia.aiaward.entities.ArbitrationApplication;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -17,6 +19,10 @@ import org.apache.log4j.PropertyConfigurator;
 public class ApplicationDocReader extends DocReader {
 
     public static Logger logger = Logger.getLogger(ApplicationDocReader.class.getName());
+    private final String IDENTIFIER_PATTERN_GIST = "^(仲裁依据)|(仲裁条款)";
+    private final String IDENTIFIER_PATTERN_REQUEST = "^(仲裁请求)|(申请请求)";
+    private final String IDENTIFIER_PATTERN_FACT = "^事实.理由";
+    private final String IDENTIFIER_PATTERN_END = "^此致";
 
     public ApplicationDocReader() {
         super();
@@ -37,31 +43,25 @@ public class ApplicationDocReader extends DocReader {
 
         for (int lineIndex = 0; lineIndex < lines.length; ++lineIndex) {
             String line = lines[lineIndex].trim();
-            String compressedLine = removeAllSpaces(line);
-            if (compressedLine.startsWith("仲裁依据：")
-                    || compressedLine.startsWith("仲裁依据")
-                    || compressedLine.startsWith("仲裁条款：")
-                    || compressedLine.startsWith("仲裁条款")) {
+//            String compressedLine = removeAllSpaces(line);
+            Pattern pattern = Pattern.compile(IDENTIFIER_PATTERN_GIST);
+            Matcher matcher = pattern.matcher(line);
+            if(matcher.find()){
                 gistChunkStartIdx = lineIndex;
             }
-            if (compressedLine.startsWith("仲裁请求：")
-                    || compressedLine.startsWith("仲裁请求")
-                    || compressedLine.startsWith("申请请求：")
-                    || compressedLine.startsWith("申请请求")) {
+            pattern = Pattern.compile(IDENTIFIER_PATTERN_REQUEST);
+            matcher = pattern.matcher(line);
+            if(matcher.find()){
                 requestChunkStartIdx = lineIndex;
             }
-            if (compressedLine.startsWith("事实与理由：")
-                    || compressedLine.startsWith("事实与理由")
-                    || compressedLine.startsWith("事实理由：")
-                    || compressedLine.startsWith("事实理由")) {
+            pattern = Pattern.compile(IDENTIFIER_PATTERN_FACT);
+            matcher = pattern.matcher(line);
+            if(matcher.find()){
                 factAndReasonChunkStartIdx = lineIndex;
             }
-            if (compressedLine.startsWith("此致")) {
-//                String nextLine = lines[lineIndex + 1].trim();
-//                if (removeAllSpaces(nextLine).startsWith("深圳国际仲裁院")
-//                        ||removeAllSpaces(nextLine).startsWith("华南国际经济贸易仲裁委员会")) {
-//                    factAndReasonChunkEndIdx = lineIndex;
-//                }
+            pattern = Pattern.compile(IDENTIFIER_PATTERN_END);
+            matcher = pattern.matcher(line);
+            if(matcher.find()){
                 factAndReasonChunkEndIdx = lineIndex;
             }
         }

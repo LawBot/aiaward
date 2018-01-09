@@ -20,4 +20,4 @@ log4j.appender.fileout.layout.conversionPattern=[%d]%-5p:%c{2} - %m%n
 #log4j.appender.A1.layout.ConversionPattern=%-5p %c - %m%n
 
 # Print only messages of level WARN or above in the package com.foo.
-log4j.logger.cn.com.xiaofabo.scia.aiaward.fileprocessor=INFO
+log4j.logger.cn.com.xiaofabo.scia.aiaward.fileprocessor=DEBUG

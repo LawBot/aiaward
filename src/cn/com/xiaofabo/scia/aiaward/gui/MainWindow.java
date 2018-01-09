@@ -35,6 +35,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 public class MainWindow extends javax.swing.JFrame {
 
     static Logger logger = Logger.getLogger(MainWindow.class.getName());
+    private static final String COPYRIGHT_INFO = "AI裁决书生成器 v0.1.180109 （单机试用版）\n深圳小法博科技有限公司\n版权所有 2018";
 
     FileFilter docFileFilter;
     String currentSelectedDirectory;
@@ -676,7 +677,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_bn_rmResEvidenceDocMouseClicked
 
     private void jMenuItem1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem1MouseReleased
-        JOptionPane.showMessageDialog(this, "AI裁决书生成器 v0.1.180104 （单机试用版）\n深圳小法博科技有限公司\n版权所有 2017", "关于", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, COPYRIGHT_INFO, "关于", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jMenuItem1MouseReleased
 
     private String generateOutFileName() {
