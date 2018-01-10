@@ -43,10 +43,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumLvl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -246,7 +248,6 @@ public class AwardDocGenerator extends DocGenerator {
 
     private void createFooter() {
         XWPFParagraph paragraph = awardDoc.createParagraph();
-        XWPFRun run = paragraph.createRun();
         XWPFFooter footer;
         footer = awardDoc.createFooter(HeaderFooterType.FIRST);
         paragraph = footer.createParagraph();
@@ -257,9 +258,19 @@ public class AwardDocGenerator extends DocGenerator {
         paragraph = footer.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
 
-        run = paragraph.createRun();
-        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
+//        paragraph.getCTP().addNewR().addNewRPr().addNewSz().setVal(BigInteger.valueOf(18));
+//
+//        run = paragraph.createRun();
+//        run.setFontSize(CN_FONT_SIZE_XIAO_WU);
+        CTP ctp = paragraph.getCTP();
+        ctp.addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
+        
 
+//        CTR r = paragraph.getCTP().addNewR();
+//        CTRPr rpr = r.addNewRPr();
+//        rpr.addNewSz().setVal(BigInteger.valueOf(18));
+//        rpr.addNewSzCs().setVal(BigInteger.valueOf(18));
+//        r.addNewInstrText().setStringValue("PAGE \\* MERGEFORMAT");
         CTDocument1 document = awardDoc.getDocument();
 
         CTBody body = document.getBody();
@@ -281,6 +292,14 @@ public class AwardDocGenerator extends DocGenerator {
         XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
         if (headerFooterPolicy == null) {
             headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
+        }
+        
+        List rList = ctp.getRList();
+        for (int i = 0; i < rList.size(); ++i) {
+            CTR r = (CTR) rList.get(i);
+            CTRPr rpr = r.addNewRPr();
+            rpr.addNewSz().setVal(BigInteger.valueOf(18));
+            rpr.addNewSzCs().setVal(BigInteger.valueOf(18));
         }
     }
 
@@ -514,7 +533,7 @@ public class AwardDocGenerator extends DocGenerator {
         spacing.setLineRule(STLineSpacingRule.EXACT);
         spacing.setLine(TEXT_LINE_SPACING);
 
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setAlignment(ParagraphAlignment.BOTH);
         paragraph.setFirstLineIndent(CN_FONT_SIZE_SAN * 2 * 20);
         XWPFRun run = paragraph.createRun();
         run.setFontFamily(FONT_FAMILY_FANGSONG);

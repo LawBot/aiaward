@@ -30,6 +30,11 @@ public abstract class DocGenerator implements OutputGenerator {
     public static final int CN_FONT_SIZE_ER = 22;
     public static final int CN_FONT_SIZE_XIAO_ER = 18;
     public static final int CN_FONT_SIZE_SAN = 16;
+    public static final int CN_FONT_SIZE_XIAO_SAN = 15;
+    public static final int CN_FONT_SIZE_SI = 14;
+    public static final int CN_FONT_SIZE_XIAO_SI = 12;
+//    public static final int CN_FONT_SIZE_WU = 10.5;
+    public static final int CN_FONT_SIZE_XIAO_WU = 9;
 
     public static final String FONT_FAMILY_TIME_NEW_ROMAN = "Times New Roman";
     public static final String FONT_FAMILY_SONG = "宋体";
