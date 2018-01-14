@@ -15,12 +15,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
-import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
@@ -43,12 +40,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumLvl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -58,6 +53,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
@@ -89,6 +85,7 @@ public class AwardDocGenerator extends DocGenerator {
     private static final BigInteger TABLE_VALUE_WIDTH = BigInteger.valueOf(5950L);  /// ~10.5cm
 
     private static final BigInteger DEFAULT_FONT_SIZE_HALF_16 = BigInteger.valueOf(32L);
+    private static final BigInteger DEFAULT_FONT_SIZE_HALF_9 = BigInteger.valueOf(18L);
 
     private static final int FONT_SIZE_FOOTER = 10;
 
@@ -221,7 +218,7 @@ public class AwardDocGenerator extends DocGenerator {
 
         styles.setStyles(ctStyles);
 
-        createFooter();
+        generateFooter();
 
         logger.trace("Page setup finished.");
     }
@@ -246,7 +243,7 @@ public class AwardDocGenerator extends DocGenerator {
         run.setText("The default page header:");
     }
 
-    private void createFooter() {
+    private void generateFooter() {
         XWPFParagraph paragraph = awardDoc.createParagraph();
         XWPFFooter footer;
         footer = awardDoc.createFooter(HeaderFooterType.FIRST);
@@ -260,17 +257,21 @@ public class AwardDocGenerator extends DocGenerator {
 
 //        paragraph.getCTP().addNewR().addNewRPr().addNewSz().setVal(BigInteger.valueOf(18));
 //
-//        run = paragraph.createRun();
-//        run.setFontSize(CN_FONT_SIZE_XIAO_WU);
-        CTP ctp = paragraph.getCTP();
-        ctp.addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
+        XWPFRun run = paragraph.createRun();
+        run.getCTR().addNewFldChar().setFldCharType(STFldCharType.BEGIN);
+        run = paragraph.createRun();
+        run.setFontSize(CN_FONT_SIZE_XIAO_WU);
+        run.getCTR().addNewInstrText().setStringValue("PAGE \\* MERGEFORMAT");
+        run = paragraph.createRun();
+        run.getCTR().addNewFldChar().setFldCharType(STFldCharType.SEPARATE);
+        run = paragraph.createRun();
+        run.getCTR().addNewRPr().addNewNoProof();
+        run = paragraph.createRun();
+        run.getCTR().addNewFldChar().setFldCharType(STFldCharType.END);
         
-
-//        CTR r = paragraph.getCTP().addNewR();
-//        CTRPr rpr = r.addNewRPr();
-//        rpr.addNewSz().setVal(BigInteger.valueOf(18));
-//        rpr.addNewSzCs().setVal(BigInteger.valueOf(18));
-//        r.addNewInstrText().setStringValue("PAGE \\* MERGEFORMAT");
+//        CTP ctp = paragraph.getCTP();
+//        ctp.addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
+        
         CTDocument1 document = awardDoc.getDocument();
 
         CTBody body = document.getBody();
@@ -289,18 +290,10 @@ public class AwardDocGenerator extends DocGenerator {
         }
         pageNumber.setStart(PAGE_NUMBER_START);
 
-        XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
-        if (headerFooterPolicy == null) {
-            headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
-        }
-        
-        List rList = ctp.getRList();
-        for (int i = 0; i < rList.size(); ++i) {
-            CTR r = (CTR) rList.get(i);
-            CTRPr rpr = r.addNewRPr();
-            rpr.addNewSz().setVal(BigInteger.valueOf(18));
-            rpr.addNewSzCs().setVal(BigInteger.valueOf(18));
-        }
+//        XWPFHeaderFooterPolicy headerFooterPolicy = awardDoc.getHeaderFooterPolicy();
+//        if (headerFooterPolicy == null) {
+//            headerFooterPolicy = awardDoc.createHeaderFooterPolicy();
+//        }
     }
 
     private void generateFirstPage(ArbitrationApplication aApplication, ArbitrationRoutine routine) {
@@ -438,11 +431,11 @@ public class AwardDocGenerator extends DocGenerator {
 
         addSubTitle("二、仲裁庭意见");
         addNormalTextParagraph("就本案争议，仲裁庭意见如下：", 1);
-        addNormalTextParagraph("{意见描述部分}", 0);
+//        addNormalTextParagraph("{意见描述部分}", 0);
 
         addSubTitle("三、裁    决");
         addNormalTextParagraph("根据上述事实和仲裁庭意见，仲裁庭对本案作出裁决如下：", 0);
-        addNormalTextParagraph("{裁决描述部分}", 2);
+//        addNormalTextParagraph("{裁决描述部分}", 2);
 
         addNormalTextParagraph("本裁决为终局裁决。", 0);
         addNormalTextParagraph("（紧接下一页）", 0);

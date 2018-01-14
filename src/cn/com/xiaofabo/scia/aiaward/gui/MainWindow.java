@@ -35,7 +35,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 public class MainWindow extends javax.swing.JFrame {
 
     static Logger logger = Logger.getLogger(MainWindow.class.getName());
-    private static final String COPYRIGHT_INFO = "AI裁决书生成器 v0.1.180110 （单机试用版）\n深圳小法博科技有限公司\n版权所有 2018";
+    private static final String COPYRIGHT_INFO = "AI裁决书生成器 v0.1.180114 （单机试用版）\n深圳小法博科技有限公司\n版权所有 2018";
 
     FileFilter docFileFilter;
     String currentSelectedDirectory;
