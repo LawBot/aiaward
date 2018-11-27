@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -81,8 +82,8 @@ public class AwardDocGenerator extends DocGenerator {
 
     private static final BigInteger TEXT_LINE_SPACING = BigInteger.valueOf(500L);
 
-    private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(2267L);    /// ~4.0cm
-    private static final BigInteger TABLE_VALUE_WIDTH = BigInteger.valueOf(5950L);  /// ~10.5cm
+    private static final BigInteger TABLE_KEY_WIDTH = BigInteger.valueOf(3005L);    /// ~4.0cm
+    private static final BigInteger TABLE_VALUE_WIDTH = BigInteger.valueOf(5216L);  /// ~10.5cm
 
     private static final BigInteger DEFAULT_FONT_SIZE_HALF_16 = BigInteger.valueOf(32L);
     private static final BigInteger DEFAULT_FONT_SIZE_HALF_9 = BigInteger.valueOf(18L);
@@ -296,6 +297,7 @@ public class AwardDocGenerator extends DocGenerator {
 //        }
     }
 
+    /// Generating the cover page
     private void generateFirstPage(ArbitrationApplication aApplication, ArbitrationRoutine routine) {
 
         XWPFParagraph p1 = awardDoc.createParagraph();
@@ -429,16 +431,10 @@ public class AwardDocGenerator extends DocGenerator {
             }
         }
 
-        addSubTitle("二、仲裁庭意见");
-        addNormalTextParagraph("就本案争议，仲裁庭意见如下：", 1);
-//        addNormalTextParagraph("{意见描述部分}", 0);
-
-        addSubTitle("三、裁    决");
-        addNormalTextParagraph("根据上述事实和仲裁庭意见，仲裁庭对本案作出裁决如下：", 0);
-//        addNormalTextParagraph("{裁决描述部分}", 2);
-
-        addNormalTextParagraph("本裁决为终局裁决。", 0);
-        addNormalTextParagraph("（紧接下一页）", 0);
+        /// Generating arbitral comment
+        generateArbitralComment();
+        
+        generateArbitration();
 
         breakToNextPage();
     }
@@ -451,6 +447,133 @@ public class AwardDocGenerator extends DocGenerator {
         addSignatureText("仲  裁  员：");
 
         addSignatureDate(cnDateGenerator() + "于深圳");
+    }
+    
+    private void generateArbitralComment(){
+        String emptyList[] = {"", "", ""};
+        addSubTitle("二、仲裁庭意见");
+        addNormalTextParagraph("仲裁庭根据申请人的仲裁请求和被申请人的答辩意见，"
+                + "结合本案的证据，审查了以下争议事实和法律问题。", 1);
+        
+        addTitleTextParagraph("（一）关于本案的管辖权 ", 0);
+        addNormalTextParagraph("仲裁庭审查了申请人与被申请人与       年   月   日签订的"
+                + "《      合同》后，认为上述合同是对双方当事人具有约束力的文件，且上述"
+                + "《     合同》的第       条载有本会仲裁解决纠纷的规定，因此仲裁庭认为"
+                + "本会对本案享有管辖权。", 1);
+        
+        addNormalTextParagraph("涉外案件，根据《最高人民法院关于适用<中华人民共和国涉外民事"
+                + "法律关系适用法>若干问题的解释（一）》的规定，本案属于涉外案件。根据"
+                + "《合同法》第一百二十六条的规定，涉外合同的当事人可以选择处理合同争议"
+                + "所适用的法律，但法律另有规定的除外。根据本案申请人和被申请人之间"
+                + "     年     月     日签订的《  合同》第   条，本合同适用"
+                + "中国人民共和国法律，并将争议提交深圳国际仲裁院仲裁。"
+                + "因此，本院对本案享有仲裁管辖权并适用中国法律 。", 1);
+        
+        addTitleTextParagraph("（二）关于本案实体法律适用问题", 0);
+        addNormalTextParagraph("", 1);
+        
+        addTitleTextParagraph("（三）关于合同的效力", 0);
+        addNormalTextParagraph("仲裁庭认为，本案申请人与被申请人于    年    月     日"
+                + "签订的《  合同》是双方当事人自愿协商签订的，是双方当事人的真实意思表示，"
+                + "不违反中国的法律和行政法规的强制性规定，应属合法有效，"
+                + "并对本案双方当事人具有约束力", 1);
+        
+        addTitleTextParagraph("（四） 关于本案相关事实的认定", 0);
+        addNormalTextParagraph("根据申请人提交的证据材料和庭审调查，仲裁庭对有关本案争议的"
+                + "相关事实认定如下（因根据本案案情部分撰写）： ", 1);
+        addNumbering(emptyList, 0, 1);
+        
+        addTitleTextParagraph("（五）关于本案的争议焦点", 0);
+        String conflictList[] = {
+            "买方是否按买卖合同的约定支付了货款？",
+            "卖方是否按买卖合同的约定交付货物？",
+            "卖方交付的货物是否符合质量标准？",
+            "卖方交付的货物是否符合数量要求？",
+            "买方是否存在违约责任？",
+            "卖方是否存在违约责任？",
+            "货物在运送过程中灭失或损坏由谁承担赔偿责任？",
+            "由谁负责验货？",
+            "验货费用由谁承担？",
+            "在什么情况下可以解除合同？",
+            "如何确定赔偿金额？",
+            "受损方是否可以主张间接损失？",
+            "瑕疵履行如何处理？",
+            "违约金和定金可以同时适用吗？",
+            "约定的违约金低于或高于损失的如何处理？",
+            "谁来进行减损？",
+            "未进行减损的后果？",
+            "谁承担减损的费用？",
+            "买卖双方均有过错造成违约的如何处理？",
+            "标的物孳息应该归谁？",
+            "货物交付的风险何时转移？"
+        };
+        addNumbering(conflictList, 0, 1);
+        
+        addTitleTextParagraph("（六）被申请人是否存在违约责任", 0);
+        addNumbering(emptyList, 0, 1);
+        
+        addTitleTextParagraph("（七）申请人是否存在过错", 0);
+        addNumbering(emptyList, 0, 1);
+        
+        addTitleTextParagraph("（八）关于申请人提出的请求", 0);
+        String requestList[] = {
+            "解除合同（合同法第93条至97条）",
+            "实际履行 （合同法第8条）",
+            "强制履行（合同法第107条、第110条）",
+            "违约责任（合同法第7章）", 
+            "损失赔偿及范围（合同法第113条）",
+            "损害赔偿（合同法第122条）",
+            "违约金（合同法第114条）",
+            "定金（合同法第115条）",
+            "违约金与定金的选择（合同法第116条）",
+            "偿还借款（合同法第206条）", 
+            "利率及利息支付（合同法第204条、第205条、最新民间借贷司法解释第25条至第32条）",
+            "直接损失和间接损失 （合同法第113条）",
+            "金钱债务（合同法第109条）",
+            "非金钱债务（合同法第110条）",
+            "不可抗力（合同法第117条）",
+            "律师费、公证费、保全费、检验费、差旅费、证人费及仲裁费（深圳国际中仲裁院《仲裁规则》第62条）"
+        };
+        addNumbering(requestList, 0, 1);
+        
+        addTitleTextParagraph("（九）关于被申请人的仲裁反请求（如有反请求）", 0);
+        addNumbering(emptyList, 0, 1);
+        
+        addTitleTextParagraph("（十）被申请人缺席的后果（如果缺席审理）", 0);
+        addNormalTextParagraph("被申请人经合法通知无正当理由未到庭，亦未提交任何书面答辩意见"
+                + "或证据，视为自行放弃抗辩的权利，应自行承担由此引起的法律后果。", 1);
+        
+        addTitleTextParagraph("（十一）关于公证费、差旅费、检验费、律师费及仲裁费的问题", 0);
+        addNormalTextParagraph("申请人请求仲裁庭裁决被申请人赔偿申请人因本案而产生的公证费、"
+                + "差旅费、检验费、律师费及仲裁费等合理费用。仲裁庭认为，申请人提交了上述费用"
+                + "的付款凭证，以证明其实际支出，该等费用均为申请人为保护其合法权益所产生的"
+                + "费用，故仲裁庭予以支持。", 1);
+        addNormalTextParagraph("根据《仲裁规则》第六十二条的规定，本案仲裁费、仲裁员实际开支"
+                + "费用应由被申请人承担。", 1);
+    }
+    
+    private void generateArbitration(){
+        addSubTitle("三、裁    决");
+        addNormalTextParagraph("根据上述事实和仲裁庭意见，仲裁庭对本案作出裁决如下：", 0);
+        addNormalTextParagraph("（一）被申请人应向申请人支付尚欠借款人民币               元。", 0);
+        addNormalTextParagraph("（二）被申请人应向申请人支付利息人民币               元。", 0);
+        addNormalTextParagraph("（三）被申请人应向申请人支付律师费人民币               元。", 0);
+        addNormalTextParagraph("（四）本案仲裁费人民币              元，由被申请人承担/"
+                + "由申请人承担       %，即人民币               元，被申请人承担      %，"
+                + "即人民币               元。申请人已足额预缴的人民币              元，"
+                + "抵作本案仲裁费不予退回，被申请人应直接向申请人支付人民币               元。", 0);
+        addNormalTextParagraph("本案仲裁员实际开支人民币               元，由被申请人"
+                + "承担/由申请人承担       %，即人民币               元，被申请人承担"
+                + "       %，即人民币               元。申请人预缴的人民币"
+                + "               元，与其应承担的仲裁员实际开支相抵后，余款人民币元由"
+                + "仲裁院退还给申请人；被申请人预缴的人民币               元，"
+                + "与其应承担的仲裁员实际开支相抵后，余款人民币元由仲裁院退还给被申请人。", 0);
+        addNormalTextParagraph("（五）驳回申请人的其他仲裁请求。", 0);
+        addNormalTextParagraph("（六）驳回被申请人的仲裁反请求/其他仲裁反请求。", 1);
+        addNormalTextParagraph("以上确定的各项应付款项/应履行义务，被申请人应在本裁决作出"
+                + "之日起（      ）日内支付完毕/履行完毕。", 1);
+        addNormalTextParagraph("本裁决为终局裁决，自作出之日起生效。", 0);
+        addNormalTextParagraph("（紧接下一页）", 0);
     }
 
     private void addNumbering(String[] strList, int emptyLineInBetween, int emptyLineAfter) {
@@ -526,7 +649,7 @@ public class AwardDocGenerator extends DocGenerator {
         spacing.setLineRule(STLineSpacingRule.EXACT);
         spacing.setLine(TEXT_LINE_SPACING);
 
-        paragraph.setAlignment(ParagraphAlignment.BOTH);
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setFirstLineIndent(CN_FONT_SIZE_SAN * 2 * 20);
         XWPFRun run = paragraph.createRun();
         run.setFontFamily(FONT_FAMILY_FANGSONG);
@@ -645,7 +768,7 @@ public class AwardDocGenerator extends DocGenerator {
     }
 
     private void addProposerTable(ArbitrationProposer pro, int countPro, int totalCount) {
-        XWPFTable proposerTable = awardDoc.createTable(4, 2);
+        XWPFTable proposerTable = awardDoc.createTable(5, 2);
         setTableBorderToNone(proposerTable);
         CTTblLayoutType type = proposerTable.getCTTbl().getTblPr().addNewTblLayout();
         type.setType(STTblLayoutType.FIXED);
@@ -660,14 +783,16 @@ public class AwardDocGenerator extends DocGenerator {
         } else {
             proKey = "第" + numberToCN((char) (countPro + '0')) + "申请人：";
         }
-        setTableRowContent(proposerTable.getRow(0), proKey, pro.getProposer());
-        setTableRowContent(proposerTable.getRow(1), "地      址：", pro.getAddress());
-        setTableRowContent(proposerTable.getRow(2), "法定代表人：", pro.getRepresentative());
-        setTableRowContent(proposerTable.getRow(3), "代  理  人：", pro.getAgency());
+        int rowNumber = 0;
+        setTableRowContent(proposerTable.getRow(rowNumber++), proKey, pro.getProposer());
+        setTableRowContent(proposerTable.getRow(rowNumber++), "地      址：", pro.getAddress());
+        setTableRowContent(proposerTable.getRow(rowNumber++), "统一社会信用代码：", "");
+        setTableRowContent(proposerTable.getRow(rowNumber++), "法定代表人：", pro.getRepresentative());
+        setTableRowContent(proposerTable.getRow(rowNumber++), "代  理  人：", pro.getAgency());
     }
 
     private void addRespondentTable(ArbitrationRespondent res, int countRes, int totalCount) {
-        XWPFTable respondentTable = awardDoc.createTable(4, 2);
+        XWPFTable respondentTable = awardDoc.createTable(5, 2);
         setTableBorderToNone(respondentTable);
         CTTblLayoutType type = respondentTable.getCTTbl().getTblPr().addNewTblLayout();
         type.setType(STTblLayoutType.FIXED);
@@ -682,9 +807,11 @@ public class AwardDocGenerator extends DocGenerator {
         } else {
             resKey = "第" + numberToCN((char) (countRes + '0')) + "被申请人：";
         }
-        setTableRowContent(respondentTable.getRow(0), resKey, res.getRespondent());
-        setTableRowContent(respondentTable.getRow(1), "地      址：", res.getAddress());
-        setTableRowContent(respondentTable.getRow(2), "法定代表人：", res.getRepresentative());
-        setTableRowContent(respondentTable.getRow(3), "代  理  人：", res.getAgency());
+        int rowNumber = 0;
+        setTableRowContent(respondentTable.getRow(rowNumber++), resKey, res.getRespondent());
+        setTableRowContent(respondentTable.getRow(rowNumber++), "地      址：", res.getAddress());
+        setTableRowContent(respondentTable.getRow(rowNumber++), "统一社会信用代码：", "");
+        setTableRowContent(respondentTable.getRow(rowNumber++), "法定代表人：", res.getRepresentative());
+        setTableRowContent(respondentTable.getRow(rowNumber++), "代  理  人：", res.getAgency());
     }
 }
