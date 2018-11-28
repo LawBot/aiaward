@@ -335,7 +335,6 @@ public class AwardDocGenerator extends DocGenerator {
         p5r1.setFontFamily(FONT_FAMILY_FANGSONG);
         p5r1.setFontSize(CN_FONT_SIZE_XIAO_ER);
         p5r1.addBreak();
-        p5r1.addBreak();
         p5r1.setText("深   圳");
 
         XWPFParagraph p6 = awardDoc.createParagraph();
