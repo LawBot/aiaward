@@ -468,21 +468,18 @@ public class AwardDocGenerator extends DocGenerator {
                 + "中国人民共和国法律，并将争议提交深圳国际仲裁院仲裁。"
                 + "因此，本院对本案享有仲裁管辖权并适用中国法律 。", 1);
         
-        addTitleTextParagraph("（二）关于本案实体法律适用问题", 0);
-        addNormalTextParagraph("", 1);
-        
-        addTitleTextParagraph("（三）关于合同的效力", 0);
+        addTitleTextParagraph("（二）关于合同的效力", 0);
         addNormalTextParagraph("仲裁庭认为，本案申请人与被申请人于    年    月     日"
                 + "签订的《  合同》是双方当事人自愿协商签订的，是双方当事人的真实意思表示，"
                 + "不违反中国的法律和行政法规的强制性规定，应属合法有效，"
                 + "并对本案双方当事人具有约束力", 1);
         
-        addTitleTextParagraph("（四） 关于本案相关事实的认定", 0);
+        addTitleTextParagraph("（三） 关于本案相关事实的认定", 0);
         addNormalTextParagraph("根据申请人提交的证据材料和庭审调查，仲裁庭对有关本案争议的"
-                + "相关事实认定如下（因根据本案案情部分撰写）： ", 1);
+                + "相关事实认定如下（仲裁庭根据案情撰写）： ", 0);
         addNumbering(emptyList, 0, 1);
         
-        addTitleTextParagraph("（五）关于本案的争议焦点", 0);
+        addTitleTextParagraph("（四）关于本案的争议焦点", 0);
         String conflictList[] = {
             "买方是否按买卖合同的约定支付了货款？（合同法第159、160、161条）",
             "卖方是否按买卖合同的约定交付货物？（合同法第138、139、141条）",
@@ -493,7 +490,7 @@ public class AwardDocGenerator extends DocGenerator {
             "货物在运送过程中灭失或损坏由谁承担赔偿责任？（合同法第141、144、145条）",
             "由谁负责验货？（合同法第157、158条）",
             "验货费用由谁承担？（合同法第157、158条）",
-            "在什么情况下可以解除合同？（合同法第93、94、95、96、97条）",
+            "在什么情况下可以解除合同？（合同法第93至97条）",
             "如何确定赔偿金额？（合同法第113条）",
             "受损方是否可以主张间接损失？（合同法第114条）",
             "瑕疵履行如何处理？（合同法第111条）",
@@ -509,13 +506,13 @@ public class AwardDocGenerator extends DocGenerator {
         };
         addNumbering(conflictList, 0, 1);
         
-        addTitleTextParagraph("（六）被申请人是否存在违约责任", 0);
+        addTitleTextParagraph("（五）被申请人是否存在违约责任（仲裁庭根据案情撰写）", 0);
         addNumbering(emptyList, 0, 1);
         
-        addTitleTextParagraph("（七）申请人是否存在过错", 0);
+        addTitleTextParagraph("（六）申请人是否存在过错（仲裁庭根据案情撰写）", 0);
         addNumbering(emptyList, 0, 1);
         
-        addTitleTextParagraph("（八）关于申请人提出的请求", 0);
+        addTitleTextParagraph("（七）关于申请人提出的请求", 0);
         String requestList[] = {
             "解除合同（合同法第93条至97条）",
             "实际履行 （合同法第8条）",
@@ -536,14 +533,14 @@ public class AwardDocGenerator extends DocGenerator {
         };
         addNumbering(requestList, 0, 1);
         
-        addTitleTextParagraph("（九）关于被申请人的仲裁反请求（如有反请求）", 0);
+        addTitleTextParagraph("（八）关于被申请人的仲裁反请求（如有反请求）", 0);
         addNumbering(emptyList, 0, 1);
         
-        addTitleTextParagraph("（十）被申请人缺席的后果（如果缺席审理）", 0);
+        addTitleTextParagraph("（九）被申请人缺席的后果（如果缺席审理）", 0);
         addNormalTextParagraph("被申请人经合法通知无正当理由未到庭，亦未提交任何书面答辩意见"
                 + "或证据，视为自行放弃抗辩的权利，应自行承担由此引起的法律后果。", 1);
         
-        addTitleTextParagraph("（十一）关于公证费、差旅费、检验费、律师费及仲裁费的问题", 0);
+        addTitleTextParagraph("（十）关于公证费、差旅费、检验费、律师费及仲裁费的问题", 0);
         addNormalTextParagraph("申请人请求仲裁庭裁决被申请人赔偿申请人因本案而产生的公证费、"
                 + "差旅费、检验费、律师费及仲裁费等合理费用。仲裁庭认为，申请人提交了上述费用"
                 + "的付款凭证，以证明其实际支出，该等费用均为申请人为保护其合法权益所产生的"
