@@ -109,12 +109,12 @@ public class RoutineDocReader extends DocReader {
         for (int lineIndex = 0; lineIndex < lines.length; ++lineIndex) {
             String line = lines[lineIndex].trim();
 //            String compressedLine = removeAllSpaces(line);
-            Pattern pattern = Pattern.compile("^申\\s.*请\\s.*人：");
+            Pattern pattern = Pattern.compile("^申[\\s]*?请[\\s]*?人：");
             Matcher matcher = pattern.matcher(line);
             if(matcher.find()){
                 proposerChunkStartIdx.add(lineIndex);
             }
-            pattern = Pattern.compile("^被\\s.*申\\s.*请\\s.*人：");
+            pattern = Pattern.compile("^被[\\s]*?申[\\s]*?请[\\s]*?人");
             matcher = pattern.matcher(line);
             if(matcher.find()){
                 respondentChunkStartIdx.add(lineIndex);
