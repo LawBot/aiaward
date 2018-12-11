@@ -67,7 +67,7 @@ public class RoutineDocReader extends DocReader {
                     startLineNum = i + 1;
                 }
             }
-            if (line.contains("现将本案案情、仲裁庭意见以及裁决内容分述如下。")) {
+            if (line.contains("现将本案案情、仲裁庭意见以及裁决内容分述如下")) {
                 if (endLineNum != 0) {
                     logger.warn("WARN: Not the first time finding end of content. IGNORED!");
                 } else {
@@ -109,17 +109,17 @@ public class RoutineDocReader extends DocReader {
         for (int lineIndex = 0; lineIndex < lines.length; ++lineIndex) {
             String line = lines[lineIndex].trim();
 //            String compressedLine = removeAllSpaces(line);
-            Pattern pattern = Pattern.compile("^申[\\s]*?请[\\s]*?人：");
+            Pattern pattern = Pattern.compile("^(第[一二三四五六])?申\\s*请\\s*人");
             Matcher matcher = pattern.matcher(line);
             if(matcher.find()){
                 proposerChunkStartIdx.add(lineIndex);
             }
-            pattern = Pattern.compile("^被[\\s]*?申[\\s]*?请[\\s]*?人");
+            pattern = Pattern.compile("^(第[一二三四五六])?被\\s*申\\s*请\\s*人");
             matcher = pattern.matcher(line);
             if(matcher.find()){
                 respondentChunkStartIdx.add(lineIndex);
             }
-            pattern = Pattern.compile("^深\\s.*圳$");
+            pattern = Pattern.compile("^深\\s*圳$");
             matcher = pattern.matcher(line);
             if(matcher.find()){
                 lastIdx = lineIndex;
@@ -220,17 +220,31 @@ public class RoutineDocReader extends DocReader {
 
         ArbitrationProposer pro = new ArbitrationProposer();
         String proposer = "";
+        String id = "";
         String address = "";
         String representative = "";
         String agency = "";
+        String type = "";
+        
         for (int i = 0; i < proposerPairList.size(); ++i) {
             String key = proposerPairList.get(i).getKey();
             String value = proposerPairList.get(i).getValue();
             String keyNoSpace = removeAllSpaces(key);
             
-            if (keyNoSpace.equals("申请人")) {
+            if (keyNoSpace.contains("申请人")) {
                 proposer = value;
             }
+            
+            if (keyNoSpace.equals("统一社会信用代码")) {
+                type = "COM";
+                id = value;
+            }
+            
+            if (keyNoSpace.equals("公民身份证号码")) {
+                type = "IND";
+                id = value;
+            }
+            
             if (keyNoSpace.equals("住址") || keyNoSpace.equals("地址") || keyNoSpace.equals("住所")) {
                 address = value;
             }
@@ -241,11 +255,15 @@ public class RoutineDocReader extends DocReader {
                 agency = value;
             }
             pro.setProposer(proposer);
+            pro.setId(id);
             pro.setAddress(address);
             pro.setRepresentative(representative);
             pro.setAgency(agency);
+            pro.setType(type);
         }
         logger.debug("申请人：" + pro.getProposer());
+        logger.debug("申请人类型：" + pro.getType());
+        logger.debug("统一社会信用代码/公民身份证号码：" + pro.getId());
         logger.debug("地址：" + pro.getAddress());
         logger.debug("法定代表人：" + pro.getRepresentative());
         logger.debug("代理人：" + pro.getAgency());
@@ -286,16 +304,28 @@ public class RoutineDocReader extends DocReader {
 
         ArbitrationRespondent res = new ArbitrationRespondent();
         String respondent = "";
+        String id = "";
         String address = "";
         String representative = "";
         String agency = "";
+        String type = "";
         for (int i = 0; i < respondentPairList.size(); ++i) {
             String key = respondentPairList.get(i).getKey();
             String value = respondentPairList.get(i).getValue();
             String keyNoSpace = removeAllSpaces(key);
 
-            if (keyNoSpace.equals("被申请人")) {
+            if (keyNoSpace.contains("被申请人")) {
                 respondent = value;
+            }
+            
+            if (keyNoSpace.equals("统一社会信用代码")) {
+                type = "COM";
+                id = value;
+            }
+            
+            if (keyNoSpace.equals("公民身份证号码")) {
+                type = "IND";
+                id = value;
             }
             if (keyNoSpace.equals("住址") || keyNoSpace.equals("地址") || keyNoSpace.equals("住所")) {
                 address = value;
@@ -307,12 +337,16 @@ public class RoutineDocReader extends DocReader {
                 agency = value;
             }
             res.setRespondent(respondent);
+            res.setId(id);
             res.setAddress(address);
             res.setRepresentative(representative);
             res.setAgency(agency);
+            res.setType(type);
         }
 
         logger.debug("被申请人：" + res.getRespondent());
+        logger.debug("被申请人类型：" + res.getType());
+        logger.debug("统一社会信用代码/公民身份证号码：" + res.getId());
         logger.debug("地址：" + res.getAddress());
         logger.debug("法定代表人：" + res.getRepresentative());
         logger.debug("代理人：" + res.getAgency());

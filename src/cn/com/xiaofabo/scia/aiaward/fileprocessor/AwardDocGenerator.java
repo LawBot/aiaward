@@ -269,10 +269,9 @@ public class AwardDocGenerator extends DocGenerator {
         run.getCTR().addNewRPr().addNewNoProof();
         run = paragraph.createRun();
         run.getCTR().addNewFldChar().setFldCharType(STFldCharType.END);
-        
+
 //        CTP ctp = paragraph.getCTP();
 //        ctp.addNewFldSimple().setInstr("PAGE \\* MERGEFORMAT");
-        
         CTDocument1 document = awardDoc.getDocument();
 
         CTBody body = document.getBody();
@@ -432,7 +431,7 @@ public class AwardDocGenerator extends DocGenerator {
 
         /// Generating arbitral comment
         generateArbitralComment();
-        
+
         generateArbitration();
 
         breakToNextPage();
@@ -447,19 +446,19 @@ public class AwardDocGenerator extends DocGenerator {
 
         addSignatureDate(cnDateGenerator() + "于深圳");
     }
-    
-    private void generateArbitralComment(){
+
+    private void generateArbitralComment() {
         String emptyList[] = {"", "", ""};
         addSubTitle("二、仲裁庭意见");
         addNormalTextParagraph("仲裁庭根据申请人的仲裁请求和被申请人的答辩意见，"
                 + "结合本案的证据，审查了以下争议事实和法律问题。", 1);
-        
+
         addTitleTextParagraph("（一）关于本案的管辖权 ", 0);
         addNormalTextParagraph("仲裁庭审查了申请人与被申请人与       年   月   日签订的"
                 + "《      合同》后，认为上述合同是对双方当事人具有约束力的文件，且上述"
                 + "《     合同》的第       条载有本会仲裁解决纠纷的规定，因此仲裁庭认为"
                 + "本会对本案享有管辖权。", 1);
-        
+
         addNormalTextParagraph("涉外案件，根据《最高人民法院关于适用<中华人民共和国涉外民事"
                 + "法律关系适用法>若干问题的解释（一）》的规定，本案属于涉外案件。根据"
                 + "《合同法》第一百二十六条的规定，涉外合同的当事人可以选择处理合同争议"
@@ -467,18 +466,18 @@ public class AwardDocGenerator extends DocGenerator {
                 + "     年     月     日签订的《  合同》第   条，本合同适用"
                 + "中国人民共和国法律，并将争议提交深圳国际仲裁院仲裁。"
                 + "因此，本院对本案享有仲裁管辖权并适用中国法律 。", 1);
-        
+
         addTitleTextParagraph("（二）关于合同的效力", 0);
         addNormalTextParagraph("仲裁庭认为，本案申请人与被申请人于    年    月     日"
                 + "签订的《  合同》是双方当事人自愿协商签订的，是双方当事人的真实意思表示，"
                 + "不违反中国的法律和行政法规的强制性规定，应属合法有效，"
                 + "并对本案双方当事人具有约束力", 1);
-        
+
         addTitleTextParagraph("（三） 关于本案相关事实的认定", 0);
         addNormalTextParagraph("根据申请人提交的证据材料和庭审调查，仲裁庭对有关本案争议的"
                 + "相关事实认定如下（仲裁庭根据案情撰写）： ", 0);
         addNumbering(emptyList, 0, 1);
-        
+
         addTitleTextParagraph("（四）关于本案的争议焦点", 0);
         String conflictList[] = {
             "买方是否按买卖合同的约定支付了货款？（合同法第159、160、161条）",
@@ -505,25 +504,25 @@ public class AwardDocGenerator extends DocGenerator {
             "第三方过失造成违约如何处理？（合同法第121条）"
         };
         addNumbering(conflictList, 0, 1);
-        
+
         addTitleTextParagraph("（五）被申请人是否存在违约责任（仲裁庭根据案情撰写）", 0);
         addNumbering(emptyList, 0, 1);
-        
+
         addTitleTextParagraph("（六）申请人是否存在过错（仲裁庭根据案情撰写）", 0);
         addNumbering(emptyList, 0, 1);
-        
+
         addTitleTextParagraph("（七）关于申请人提出的请求", 0);
         String requestList[] = {
             "解除合同（合同法第93条至97条）",
             "实际履行 （合同法第8条）",
             "强制履行（合同法第107条、第110条）",
-            "违约责任（合同法第7章）", 
+            "违约责任（合同法第7章）",
             "损失赔偿及范围（合同法第113条）",
             "损害赔偿（合同法第122条）",
             "违约金（合同法第114条）",
             "定金（合同法第115条）",
             "违约金与定金的选择（合同法第116条）",
-            "偿还借款（合同法第206条）", 
+            "偿还借款（合同法第206条）",
             "利率及利息支付（合同法第204条、第205条、最新民间借贷司法解释第25条至第32条）",
             "直接损失和间接损失 （合同法第113条）",
             "金钱债务（合同法第109条）",
@@ -532,14 +531,14 @@ public class AwardDocGenerator extends DocGenerator {
             "律师费、公证费、保全费、检验费、差旅费、证人费及仲裁费（深圳国际中仲裁院《仲裁规则》第62条）"
         };
         addNumbering(requestList, 0, 1);
-        
+
         addTitleTextParagraph("（八）关于被申请人的仲裁反请求（如有反请求）", 0);
         addNumbering(emptyList, 0, 1);
-        
+
         addTitleTextParagraph("（九）被申请人缺席的后果（如果缺席审理）", 0);
         addNormalTextParagraph("被申请人经合法通知无正当理由未到庭，亦未提交任何书面答辩意见"
                 + "或证据，视为自行放弃抗辩的权利，应自行承担由此引起的法律后果。", 1);
-        
+
         addTitleTextParagraph("（十）关于公证费、差旅费、检验费、律师费及仲裁费的问题", 0);
         addNormalTextParagraph("申请人请求仲裁庭裁决被申请人赔偿申请人因本案而产生的公证费、"
                 + "差旅费、检验费、律师费及仲裁费等合理费用。仲裁庭认为，申请人提交了上述费用"
@@ -548,8 +547,8 @@ public class AwardDocGenerator extends DocGenerator {
         addNormalTextParagraph("根据《仲裁规则》第六十二条的规定，本案仲裁费、仲裁员实际开支"
                 + "费用应由被申请人承担。", 1);
     }
-    
-    private void generateArbitration(){
+
+    private void generateArbitration() {
         addSubTitle("三、裁    决");
         addNormalTextParagraph("根据上述事实和仲裁庭意见，仲裁庭对本案作出裁决如下：", 0);
         addNormalTextParagraph("（一）被申请人应向申请人支付尚欠借款人民币               元。", 0);
@@ -783,7 +782,8 @@ public class AwardDocGenerator extends DocGenerator {
         int rowNumber = 0;
         setTableRowContent(proposerTable.getRow(rowNumber++), proKey, pro.getProposer());
         setTableRowContent(proposerTable.getRow(rowNumber++), "地      址：", pro.getAddress());
-        setTableRowContent(proposerTable.getRow(rowNumber++), "统一社会信用代码：", "");
+        String idDesc = pro.getType().equalsIgnoreCase("COM") ? "统一社会信用代码：" : "公民身份证号码：";
+        setTableRowContent(proposerTable.getRow(rowNumber++), idDesc, pro.getId());
         setTableRowContent(proposerTable.getRow(rowNumber++), "法定代表人：", pro.getRepresentative());
         setTableRowContent(proposerTable.getRow(rowNumber++), "代  理  人：", pro.getAgency());
     }
@@ -807,7 +807,8 @@ public class AwardDocGenerator extends DocGenerator {
         int rowNumber = 0;
         setTableRowContent(respondentTable.getRow(rowNumber++), resKey, res.getRespondent());
         setTableRowContent(respondentTable.getRow(rowNumber++), "地      址：", res.getAddress());
-        setTableRowContent(respondentTable.getRow(rowNumber++), "统一社会信用代码：", "");
+        String idDesc = res.getType().equalsIgnoreCase("COM") ? "统一社会信用代码：" : "公民身份证号码：";
+        setTableRowContent(respondentTable.getRow(rowNumber++), idDesc, res.getId());
         setTableRowContent(respondentTable.getRow(rowNumber++), "法定代表人：", res.getRepresentative());
         setTableRowContent(respondentTable.getRow(rowNumber++), "代  理  人：", res.getAgency());
     }

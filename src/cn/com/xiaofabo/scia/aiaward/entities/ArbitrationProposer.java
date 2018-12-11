@@ -12,9 +12,14 @@ package cn.com.xiaofabo.scia.aiaward.entities;
 public class ArbitrationProposer {
 
     private String proposer;
+    private String id;
     private String agency;
     private String representative;
     private String address;
+
+    /// Either COM (company) or IND (individual)
+    /// this is determined by the id type
+    private String type;
 
     public ArbitrationProposer() {
     }
@@ -23,8 +28,9 @@ public class ArbitrationProposer {
         this.proposer = proposer;
     }
 
-    public ArbitrationProposer(String proposer, String agency, String representative, String address) {
+    public ArbitrationProposer(String proposer, String id, String agency, String representative, String address) {
         this.proposer = proposer;
+        this.id = id;
         this.agency = agency;
         this.representative = representative;
         this.address = address;
@@ -36,6 +42,14 @@ public class ArbitrationProposer {
 
     public void setProposer(String proposer) {
         this.proposer = proposer;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAgency() {
@@ -61,4 +75,13 @@ public class ArbitrationProposer {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 }

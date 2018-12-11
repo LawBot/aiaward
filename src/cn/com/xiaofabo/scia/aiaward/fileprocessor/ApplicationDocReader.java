@@ -20,7 +20,7 @@ public class ApplicationDocReader extends DocReader {
 
     public static Logger logger = Logger.getLogger(ApplicationDocReader.class.getName());
     private final String IDENTIFIER_PATTERN_GIST = "^(仲裁依据)|(仲裁条款)";
-    private final String IDENTIFIER_PATTERN_REQUEST = "^(仲裁请求)|(申请请求)";
+    private final String IDENTIFIER_PATTERN_REQUEST = "^(仲裁请求)|(申请请求)|(申请事项).?";
     private final String IDENTIFIER_PATTERN_FACT = "^事实.理由";
     private final String IDENTIFIER_PATTERN_END = "^此\\s*致";
 
